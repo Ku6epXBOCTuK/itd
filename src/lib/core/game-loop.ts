@@ -2,6 +2,7 @@ import { IncomeSystem } from "$lib/modules/economy/system/income.system";
 import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
 import { MoveSystem } from "$lib/modules/enemies/system/move.system";
 import { AttackSystem } from "$lib/modules/enemies/system/attack.system";
+import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
 
 const systems = [IncomeSystem, SyncRenderSystem, MoveSystem, AttackSystem];
 
@@ -9,6 +10,8 @@ let isRunning = false;
 let animationFrameId: number | null = null;
 
 function gameLoop(deltaTime: number) {
+	if (uiState.isPaused) return;
+
 	for (const system of systems) {
 		system(deltaTime);
 	}
