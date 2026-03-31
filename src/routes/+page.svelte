@@ -3,6 +3,7 @@
 	import { GameLoop } from "$lib/core/game-loop";
 	import { initializeGameState } from "$lib/modules/economy/factories";
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { isPaused } from "$lib/core/world";
 	import {
 		initRender,
 		resizeRenderer,
@@ -16,6 +17,7 @@
 
 	let canvas: HTMLCanvasElement;
 	let isGameRunning = false;
+	let paused: boolean = $state(false);
 
 	function startGame() {
 		if (isGameRunning) return;
@@ -40,6 +42,14 @@
 		const { width, height } = canvas.getBoundingClientRect();
 		resizeRenderer(width, height);
 	}
+
+	$effect(() => {
+		const interval = setInterval(() => {
+			paused = isPaused();
+		}, 100);
+
+		return () => clearInterval(interval);
+	});
 
 	$effect(() => {
 		if (uiState.gameState === GameState.PLAYING && !isGameRunning) {
@@ -73,7 +83,7 @@
 	{:else if uiState.gameState === GameState.GAME_OVER}
 		<GameOver />
 	{:else if uiState.gameState === GameState.PLAYING}
-		{#if uiState.isPaused}
+		{#if paused}
 			<PauseMenu />
 		{:else}
 			<Hud />

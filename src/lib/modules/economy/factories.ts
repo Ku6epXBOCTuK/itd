@@ -33,7 +33,10 @@ export const resetGameState = () => {
 	uiState.wave = 0;
 	uiState.towerHp = 0;
 	uiState.towerMaxHp = 0;
-	uiState.isPaused = false;
+
+	import("$lib/core/world").then(({ resumeGame }) => {
+		resumeGame();
+	});
 };
 
 export const initializeGameState = () => {

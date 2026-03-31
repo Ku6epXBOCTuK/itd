@@ -1,17 +1,21 @@
 <script lang="ts">
-	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { resumeGame } from "$lib/core/world";
 	import { resetGameState } from "$lib/modules/economy/factories";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconPlay from "~icons/lucide/play";
 	import IconLogOut from "~icons/lucide/log-out";
 
-	function resumeGame() {
-		uiState.isPaused = false;
+	function handleResume() {
+		resumeGame();
 	}
 
 	function exitToMenu() {
+		resumeGame();
 		resetGameState();
-		uiState.gameState = GameState.MENU;
+		import("$lib/adapters/ui-state/game-state.svelte").then(({ uiState, GameState }) => {
+			uiState.gameState = GameState.MENU;
+		});
 	}
 </script>
 
@@ -20,7 +24,7 @@
 		<h1 class="title">Пауза</h1>
 
 		<div class="pause-buttons">
-			<Button icon={IconPlay} label="Продолжить" onclick={resumeGame} />
+			<Button icon={IconPlay} label="Продолжить" onclick={handleResume} />
 
 			<Button icon={IconLogOut} label="В главное меню" onclick={exitToMenu} variant="outline" />
 		</div>
