@@ -10,15 +10,15 @@ export const EnemyType = {
 	TANK: "tank",
 } as const;
 
-export type EnemyTypeKey = keyof typeof EnemyType;
-export type EnemyStateKey = keyof typeof EnemyState;
+export type EnemyTypeValue = (typeof EnemyType)[keyof typeof EnemyType];
+export type EnemyStateValue = (typeof EnemyState)[keyof typeof EnemyState];
 
 export type Enemy = {
-	type: EnemyTypeKey;
-	state: EnemyStateKey;
+	type: EnemyTypeValue;
+	state: EnemyStateValue;
 	speed: number;
+	hp: number;
 	maxHp: number;
-	currentHp: number;
 	damage: number;
 	attackRange: number;
 	attackCooldown: number;

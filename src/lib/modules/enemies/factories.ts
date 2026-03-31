@@ -1,28 +1,31 @@
 import { world } from "$lib/core/world";
 import * as THREE from "three";
-import { EnemyState, EnemyType } from "./enemies.components";
+import { EnemyState, EnemyType, type EnemyTypeValue, type EnemyStateValue } from "./enemies.components";
 
 export { EnemyType };
 
 const enemyTypes = {
-	basic: {
+	[EnemyType.BASIC]: {
 		speed: 2,
+		hp: 100,
 		maxHp: 100,
 		damage: 100,
 		attackRange: 1.5,
 		attackCooldown: 1000,
 		attackDuration: 300,
 	},
-	fast: {
+	[EnemyType.FAST]: {
 		speed: 4,
+		hp: 50,
 		maxHp: 50,
 		damage: 50,
 		attackRange: 1.5,
 		attackCooldown: 500,
 		attackDuration: 200,
 	},
-	tank: {
+	[EnemyType.TANK]: {
 		speed: 1,
+		hp: 200,
 		maxHp: 200,
 		damage: 200,
 		attackRange: 1.5,
@@ -30,6 +33,8 @@ const enemyTypes = {
 		attackDuration: 500,
 	},
 } as const;
+
+type EnemyStats = typeof enemyTypes[EnemyTypeValue];
 
 const enemyColors = {
 	[EnemyState.MOVING]: 0x00ff00,
@@ -43,7 +48,7 @@ export const createEnemy = (
 	x: number,
 	z: number,
 ) => {
-	const stats = enemyTypes[type];
+	const stats = enemyTypes[type] as EnemyStats;
 
 	const geometry = new THREE.SphereGeometry(0.5, 16, 16);
 	const material = new THREE.MeshStandardMaterial({
@@ -59,8 +64,8 @@ export const createEnemy = (
 		state: EnemyState.MOVING,
 		position: { x, y: 0.5, z },
 		speed: stats.speed,
+		hp: stats.hp,
 		maxHp: stats.maxHp,
-		currentHp: stats.maxHp,
 		damage: stats.damage,
 		attackRange: stats.attackRange,
 		attackCooldown: stats.attackCooldown,

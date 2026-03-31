@@ -1,7 +1,7 @@
-import { IncomeSystem } from "$lib/modules/economy/system/income.system";
+import { IncomeSystem } from "$lib/modules/economy/systems/income.system";
 import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
-import { MoveSystem } from "$lib/modules/enemies/system/move.system";
-import { AttackSystem } from "$lib/modules/enemies/system/attack.system";
+import { MoveSystem } from "$lib/modules/enemies/systems/move.system";
+import { AttackSystem } from "$lib/modules/enemies/systems/attack.system";
 import { world } from "./world";
 
 const systems = [IncomeSystem, SyncRenderSystem, MoveSystem, AttackSystem];

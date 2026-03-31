@@ -4,7 +4,7 @@ import { EnemyState } from "../enemies.components";
 
 export const AttackSystem = (deltaTime: number) => {
 	const currentTime = Date.now();
-	const enemies = world.with("position", "attackRange", "damage", "attackCooldown", "attackDuration", "attackStartTime", "state", "target");
+	const enemies = world.with("position", "attackRange", "damage", "attackCooldown", "attackDuration", "attackStartTime", "state", "target", "hp");
 	const towers = world.with("tower");
 
 	for (const enemy of enemies) {
