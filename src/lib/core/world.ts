@@ -123,13 +123,15 @@ export const world = new World<{
 // ============ APP STATE ============
 
 export const AppState = {
-	IN_GAME: "in_game",
+	ACTIVE_GAME: "active_game",
 	PAUSED: "paused",
+	GAME_OVER_ANIMATING: "game_over_animating",
+	GAME_OVER: "game_over",
 } as const;
 
 export type AppStateType = (typeof AppState)[keyof typeof AppState];
 
-let appState: AppStateType = AppState.IN_GAME;
+let appState: AppStateType = AppState.ACTIVE_GAME;
 
 export const getAppState = (): AppStateType => appState;
 
@@ -142,7 +144,7 @@ export const pauseGame = () => {
 };
 
 export const resumeGame = () => {
-	appState = AppState.IN_GAME;
+	appState = AppState.ACTIVE_GAME;
 };
 
 export const isPaused = () => appState === AppState.PAUSED;

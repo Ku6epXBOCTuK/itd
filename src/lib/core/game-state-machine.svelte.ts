@@ -15,7 +15,7 @@ import {
 } from "$lib/modules/render/systems/sync-render.system";
 import { GameEngine, GameEvents } from "./event-bus";
 import { GameLoop } from "./game-loop";
-import { pauseGame, resumeGame } from "./world";
+import { setAppState, AppState, pauseGame, resumeGame } from "./world";
 
 let canvas: HTMLCanvasElement | null = null;
 let isGameRunning = false;
@@ -70,26 +70,29 @@ export const initGameStateMachine = () => {
 		}
 		resetGameState();
 		startGame();
+		setAppState(AppState.ACTIVE_GAME);
 		setGameState(GameState.PLAYING);
 	});
 
 	GameEngine.on(GameEvents.PAUSE_GAME, () => {
-		pauseGame();
+		setAppState(AppState.PAUSED);
 		setGameState(GameState.PAUSED);
 	});
 
 	GameEngine.on(GameEvents.RESUME_GAME, () => {
-		resumeGame();
+		setAppState(AppState.ACTIVE_GAME);
 		setGameState(GameState.PLAYING);
 	});
 
 	GameEngine.on(GameEvents.STOP_GAME, () => {
+		setAppState(AppState.GAME_OVER_ANIMATING);
 		setGameState(GameState.GAME_OVER_ANIMATING);
 
 		if (gameOverTimeout) {
 			clearTimeout(gameOverTimeout);
 		}
 		gameOverTimeout = setTimeout(() => {
+			setAppState(AppState.GAME_OVER);
 			setGameState(GameState.GAME_OVER);
 			gameOverTimeout = null;
 		}, 3000);
@@ -101,7 +104,7 @@ export const initGameStateMachine = () => {
 			gameOverTimeout = null;
 		}
 		resetGameState();
-		resumeGame();
+		setAppState(AppState.ACTIVE_GAME);
 		setGameState(GameState.MENU);
 		stopGame();
 	});
