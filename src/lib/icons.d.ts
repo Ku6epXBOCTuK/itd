@@ -1,6 +1,6 @@
 declare module "~icons/*" {
 	import type { SvelteComponent } from "svelte";
-	export default class extends SvelteComponent {
-		$$prop_def: { size?: string | number; color?: string };
-	}
+
+	const component: new (...args: any[]) => SvelteComponent;
+	export default component;
 }

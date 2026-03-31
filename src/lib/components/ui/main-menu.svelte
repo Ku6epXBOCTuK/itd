@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import Button from "$lib/components/ui/button.svelte";
+	import IconPlay from "~icons/lucide/play";
+	import IconSettings from "~icons/lucide/settings";
+	import IconLogOut from "~icons/lucide/log-out";
 
 	function startGame() {
 		uiState.gameState = GameState.PLAYING;
@@ -21,17 +25,11 @@
 		<h1 class="title">Idle Tower Defense</h1>
 
 		<div class="menu-buttons">
-			<button class="menu-btn" onclick={startGame}>
-				Начать игру
-			</button>
+			<Button icon={IconPlay} label="Начать игру" onclick={startGame} />
 
-			<button class="menu-btn" onclick={openSettings}>
-				Настройки
-			</button>
+			<Button icon={IconSettings} label="Настройки" onclick={openSettings} />
 
-			<button class="menu-btn" onclick={exitGame}>
-				Выход
-			</button>
+			<Button icon={IconLogOut} label="Выход" onclick={exitGame} variant="outline" />
 		</div>
 	</div>
 </div>
@@ -66,26 +64,5 @@
 		flex-direction: column;
 		gap: 1rem;
 		align-items: center;
-	}
-
-	.menu-btn {
-		width: 250px;
-		padding: 1rem 2rem;
-		font-size: 1.5rem;
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-		color: #fff;
-		border: none;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		transition: transform 0.2s, box-shadow 0.2s;
-	}
-
-	.menu-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-	}
-
-	.menu-btn:active {
-		transform: translateY(0);
 	}
 </style>

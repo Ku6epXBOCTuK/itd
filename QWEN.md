@@ -32,6 +32,10 @@ export const EnemyState = {
 export type EnemyState = "moving" | "attacking";
 ```
 
+### 5. tsconfig.json
+- ❌ **ЗАПРЕЩЕНО** менять tsconfig.json без явного разрешения
+- ✅ Если нужна настройка — спроси у пользователя
+
 ---
 
 ## 🏛️ Архитектура

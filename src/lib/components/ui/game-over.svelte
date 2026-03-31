@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import Button from "$lib/components/ui/button.svelte";
+	import IconRotateCcw from "~icons/lucide/rotate-ccw";
+	import IconLogOut from "~icons/lucide/log-out";
 
 	function restartGame() {
 		uiState.gameOver = false;
@@ -22,13 +25,9 @@
 		<p class="subtitle">Башня разрушена</p>
 
 		<div class="buttons">
-			<button class="btn btn-restart" onclick={restartGame}>
-				Начать заново
-			</button>
+			<Button icon={IconRotateCcw} label="Начать заново" onclick={restartGame} />
 
-			<button class="btn btn-exit" onclick={exitToMenu}>
-				Выйти в меню
-			</button>
+			<Button icon={IconLogOut} label="Выйти в меню" onclick={exitToMenu} variant="outline" />
 		</div>
 	</div>
 </div>
@@ -73,33 +72,5 @@
 		flex-direction: column;
 		gap: 1rem;
 		align-items: center;
-	}
-
-	.btn {
-		width: 250px;
-		padding: 1rem 2rem;
-		font-size: 1.3rem;
-		color: #fff;
-		border: none;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		transition: transform 0.2s, box-shadow 0.2s;
-	}
-
-	.btn-restart {
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-	}
-
-	.btn-exit {
-		background: rgba(255, 255, 255, 0.2);
-	}
-
-	.btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-	}
-
-	.btn:active {
-		transform: translateY(0);
 	}
 </style>

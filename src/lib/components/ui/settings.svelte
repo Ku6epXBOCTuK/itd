@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import Button from "$lib/components/ui/button.svelte";
+	import IconArrowLeft from "~icons/lucide/arrow-left";
 
 	function goBack() {
 		uiState.gameState = GameState.MENU;
@@ -58,9 +60,7 @@
 			</div>
 		</div>
 
-		<button class="back-btn" onclick={goBack}>
-			Назад
-		</button>
+		<Button icon={IconArrowLeft} label="Назад" onclick={goBack} variant="outline" />
 	</div>
 </div>
 
@@ -134,36 +134,5 @@
 		color: #fff;
 		min-width: 50px;
 		text-align: right;
-	}
-
-	.toggle-btn {
-		padding: 0.5rem 1.5rem;
-		font-size: 1rem;
-		background: rgba(255, 255, 255, 0.2);
-		color: #fff;
-		border: none;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		transition: background 0.2s;
-	}
-
-	.toggle-btn.enabled {
-		background: #667eea;
-	}
-
-	.back-btn {
-		width: 100%;
-		padding: 1rem;
-		font-size: 1.2rem;
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-		color: #fff;
-		border: none;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		transition: transform 0.2s;
-	}
-
-	.back-btn:hover {
-		transform: translateY(-2px);
 	}
 </style>
