@@ -4,6 +4,7 @@ import { createGround } from "../factories";
 import { createEnemy, EnemyType } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
 import { EnemyState } from "$lib/modules/enemies/enemies.components";
+import { setScene } from "$lib/modules/economy/factories";
 
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
@@ -16,6 +17,7 @@ export const initRender = (
 ) => {
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0x1a1a2e);
+	setScene(scene);
 
 	camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 	camera.position.set(0, 10, 10);
@@ -33,7 +35,6 @@ export const initRender = (
 
 	createGround(scene);
 	createTower(scene, 0, 0);
-	createEnemy(scene, EnemyType.BASIC, 5, 5);
 
 	const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
 	scene.add(gridHelper);

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import { GameLoop } from "$lib/core/game-loop";
-	import { createGameState } from "$lib/modules/economy/factories";
+	import { initializeGameState } from "$lib/modules/economy/factories";
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
 	import {
 		initRender,
@@ -22,7 +22,7 @@
 
 		const { width, height } = canvas.getBoundingClientRect();
 		initRender(canvas, width, height);
-		createGameState();
+		initializeGameState();
 		GameLoop.start();
 		isGameRunning = true;
 	}

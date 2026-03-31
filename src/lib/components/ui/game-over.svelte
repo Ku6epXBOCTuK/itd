@@ -1,20 +1,17 @@
 <script lang="ts">
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { initializeGameState, resetGameState } from "$lib/modules/economy/factories";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconRotateCcw from "~icons/lucide/rotate-ccw";
 	import IconLogOut from "~icons/lucide/log-out";
 
 	function restartGame() {
-		uiState.gameOver = false;
-		uiState.towerHp = 0;
-		uiState.towerMaxHp = 0;
+		initializeGameState();
 		uiState.gameState = GameState.PLAYING;
 	}
 
 	function exitToMenu() {
-		uiState.gameOver = false;
-		uiState.towerHp = 0;
-		uiState.towerMaxHp = 0;
+		resetGameState();
 		uiState.gameState = GameState.MENU;
 	}
 </script>

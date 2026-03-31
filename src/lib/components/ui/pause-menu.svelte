@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { resetGameState } from "$lib/modules/economy/factories";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconPlay from "~icons/lucide/play";
 	import IconLogOut from "~icons/lucide/log-out";
@@ -9,7 +10,7 @@
 	}
 
 	function exitToMenu() {
-		uiState.isPaused = false;
+		resetGameState();
 		uiState.gameState = GameState.MENU;
 	}
 </script>
