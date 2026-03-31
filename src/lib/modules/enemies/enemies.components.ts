@@ -1,9 +1,21 @@
-export type EnemyType = "basic" | "fast" | "tank";
-export type EnemyState = "moving" | "attacking" | "cooldown";
+export const EnemyState = {
+	MOVING: "moving",
+	ATTACKING: "attacking",
+	COOLDOWN: "cooldown",
+} as const;
+
+export const EnemyType = {
+	BASIC: "basic",
+	FAST: "fast",
+	TANK: "tank",
+} as const;
+
+export type EnemyTypeKey = keyof typeof EnemyType;
+export type EnemyStateKey = keyof typeof EnemyState;
 
 export type Enemy = {
-	type: EnemyType;
-	state: EnemyState;
+	type: EnemyTypeKey;
+	state: EnemyStateKey;
 	speed: number;
 	maxHp: number;
 	currentHp: number;

@@ -1,5 +1,6 @@
 import { world } from "$lib/core/world";
 import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
+import { EnemyState } from "../enemies.components";
 
 export const AttackSystem = (deltaTime: number) => {
 	const currentTime = Date.now();
@@ -13,12 +14,12 @@ export const AttackSystem = (deltaTime: number) => {
 		const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 		if (distance <= enemy.attackRange) {
-			if (enemy.state === "moving") {
-				enemy.state = "attacking";
+			if (enemy.state === EnemyState.MOVING) {
+				enemy.state = EnemyState.ATTACKING;
 				enemy.attackStartTime = currentTime;
 			}
 
-			if (enemy.state === "attacking") {
+			if (enemy.state === EnemyState.ATTACKING) {
 				const attackElapsed = currentTime - enemy.attackStartTime;
 
 				if (attackElapsed >= enemy.attackDuration) {
@@ -33,21 +34,21 @@ export const AttackSystem = (deltaTime: number) => {
 						uiState.towerHp = Math.floor(tower.hp);
 					}
 
-					enemy.state = "cooldown";
+					enemy.state = EnemyState.COOLDOWN;
 					enemy.attackStartTime = currentTime;
 				}
 			}
 
-			if (enemy.state === "cooldown") {
+			if (enemy.state === EnemyState.COOLDOWN) {
 				const cooldownElapsed = currentTime - enemy.attackStartTime;
 
 				if (cooldownElapsed >= enemy.attackCooldown) {
-					enemy.state = "attacking";
+					enemy.state = EnemyState.ATTACKING;
 					enemy.attackStartTime = currentTime;
 				}
 			}
 		} else {
-			enemy.state = "moving";
+			enemy.state = EnemyState.MOVING;
 		}
 	}
 };

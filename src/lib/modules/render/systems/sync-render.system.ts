@@ -1,8 +1,9 @@
 import { world } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround } from "../factories";
-import { createEnemy } from "$lib/modules/enemies/factories";
+import { createEnemy, EnemyType } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
+import { EnemyState } from "$lib/modules/enemies/enemies.components";
 
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
@@ -32,7 +33,7 @@ export const initRender = (
 
 	createGround(scene);
 	createTower(scene, 0, 0);
-	createEnemy(scene, "basic", 5, 5);
+	createEnemy(scene, EnemyType.BASIC, 5, 5);
 
 	const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
 	scene.add(gridHelper);
@@ -44,9 +45,9 @@ export const SyncRenderSystem = () => {
 	for (const enemy of enemies) {
 		enemy.view.mesh.position.copy(enemy.position);
 
-		const color = enemy.state === "attacking"
+		const color = enemy.state === EnemyState.ATTACKING
 			? 0xff4444
-			: enemy.state === "cooldown"
+			: enemy.state === EnemyState.COOLDOWN
 				? 0xffff00
 				: 0x00ff00;
 
