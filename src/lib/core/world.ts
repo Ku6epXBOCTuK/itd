@@ -1,7 +1,5 @@
 import { World } from "miniplex";
-import * as THREE from "three";
 
-type Position = { x: number; y: number; z: number };
-export type View3D = { mesh: THREE.Mesh };
+type Player = { gold: number; incomePerSecond: number };
 
-export const world = new World();
+export const world = new World<Partial<Player>>();

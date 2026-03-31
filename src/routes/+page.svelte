@@ -4,27 +4,30 @@
 	import { createGameState } from "$lib/modules/economy/factories";
 	import { GameEngine } from "$lib/core/event-bus";
 	import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
-	import { createScene3D } from "$lib/modules/render/three-scene";
-	import { RenderService } from "$lib/modules/render/render-service";
+	import {
+		initRender,
+		resizeRenderer,
+		disposeRenderer,
+	} from "$lib/modules/render/systems/sync-render.system";
 
 	let canvas: HTMLCanvasElement;
-	let scene3D: ReturnType<typeof createScene3D>;
 
 	onMount(() => {
-		scene3D = createScene3D(canvas);
-		RenderService.init(scene3D);
+		const { width, height } = canvas.getBoundingClientRect();
+		initRender(canvas, width, height);
 		createGameState();
 		GameLoop.start();
 
 		return () => {
 			GameLoop.stop();
-			RenderService.dispose();
+			disposeRenderer();
 		};
 	});
 
 	function handleResize() {
-		if (!canvas || !scene3D) return;
-		RenderService.resize(canvas.clientWidth, canvas.clientHeight);
+		if (!canvas) return;
+		const { width, height } = canvas.getBoundingClientRect();
+		resizeRenderer(width, height);
 	}
 </script>
 

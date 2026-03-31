@@ -1,6 +1,5 @@
 import { IncomeSystem } from "$lib/modules/economy/system/income.system";
-import { SyncRenderSystem } from "$lib/modules/render/system/sync-render.system";
-import { RenderService } from "$lib/modules/render/render-service";
+import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
 
 const systems = [IncomeSystem, SyncRenderSystem];
 
@@ -11,7 +10,6 @@ function gameLoop(deltaTime: number) {
 	for (const system of systems) {
 		system(deltaTime);
 	}
-	RenderService.render();
 }
 
 function loop(timestamp: number) {
