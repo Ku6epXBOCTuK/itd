@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { GameEngine } from "$lib/core/event-bus";
+	import { GameEngine, GameEvents } from "$lib/core/event-bus";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconRotateCcw from "~icons/lucide/rotate-ccw";
 	import IconLogOut from "~icons/lucide/log-out";
 
 	function restartGame() {
-		GameEngine.emit("start-game");
+		GameEngine.emit(GameEvents.START_GAME);
 	}
 
 	function exitToMenu() {
-		GameEngine.emit("to-menu");
+		GameEngine.emit(GameEvents.TO_MENU);
 	}
 </script>
 

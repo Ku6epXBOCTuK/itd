@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { GameEngine } from "$lib/core/event-bus";
+	import { GameEngine, GameEvents } from "$lib/core/event-bus";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconPlay from "~icons/lucide/play";
 	import IconLogOut from "~icons/lucide/log-out";
 
 	function handleResume() {
-		GameEngine.emit("resume-game");
+		GameEngine.emit(GameEvents.RESUME_GAME);
 	}
 
 	function exitToMenu() {
-		GameEngine.emit("to-menu");
+		GameEngine.emit(GameEvents.TO_MENU);
 	}
 </script>
 

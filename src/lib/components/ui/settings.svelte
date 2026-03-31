@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
-	import { GameEngine } from "$lib/core/event-bus";
+	import { GameEngine, GameEvents } from "$lib/core/event-bus";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconArrowLeft from "~icons/lucide/arrow-left";
 	import IconVolume2 from "~icons/lucide/volume-2";
 	import IconVolumeX from "~icons/lucide/volume-x";
 
 	function goBack() {
-		GameEngine.emit("to-menu");
+		GameEngine.emit(GameEvents.TO_MENU);
 	}
 </script>
 

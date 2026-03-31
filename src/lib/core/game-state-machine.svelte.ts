@@ -6,7 +6,7 @@ import {
 	disposeRenderer,
 } from "$lib/modules/render/systems/sync-render.system";
 import { initializeGameState, resetGameState } from "$lib/modules/economy/factories";
-import { GameEngine } from "./event-bus";
+import { GameEngine, GameEvents } from "./event-bus";
 import { resumeGame } from "./world";
 
 let canvas: HTMLCanvasElement | null = null;
@@ -47,27 +47,27 @@ const setGameState = (state: GameStateType) => {
 export const initGameStateMachine = () => {
 	const resizeObserver = new ResizeObserver(handleResize);
 
-	GameEngine.on("start-game", () => {
+	GameEngine.on(GameEvents.START_GAME, () => {
 		resetGameState();
 		startGame();
 		setGameState(GameState.PLAYING);
 	});
 
-	GameEngine.on("pause-game", () => {
+	GameEngine.on(GameEvents.PAUSE_GAME, () => {
 		setGameState(GameState.PAUSED);
 	});
 
-	GameEngine.on("resume-game", () => {
+	GameEngine.on(GameEvents.RESUME_GAME, () => {
 		resumeGame();
 		setGameState(GameState.PLAYING);
 	});
 
-	GameEngine.on("stop-game", () => {
+	GameEngine.on(GameEvents.STOP_GAME, () => {
 		setGameState(GameState.GAME_OVER);
 		stopGame();
 	});
 
-	GameEngine.on("to-menu", () => {
+	GameEngine.on(GameEvents.TO_MENU, () => {
 		resetGameState();
 		resumeGame();
 		setGameState(GameState.MENU);
