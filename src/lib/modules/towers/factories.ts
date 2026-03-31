@@ -1,8 +1,11 @@
-import { world } from "$lib/core/world";
+import { world, TowerState } from "$lib/core/world";
 import * as THREE from "three";
 import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
+import { setTowerScene } from "./system/attack.system";
 
 export const createTower = (scene: THREE.Scene, x: number, z: number) => {
+	setTowerScene(scene);
+
 	const geometry = new THREE.BoxGeometry(1, 2, 1);
 	const material = new THREE.MeshStandardMaterial({ color: 0x4a4a4a });
 	const mesh = new THREE.Mesh(geometry, material);
@@ -11,15 +14,25 @@ export const createTower = (scene: THREE.Scene, x: number, z: number) => {
 	scene.add(mesh);
 
 	const tower = world.add({
-		position: { x, y: 1, z },
-		view: { mesh, originalColor: 0x4a4a4a },
+		x,
+		y: 1,
+		z,
+		mesh,
+		originalColor: 0x4a4a4a,
 		tower: true,
 		hp: 500,
 		maxHp: 500,
+		damage: 25,
+		attackRange: 4,
+		attackCooldown: 1000,
+		attackAnimationDuration: 300,
+		towerState: TowerState.IDLE,
+		attackStartTime: 0,
+		targetId: undefined,
 	});
 
-	uiState.towerHp = tower.hp;
-	uiState.towerMaxHp = tower.maxHp;
+	uiState.towerHp = tower.hp!;
+	uiState.towerMaxHp = tower.maxHp!;
 
 	return tower;
 };

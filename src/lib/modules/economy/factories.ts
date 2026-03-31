@@ -1,6 +1,6 @@
-import { world, resumeGame } from "$lib/core/world";
+import { world, resumeGame, EnemyVariant } from "$lib/core/world";
 import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
-import { createEnemy, EnemyType } from "$lib/modules/enemies/factories";
+import { createEnemy } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
 import type { Scene } from "three";
 
@@ -22,9 +22,11 @@ export const createGameState = () => {
 
 export const resetGameState = () => {
 	if (scene) {
-		const entities = world.with("position", "view");
+		const entities = world.with("x", "y", "z", "mesh");
 		for (const entity of entities) {
-			scene.remove(entity.view.mesh);
+			if (entity.mesh) {
+				scene.remove(entity.mesh);
+			}
 		}
 	}
 
@@ -45,6 +47,6 @@ export const initializeGameState = () => {
 
 	if (scene) {
 		createTower(scene, 0, 0);
-		createEnemy(scene, EnemyType.BASIC, 5, 5);
+		createEnemy(scene, EnemyVariant.BASIC, 5, 5);
 	}
 };

@@ -1,11 +1,10 @@
-import { world } from "$lib/core/world";
+import { world, EnemyState, EnemyVariant, type EnemyVariantType } from "$lib/core/world";
 import * as THREE from "three";
-import { EnemyState, EnemyType, type EnemyTypeValue, type EnemyStateValue } from "./enemies.components";
 
-export { EnemyType };
+export { EnemyVariant };
 
 const enemyTypes = {
-	[EnemyType.BASIC]: {
+	[EnemyVariant.BASIC]: {
 		speed: 2,
 		hp: 100,
 		maxHp: 100,
@@ -14,7 +13,7 @@ const enemyTypes = {
 		attackCooldown: 1000,
 		attackDuration: 300,
 	},
-	[EnemyType.FAST]: {
+	[EnemyVariant.FAST]: {
 		speed: 4,
 		hp: 50,
 		maxHp: 50,
@@ -23,7 +22,7 @@ const enemyTypes = {
 		attackCooldown: 500,
 		attackDuration: 200,
 	},
-	[EnemyType.TANK]: {
+	[EnemyVariant.TANK]: {
 		speed: 1,
 		hp: 200,
 		maxHp: 200,
@@ -34,7 +33,7 @@ const enemyTypes = {
 	},
 } as const;
 
-type EnemyStats = typeof enemyTypes[EnemyTypeValue];
+type EnemyStats = typeof enemyTypes[EnemyVariantType];
 
 const enemyColors = {
 	[EnemyState.MOVING]: 0x00ff00,
@@ -60,9 +59,12 @@ export const createEnemy = (
 	scene.add(mesh);
 
 	return world.add({
-		type,
-		state: EnemyState.MOVING,
-		position: { x, y: 0.5, z },
+		enemy: true,
+		type: type as EnemyVariantType,
+		enemyState: EnemyState.MOVING,
+		x,
+		y: 0.5,
+		z,
 		speed: stats.speed,
 		hp: stats.hp,
 		maxHp: stats.maxHp,
@@ -72,6 +74,7 @@ export const createEnemy = (
 		attackDuration: stats.attackDuration,
 		attackStartTime: 0,
 		target: { x: 0, y: 1, z: 0 },
-		view: { mesh, originalColor: enemyColors[EnemyState.MOVING] },
+		mesh,
+		originalColor: enemyColors[EnemyState.MOVING],
 	});
 };

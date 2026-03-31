@@ -1,9 +1,8 @@
-import { world } from "$lib/core/world";
+import { world, EnemyState } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround } from "../factories";
-import { createEnemy, EnemyType } from "$lib/modules/enemies/factories";
+import { createEnemy } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
-import { EnemyState } from "$lib/modules/enemies/enemies.components";
 import { setScene } from "$lib/modules/economy/factories";
 
 let renderer: THREE.WebGLRenderer | null = null;
@@ -41,18 +40,27 @@ export const initRender = (
 };
 
 export const SyncRenderSystem = () => {
-	const enemies = world.with("position", "view", "state");
+	const enemies = world.with("enemy", "x", "y", "z", "mesh", "originalColor", "enemyState");
+	const projectiles = world.with("projectile", "x", "y", "z", "mesh");
 
 	for (const enemy of enemies) {
-		enemy.view.mesh.position.copy(enemy.position);
+		if (enemy.mesh && enemy.x !== undefined && enemy.y !== undefined && enemy.z !== undefined) {
+			enemy.mesh.position.set(enemy.x, enemy.y, enemy.z);
 
-		const color = enemy.state === EnemyState.ATTACKING
-			? 0xff4444
-			: enemy.state === EnemyState.COOLDOWN
-				? 0xffff00
-				: 0x00ff00;
+			const color = enemy.enemyState === EnemyState.ATTACKING
+				? 0xff4444
+				: enemy.enemyState === EnemyState.COOLDOWN
+					? 0xffff00
+					: 0x00ff00;
 
-		(enemy.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
+			(enemy.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
+		}
+	}
+
+	for (const projectile of projectiles) {
+		if (projectile.mesh && projectile.x !== undefined && projectile.y !== undefined && projectile.z !== undefined) {
+			projectile.mesh.position.set(projectile.x, projectile.y, projectile.z);
+		}
 	}
 
 	if (renderer && scene && camera) {

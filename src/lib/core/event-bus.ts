@@ -1,4 +1,4 @@
-import type { EnemyTypeValue } from "$lib/modules/enemies/enemies.components";
+import type { EnemyVariantType } from "$lib/core/world";
 
 export const GameEvents = {
 	SPAWN_ENEMY: Symbol("spawn-enemy"),
@@ -12,7 +12,7 @@ export const GameEvents = {
 export type GameEventType = (typeof GameEvents)[keyof typeof GameEvents];
 
 type EventDataMap = {
-	[GameEvents.SPAWN_ENEMY]: { type: EnemyTypeValue; x: number; z: number };
+	[GameEvents.SPAWN_ENEMY]: { type: EnemyVariantType; x: number; z: number };
 	[GameEvents.START_GAME]: undefined;
 	[GameEvents.PAUSE_GAME]: undefined;
 	[GameEvents.RESUME_GAME]: undefined;

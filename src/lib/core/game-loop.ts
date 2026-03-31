@@ -2,12 +2,15 @@ import { IncomeSystem } from "$lib/modules/economy/systems/income.system";
 import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
 import { MoveSystem } from "$lib/modules/enemies/systems/move.system";
 import { AttackSystem } from "$lib/modules/enemies/systems/attack.system";
+import { TowerAttackSystem } from "$lib/modules/towers/system/attack.system";
+import { ProjectileMoveSystem } from "$lib/modules/projectiles/systems/move.system";
+import { HitSystem } from "$lib/modules/projectiles/systems/hit.system";
 import { getAppState, AppState } from "./world";
 
 type GameplaySystem = (deltaTime: number) => void;
 type RenderSystem = () => void;
 
-const InGameSystems: GameplaySystem[] = [IncomeSystem, MoveSystem, AttackSystem];
+const InGameSystems: GameplaySystem[] = [IncomeSystem, MoveSystem, AttackSystem, TowerAttackSystem, ProjectileMoveSystem, HitSystem];
 const AlwaysSystems: RenderSystem[] = [SyncRenderSystem];
 
 let isRunning = false;
