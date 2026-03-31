@@ -18,8 +18,8 @@ export const createTower = (scene: THREE.Scene, x: number, z: number) => {
 		maxHp: 500,
 	});
 
-	uiState.towerHp = tower.hp ?? 500;
-	uiState.towerMaxHp = tower.maxHp ?? 500;
+	uiState.towerHp = tower.hp;
+	uiState.towerMaxHp = tower.maxHp;
 
 	return tower;
 };

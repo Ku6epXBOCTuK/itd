@@ -1,5 +1,5 @@
 import { world } from "$lib/core/world";
-import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
+import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
 import { createEnemy, EnemyType } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
 import type { Scene } from "three";
@@ -33,7 +33,6 @@ export const resetGameState = () => {
 	uiState.wave = 0;
 	uiState.towerHp = 0;
 	uiState.towerMaxHp = 0;
-	uiState.gameOver = false;
 	uiState.isPaused = false;
 };
 
@@ -42,6 +41,7 @@ export const initializeGameState = () => {
 	createGameState();
 	uiState.towerHp = 500;
 	uiState.towerMaxHp = 500;
+	uiState.gameState = GameState.PLAYING;
 
 	if (scene) {
 		createTower(scene, 0, 0);

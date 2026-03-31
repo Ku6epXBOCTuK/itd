@@ -5,9 +5,30 @@ import { EnemyState, EnemyType } from "./enemies.components";
 export { EnemyType };
 
 const enemyTypes = {
-	basic: { speed: 2, maxHp: 100, damage: 10, attackRange: 1.5, attackCooldown: 1000, attackDuration: 300 },
-	fast: { speed: 4, maxHp: 50, damage: 5, attackRange: 1.5, attackCooldown: 500, attackDuration: 200 },
-	tank: { speed: 1, maxHp: 200, damage: 20, attackRange: 1.5, attackCooldown: 2000, attackDuration: 500 },
+	basic: {
+		speed: 2,
+		maxHp: 100,
+		damage: 100,
+		attackRange: 1.5,
+		attackCooldown: 1000,
+		attackDuration: 300,
+	},
+	fast: {
+		speed: 4,
+		maxHp: 50,
+		damage: 50,
+		attackRange: 1.5,
+		attackCooldown: 500,
+		attackDuration: 200,
+	},
+	tank: {
+		speed: 1,
+		maxHp: 200,
+		damage: 200,
+		attackRange: 1.5,
+		attackCooldown: 2000,
+		attackDuration: 500,
+	},
 } as const;
 
 const enemyColors = {
@@ -25,7 +46,9 @@ export const createEnemy = (
 	const stats = enemyTypes[type];
 
 	const geometry = new THREE.SphereGeometry(0.5, 16, 16);
-	const material = new THREE.MeshStandardMaterial({ color: enemyColors[EnemyState.MOVING] });
+	const material = new THREE.MeshStandardMaterial({
+		color: enemyColors[EnemyState.MOVING],
+	});
 	const mesh = new THREE.Mesh(geometry, material);
 	mesh.position.set(x, 0.5, z);
 	mesh.castShadow = true;

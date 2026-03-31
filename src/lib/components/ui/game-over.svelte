@@ -7,7 +7,6 @@
 
 	function restartGame() {
 		initializeGameState();
-		uiState.gameState = GameState.PLAYING;
 	}
 
 	function exitToMenu() {
