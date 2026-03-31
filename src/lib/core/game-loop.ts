@@ -2,9 +2,8 @@ import { IncomeSystem } from "$lib/modules/economy/system/income.system";
 import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
 import { MoveSystem } from "$lib/modules/enemies/system/move.system";
 import { AttackSystem } from "$lib/modules/enemies/system/attack.system";
-import { DamageSystem } from "$lib/modules/enemies/system/damage.system";
 
-const systems = [IncomeSystem, SyncRenderSystem, MoveSystem, AttackSystem, DamageSystem];
+const systems = [IncomeSystem, SyncRenderSystem, MoveSystem, AttackSystem];
 
 let isRunning = false;
 let animationFrameId: number | null = null;

@@ -12,14 +12,14 @@ export const createTower = (scene: THREE.Scene, x: number, z: number) => {
 
 	const tower = world.add({
 		position: { x, y: 1, z },
-		view: { mesh },
+		view: { mesh, originalColor: 0x4a4a4a },
 		tower: true,
 		hp: 500,
 		maxHp: 500,
 	});
 
-	uiState.towerHp = tower.hp;
-	uiState.towerMaxHp = tower.maxHp;
+	uiState.towerHp = tower.hp ?? 500;
+	uiState.towerMaxHp = tower.maxHp ?? 500;
 
 	return tower;
 };

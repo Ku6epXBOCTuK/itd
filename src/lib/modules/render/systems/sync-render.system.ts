@@ -39,10 +39,18 @@ export const initRender = (
 };
 
 export const SyncRenderSystem = () => {
-	const enemies = world.with("position", "view");
+	const enemies = world.with("position", "view", "state");
 
 	for (const enemy of enemies) {
 		enemy.view.mesh.position.copy(enemy.position);
+
+		const color = enemy.state === "attacking"
+			? 0xff4444
+			: enemy.state === "cooldown"
+				? 0xffff00
+				: 0x00ff00;
+
+		(enemy.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
 	}
 
 	if (renderer && scene && camera) {
