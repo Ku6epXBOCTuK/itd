@@ -3,7 +3,8 @@ export const GameState = {
 	PLAYING: "playing",
 	PAUSED: "paused",
 	SETTINGS: "settings",
-	GAME_OVER: "gameOver",
+	GAME_OVER_ANIMATING: "gameOverAnimating", // Анимация поражения (~1 сек)
+	GAME_OVER: "gameOver", // Показ меню game over
 } as const;
 
 export type GameStateType = (typeof GameState)[keyof typeof GameState];

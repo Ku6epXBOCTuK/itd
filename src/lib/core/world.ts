@@ -8,6 +8,7 @@ export const TowerState = {
 	AIMING: "aiming",
 	FIRING: "firing",
 	COOLDOWN: "cooldown",
+	BROKEN: "broken", // Башня разрушена
 } as const;
 
 export type TowerStateType = (typeof TowerState)[keyof typeof TowerState];
@@ -16,6 +17,7 @@ export const EnemyState = {
 	MOVING: "moving",
 	ATTACKING: "attacking",
 	COOLDOWN: "cooldown",
+	HAPPY: "happy", // Враг радуется победе
 } as const;
 
 export type EnemyStateType = (typeof EnemyState)[keyof typeof EnemyState];

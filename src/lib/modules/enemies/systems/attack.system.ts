@@ -1,12 +1,23 @@
-import { world, EnemyState, type EnemyStateType } from "$lib/core/world";
+import { world, EnemyState, TowerState, type EnemyStateType } from "$lib/core/world";
 import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+import { GameEngine, GameEvents } from "$lib/core/event-bus";
+
+let gameTriggered = false;
+
+export const resetAttackSystem = () => {
+	gameTriggered = false;
+};
 
 export const AttackSystem = (deltaTime: number) => {
 	const currentTime = Date.now();
 	const enemies = world.with("enemy", "x", "y", "z", "attackRange", "damage", "attackCooldown", "attackDuration", "attackStartTime", "enemyState", "target", "hp");
-	const towers = world.with("tower", "hp", "maxHp");
+	const towers = world.with("tower", "hp", "maxHp", "towerState");
 
 	for (const enemy of enemies) {
+		if (enemy.enemyState === EnemyState.HAPPY) {
+			continue;
+		}
+
 		const tx = enemy.target?.x ?? 0;
 		const ty = enemy.target?.y ?? 0;
 		const tz = enemy.target?.z ?? 0;
@@ -21,6 +32,18 @@ export const AttackSystem = (deltaTime: number) => {
 
 		const attackRange = enemy.attackRange ?? 0;
 		if (distance <= attackRange) {
+			let hasActiveTower = false;
+			for (const tower of towers) {
+				if (tower.towerState !== TowerState.BROKEN) {
+					hasActiveTower = true;
+					break;
+				}
+			}
+
+			if (!hasActiveTower) {
+				continue;
+			}
+
 			if (enemy.enemyState === EnemyState.MOVING) {
 				enemy.enemyState = EnemyState.ATTACKING;
 				enemy.attackStartTime = currentTime;
@@ -40,8 +63,18 @@ export const AttackSystem = (deltaTime: number) => {
 						uiState.towerHp = Math.floor(newHp);
 						uiState.towerMaxHp = Math.floor(towerMaxHp);
 
-						if (uiState.towerHp <= 0) {
-							uiState.gameState = GameState.GAME_OVER;
+						if (newHp <= 0 && !gameTriggered) {
+							gameTriggered = true;
+							tower.towerState = TowerState.BROKEN;
+
+							const allEnemies = world.with("enemy", "enemyState");
+							for (const e of allEnemies) {
+								e.enemyState = EnemyState.HAPPY;
+								e.attackStartTime = 0;
+							}
+
+							GameEngine.emit(GameEvents.STOP_GAME);
+							return;
 						}
 					}
 

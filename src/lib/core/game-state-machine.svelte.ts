@@ -1,13 +1,21 @@
-import { GameLoop } from "./game-loop";
-import { uiState, GameState, type GameStateType } from "$lib/adapters/ui-state/game-state.svelte";
 import {
+	GameState,
+	uiState,
+	type GameStateType,
+} from "$lib/adapters/ui-state/game-state.svelte";
+import {
+	initializeGameState,
+	resetGameState,
+} from "$lib/modules/economy/factories";
+import {
+	disposeRenderer,
 	initRender,
 	resizeRenderer,
-	disposeRenderer,
+	SyncRenderSystem,
 } from "$lib/modules/render/systems/sync-render.system";
-import { initializeGameState, resetGameState } from "$lib/modules/economy/factories";
 import { GameEngine, GameEvents } from "./event-bus";
-import { resumeGame } from "./world";
+import { GameLoop } from "./game-loop";
+import { pauseGame, resumeGame } from "./world";
 
 let canvas: HTMLCanvasElement | null = null;
 let isGameRunning = false;
@@ -18,6 +26,10 @@ function startGame() {
 	const { width, height } = canvas.getBoundingClientRect();
 	initRender(canvas, width, height);
 	initializeGameState();
+
+	// Форсируем первый рендер после инициализации
+	SyncRenderSystem();
+
 	GameLoop.start();
 	isGameRunning = true;
 }
@@ -46,14 +58,23 @@ const setGameState = (state: GameStateType) => {
 
 export const initGameStateMachine = () => {
 	const resizeObserver = new ResizeObserver(handleResize);
+	let gameOverTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	GameEngine.on(GameEvents.START_GAME, () => {
+		if (isGameRunning) {
+			stopGame();
+		}
+		if (gameOverTimeout) {
+			clearTimeout(gameOverTimeout);
+			gameOverTimeout = null;
+		}
 		resetGameState();
 		startGame();
 		setGameState(GameState.PLAYING);
 	});
 
 	GameEngine.on(GameEvents.PAUSE_GAME, () => {
+		pauseGame();
 		setGameState(GameState.PAUSED);
 	});
 
@@ -63,11 +84,22 @@ export const initGameStateMachine = () => {
 	});
 
 	GameEngine.on(GameEvents.STOP_GAME, () => {
-		setGameState(GameState.GAME_OVER);
-		stopGame();
+		setGameState(GameState.GAME_OVER_ANIMATING);
+
+		if (gameOverTimeout) {
+			clearTimeout(gameOverTimeout);
+		}
+		gameOverTimeout = setTimeout(() => {
+			setGameState(GameState.GAME_OVER);
+			gameOverTimeout = null;
+		}, 3000);
 	});
 
 	GameEngine.on(GameEvents.TO_MENU, () => {
+		if (gameOverTimeout) {
+			clearTimeout(gameOverTimeout);
+			gameOverTimeout = null;
+		}
 		resetGameState();
 		resumeGame();
 		setGameState(GameState.MENU);

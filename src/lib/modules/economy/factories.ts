@@ -2,6 +2,8 @@ import { world, resumeGame, EnemyVariant } from "$lib/core/world";
 import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
 import { createEnemy } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
+import { clearGameEntities } from "$lib/modules/render/systems/sync-render.system";
+import { resetAttackSystem } from "$lib/modules/enemies/systems/attack.system";
 import type { Scene } from "three";
 
 let scene: Scene | null = null;
@@ -20,17 +22,20 @@ export const createGameState = () => {
 	uiState.wave = 1;
 };
 
-export const resetGameState = () => {
-	if (scene) {
-		const entities = world.with("x", "y", "z", "mesh");
-		for (const entity of entities) {
-			if (entity.mesh) {
-				scene.remove(entity.mesh);
-			}
-		}
+export const spawnInitialEnemies = () => {
+	if (!scene) {
+		return;
 	}
 
-	world.clear();
+	createEnemy(scene, EnemyVariant.BASIC, 5, 5);
+
+	uiState.wave = 1;
+};
+
+export const resetGameState = () => {
+	clearGameEntities();
+	resetAttackSystem();
+
 	uiState.gold = 0;
 	uiState.wave = 0;
 	uiState.towerHp = 0;
@@ -40,13 +45,12 @@ export const resetGameState = () => {
 };
 
 export const initializeGameState = () => {
-	resetGameState();
 	createGameState();
 	uiState.towerHp = 500;
 	uiState.towerMaxHp = 500;
 
 	if (scene) {
 		createTower(scene, 0, 0);
-		createEnemy(scene, EnemyVariant.BASIC, 5, 5);
+		spawnInitialEnemies();
 	}
 };
