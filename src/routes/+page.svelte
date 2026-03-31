@@ -45,6 +45,19 @@
 			<span class="wave-value">{uiState.wave}</span>
 		</div>
 
+		<div class="hud-panel hp-panel">
+			<span class="hp-label">HP башни:</span>
+			<div class="hp-bar">
+				<div
+					class="hp-fill"
+					style="width: {(uiState.towerHp / uiState.towerMaxHp) * 100}%"
+				></div>
+			</div>
+			<span class="hp-value">
+				{Math.floor(uiState.towerHp)} / {Math.floor(uiState.towerMaxHp)}
+			</span>
+		</div>
+
 		<button
 			class="pause-btn"
 			onclick={() => {
@@ -60,6 +73,13 @@
 			{uiState.isPaused ? "▶" : "⏸"}
 		</button>
 	</div>
+
+	{#if uiState.gameOver}
+		<div class="game-over">
+			<h1>Игра окончена!</h1>
+			<p>Башня разрушена</p>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -106,6 +126,50 @@
 	.wave-value {
 		color: #ff6b6b;
 		margin-left: 0.5rem;
+	}
+
+	.hp-panel {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.hp-bar {
+		width: 150px;
+		height: 20px;
+		background: rgba(255, 255, 255, 0.2);
+		border-radius: 0.25rem;
+		overflow: hidden;
+	}
+
+	.hp-fill {
+		height: 100%;
+		background: linear-gradient(90deg, #ff4444, #ff6b6b);
+		transition: width 0.2s;
+	}
+
+	.hp-value {
+		color: #fff;
+		font-size: 1rem;
+		min-width: 60px;
+	}
+
+	.game-over {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: rgba(0, 0, 0, 0.9);
+		padding: 2rem 4rem;
+		border-radius: 1rem;
+		text-align: center;
+		color: #fff;
+		z-index: 100;
+	}
+
+	.game-over h1 {
+		color: #ff4444;
+		margin-bottom: 1rem;
 	}
 
 	.pause-btn {

@@ -1,7 +1,8 @@
 import { world } from "$lib/core/world";
 import * as THREE from "three";
-import { createGround, createTower } from "../factories";
+import { createGround } from "../factories";
 import { createEnemy } from "$lib/modules/enemies/factories";
+import { createTower } from "$lib/modules/towers/factories";
 
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;

@@ -4,6 +4,7 @@ import * as THREE from "three";
 type Player = { gold: number; incomePerSecond: number };
 type Position = { x: number; y: number; z: number };
 type View = { mesh: THREE.Mesh };
+type Tower = { tower: true; hp: number; maxHp: number };
 type Enemy = {
 	type: string;
 	speed: number;
@@ -15,5 +16,5 @@ type Enemy = {
 };
 
 export const world = new World<
-	Partial<Player & { position: Position; view: View } & Enemy>
+	Partial<Player & { position: Position; view: View } & Tower & Enemy>
 >();
