@@ -1,5 +1,7 @@
+import { world } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround, createTower } from "../factories";
+import { createEnemy } from "$lib/modules/enemies/factories";
 
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
@@ -29,12 +31,19 @@ export const initRender = (
 
 	createGround(scene);
 	createTower(scene, 0, 0);
+	createEnemy(scene, "basic", 5, 5);
 
 	const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
 	scene.add(gridHelper);
 };
 
 export const SyncRenderSystem = () => {
+	const enemies = world.with("position", "view");
+
+	for (const enemy of enemies) {
+		enemy.view.mesh.position.copy(enemy.position);
+	}
+
 	if (renderer && scene && camera) {
 		renderer.render(scene, camera);
 	}
