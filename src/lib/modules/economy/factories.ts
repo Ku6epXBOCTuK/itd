@@ -1,4 +1,4 @@
-import { world } from "$lib/core/world";
+import { world, resumeGame } from "$lib/core/world";
 import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
 import { createEnemy, EnemyType } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
@@ -34,9 +34,7 @@ export const resetGameState = () => {
 	uiState.towerHp = 0;
 	uiState.towerMaxHp = 0;
 
-	import("$lib/core/world").then(({ resumeGame }) => {
-		resumeGame();
-	});
+	resumeGame();
 };
 
 export const initializeGameState = () => {
@@ -44,7 +42,6 @@ export const initializeGameState = () => {
 	createGameState();
 	uiState.towerHp = 500;
 	uiState.towerMaxHp = 500;
-	uiState.gameState = GameState.PLAYING;
 
 	if (scene) {
 		createTower(scene, 0, 0);

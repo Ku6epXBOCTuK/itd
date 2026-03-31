@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
 	import { resumeGame } from "$lib/core/world";
 	import { resetGameState } from "$lib/modules/economy/factories";
 	import Button from "$lib/components/ui/button.svelte";
@@ -8,14 +8,13 @@
 
 	function handleResume() {
 		resumeGame();
+		uiState.gameState = GameState.PLAYING;
 	}
 
 	function exitToMenu() {
 		resumeGame();
 		resetGameState();
-		import("$lib/adapters/ui-state/game-state.svelte").then(({ uiState, GameState }) => {
-			uiState.gameState = GameState.MENU;
-		});
+		uiState.gameState = GameState.MENU;
 	}
 </script>
 

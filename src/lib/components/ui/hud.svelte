@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
 	import { pauseGame } from "$lib/core/world";
 	import IconSettings from "~icons/lucide/settings";
 
 	function togglePause() {
 		pauseGame();
+		uiState.gameState = GameState.PAUSED;
 	}
 </script>
 

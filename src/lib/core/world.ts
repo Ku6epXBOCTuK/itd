@@ -3,38 +3,34 @@ import type { View } from "$lib/modules/render/render.components";
 import type { Tower } from "$lib/modules/towers/towers.components";
 import type { Enemy } from "$lib/modules/enemies/enemies.components";
 
+export const AppState = {
+	IN_GAME: "in_game",
+	PAUSED: "paused",
+} as const;
+
+export type AppStateType = (typeof AppState)[keyof typeof AppState];
+
 type Player = { gold: number; incomePerSecond: number };
 type Position = { x: number; y: number; z: number };
-type Pause = { paused: true };
 
 export const world = new World<
-	Partial<Player & { position: Position; view: View } & Tower & Pause & Enemy>
+	Partial<Player & { position: Position; view: View } & Tower & Enemy>
 >();
 
-export const pauseGame = () => {
-	const pauses = world.with("paused");
-	let hasPause = false;
-	for (const _ of pauses) {
-		hasPause = true;
-		break;
-	}
+let appState: AppStateType = AppState.IN_GAME;
 
-	if (!hasPause) {
-		world.add({ paused: true });
-	}
+export const getAppState = (): AppStateType => appState;
+
+export const setAppState = (state: AppStateType) => {
+	appState = state;
+};
+
+export const pauseGame = () => {
+	appState = AppState.PAUSED;
 };
 
 export const resumeGame = () => {
-	const pauses = world.with("paused");
-	for (const pause of pauses) {
-		world.remove(pause);
-	}
+	appState = AppState.IN_GAME;
 };
 
-export const isPaused = () => {
-	const pauses = world.with("paused");
-	for (const _ of pauses) {
-		return true;
-	}
-	return false;
-};
+export const isPaused = () => appState === AppState.PAUSED;

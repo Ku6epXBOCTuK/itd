@@ -1,6 +1,7 @@
 export const GameState = {
 	MENU: "menu",
 	PLAYING: "playing",
+	PAUSED: "paused",
 	SETTINGS: "settings",
 	GAME_OVER: "gameOver",
 } as const;

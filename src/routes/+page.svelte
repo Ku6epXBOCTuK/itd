@@ -1,14 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { GameLoop } from "$lib/core/game-loop";
-	import { initializeGameState } from "$lib/modules/economy/factories";
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
-	import { isPaused } from "$lib/core/world";
-	import {
-		initRender,
-		resizeRenderer,
-		disposeRenderer,
-	} from "$lib/modules/render/systems/sync-render.system";
+	import { initGameStateMachine, setGameCanvas } from "$lib/core/game-state-machine.svelte";
 	import MainMenu from "$lib/components/ui/main-menu.svelte";
 	import Settings from "$lib/components/ui/settings.svelte";
 	import GameOver from "$lib/components/ui/game-over.svelte";
@@ -16,65 +9,15 @@
 	import Hud from "$lib/components/ui/hud.svelte";
 
 	let canvas: HTMLCanvasElement;
-	let isGameRunning = false;
-	let paused: boolean = $state(false);
 
-	function startGame() {
-		if (isGameRunning) return;
-
-		const { width, height } = canvas.getBoundingClientRect();
-		initRender(canvas, width, height);
-		initializeGameState();
-		GameLoop.start();
-		isGameRunning = true;
-	}
-
-	function stopGame() {
-		if (!isGameRunning) return;
-
-		GameLoop.stop();
-		disposeRenderer();
-		isGameRunning = false;
-	}
-
-	function handleResize() {
-		if (!canvas) return;
-		const { width, height } = canvas.getBoundingClientRect();
-		resizeRenderer(width, height);
-	}
-
-	$effect(() => {
-		const interval = setInterval(() => {
-			paused = isPaused();
-		}, 100);
-
-		return () => clearInterval(interval);
-	});
-
-	$effect(() => {
-		if (uiState.gameState === GameState.PLAYING && !isGameRunning) {
-			startGame();
-		}
-
-		if (
-			(uiState.gameState === GameState.MENU ||
-				uiState.gameState === GameState.SETTINGS ||
-				uiState.gameState === GameState.GAME_OVER) &&
-			isGameRunning
-		) {
-			stopGame();
-		}
-
-		return () => {
-			if (isGameRunning) {
-				stopGame();
-			}
-		};
+	onMount(() => {
+		setGameCanvas(canvas);
+		initGameStateMachine();
 	});
 </script>
 
 <div class="game-container">
-	<canvas bind:this={canvas} onresize={handleResize}></canvas>
+	<canvas bind:this={canvas}></canvas>
 
 	{#if uiState.gameState === GameState.MENU}
 		<MainMenu />
@@ -82,12 +25,10 @@
 		<Settings />
 	{:else if uiState.gameState === GameState.GAME_OVER}
 		<GameOver />
+	{:else if uiState.gameState === GameState.PAUSED}
+		<PauseMenu />
 	{:else if uiState.gameState === GameState.PLAYING}
-		{#if paused}
-			<PauseMenu />
-		{:else}
-			<Hud />
-		{/if}
+		<Hud />
 	{/if}
 </div>
 

@@ -2,32 +2,35 @@ import { IncomeSystem } from "$lib/modules/economy/systems/income.system";
 import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
 import { MoveSystem } from "$lib/modules/enemies/systems/move.system";
 import { AttackSystem } from "$lib/modules/enemies/systems/attack.system";
-import { world } from "./world";
+import { getAppState, AppState } from "./world";
 
-const systems = [IncomeSystem, SyncRenderSystem, MoveSystem, AttackSystem];
+type GameplaySystem = (deltaTime: number) => void;
+type RenderSystem = () => void;
+
+const InGameSystems: GameplaySystem[] = [IncomeSystem, MoveSystem, AttackSystem];
+const AlwaysSystems: RenderSystem[] = [SyncRenderSystem];
 
 let isRunning = false;
 let animationFrameId: number | null = null;
 
 function gameLoop(deltaTime: number) {
-	const pauses = world.with("paused");
-	let isPaused = false;
-	for (const _ of pauses) {
-		isPaused = true;
-		break;
+	const state = getAppState();
+
+	if (state === AppState.IN_GAME) {
+		for (const system of InGameSystems) {
+			system(deltaTime);
+		}
 	}
 
-	if (isPaused) return;
-
-	for (const system of systems) {
-		system(deltaTime);
+	for (const system of AlwaysSystems) {
+		system();
 	}
 }
 
 function loop(timestamp: number) {
 	if (!isRunning) return;
 
-	gameLoop(16); // пока фиксированный delta, можно улучшить до расчета реального deltaTime
+	gameLoop(16);
 	animationFrameId = requestAnimationFrame(loop);
 }
 

@@ -6,7 +6,9 @@
 	import IconLogOut from "~icons/lucide/log-out";
 
 	function restartGame() {
+		resetGameState();
 		initializeGameState();
+		uiState.gameState = GameState.PLAYING;
 	}
 
 	function exitToMenu() {
