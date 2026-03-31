@@ -1,17 +1,14 @@
 <script lang="ts">
-	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
+	import { AppState, setAppState } from "$lib/core/app-state.svelte";
 	import { GameEngine, GameEvents } from "$lib/core/event-bus";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconPlay from "~icons/lucide/play";
 	import IconSettings from "~icons/lucide/settings";
 	import IconLogOut from "~icons/lucide/log-out";
 
-	function startGame() {
-		GameEngine.emit(GameEvents.START_GAME);
-	}
-
 	function openSettings() {
-		uiState.gameState = GameState.SETTINGS;
+		setAppState(AppState.SETTINGS);
 	}
 
 	function exitGame() {
@@ -26,7 +23,7 @@
 		<h1 class="title">Idle Tower Defense</h1>
 
 		<div class="menu-buttons">
-			<Button icon={IconPlay} label="Начать игру" onclick={startGame} />
+			<Button icon={IconPlay} label="Начать игру" onclick={() => GameEngine.emit(GameEvents.START_GAME)} />
 
 			<Button icon={IconSettings} label="Настройки" onclick={openSettings} />
 

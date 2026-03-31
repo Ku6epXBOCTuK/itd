@@ -119,32 +119,3 @@ export const world = new World<{
 	// Projectile
 	projectile?: true;
 }>();
-
-// ============ APP STATE ============
-
-export const AppState = {
-	ACTIVE_GAME: "active_game",
-	PAUSED: "paused",
-	GAME_OVER_ANIMATING: "game_over_animating",
-	GAME_OVER: "game_over",
-} as const;
-
-export type AppStateType = (typeof AppState)[keyof typeof AppState];
-
-let appState: AppStateType = AppState.ACTIVE_GAME;
-
-export const getAppState = (): AppStateType => appState;
-
-export const setAppState = (state: AppStateType) => {
-	appState = state;
-};
-
-export const pauseGame = () => {
-	appState = AppState.PAUSED;
-};
-
-export const resumeGame = () => {
-	appState = AppState.ACTIVE_GAME;
-};
-
-export const isPaused = () => appState === AppState.PAUSED;

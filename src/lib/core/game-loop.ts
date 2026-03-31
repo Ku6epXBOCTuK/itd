@@ -6,7 +6,8 @@ import { TowerAttackSystem } from "$lib/modules/towers/system/attack.system";
 import { ProjectileMoveSystem } from "$lib/modules/projectiles/systems/move.system";
 import { HitSystem } from "$lib/modules/projectiles/systems/hit.system";
 import { RespawnSystem } from "$lib/modules/waves/systems/respawn.system";
-import { getAppState, AppState } from "./world";
+import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
+import { appState, AppState } from "$lib/core/app-state.svelte";
 
 type GameplaySystem = (deltaTime: number) => void;
 type RenderSystem = () => void;
@@ -14,15 +15,13 @@ type RenderSystem = () => void;
 const ActiveGameSystems: GameplaySystem[] = [AttackSystem, RespawnSystem];
 const GameplaySystems: GameplaySystem[] = [IncomeSystem, MoveSystem, TowerAttackSystem];
 const ProjectileSystems: GameplaySystem[] = [ProjectileMoveSystem, HitSystem];
-const AlwaysSystems: RenderSystem[] = [SyncRenderSystem];
+const AlwaysSystems: RenderSystem[] = [SyncRenderSystem, UpdateHudSystem];
 
 let isRunning = false;
 let animationFrameId: number | null = null;
 
 function gameLoop(deltaTime: number) {
-	const state = getAppState();
-
-	if (state === AppState.ACTIVE_GAME) {
+	if (appState.current === AppState.PLAYING) {
 		for (const system of ActiveGameSystems) {
 			system(deltaTime);
 		}
@@ -36,7 +35,7 @@ function gameLoop(deltaTime: number) {
 		}
 	}
 
-	if (state === AppState.GAME_OVER_ANIMATING) {
+	if (appState.current === AppState.GAME_OVER_ANIMATING) {
 		for (const system of ProjectileSystems) {
 			system(deltaTime);
 		}

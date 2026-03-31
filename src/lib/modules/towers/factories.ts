@@ -1,6 +1,5 @@
 import { world, TowerState } from "$lib/core/world";
 import * as THREE from "three";
-import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
 import { setTowerScene } from "./system/attack.system";
 
 export const createTower = (scene: THREE.Scene, x: number, z: number) => {
@@ -30,9 +29,6 @@ export const createTower = (scene: THREE.Scene, x: number, z: number) => {
 		attackStartTime: 0,
 		targetId: undefined,
 	});
-
-	uiState.towerHp = tower.hp!;
-	uiState.towerMaxHp = tower.maxHp!;
 
 	return tower;
 };

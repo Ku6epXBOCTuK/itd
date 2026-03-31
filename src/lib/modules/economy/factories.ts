@@ -1,5 +1,5 @@
-import { world, resumeGame, EnemyVariant } from "$lib/core/world";
-import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+import { world, EnemyVariant } from "$lib/core/world";
+import { resumeGame } from "$lib/core/app-state.svelte";
 import { createEnemy } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
 import { clearGameEntities } from "$lib/modules/render/systems/sync-render.system";
@@ -14,12 +14,10 @@ export const setScene = (s: Scene) => {
 
 export const createGameState = () => {
 	world.add({
+		player: true,
 		gold: 100,
 		incomePerSecond: 10,
 	});
-
-	uiState.gold = 100;
-	uiState.wave = 1;
 };
 
 export const spawnInitialEnemies = () => {
@@ -28,26 +26,18 @@ export const spawnInitialEnemies = () => {
 	}
 
 	createEnemy(scene, EnemyVariant.BASIC, 5, 5);
-
-	uiState.wave = 1;
 };
 
 export const resetGameState = () => {
 	clearGameEntities();
 	resetAttackSystem();
 
-	uiState.gold = 0;
-	uiState.wave = 0;
-	uiState.towerHp = 0;
-	uiState.towerMaxHp = 0;
-
+	world.clear();
 	resumeGame();
 };
 
 export const initializeGameState = () => {
 	createGameState();
-	uiState.towerHp = 500;
-	uiState.towerMaxHp = 500;
 
 	if (scene) {
 		createTower(scene, 0, 0);

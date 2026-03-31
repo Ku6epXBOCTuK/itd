@@ -1,8 +1,4 @@
-import {
-	GameState,
-	uiState,
-	type GameStateType,
-} from "$lib/adapters/ui-state/game-state.svelte";
+import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 import {
 	initializeGameState,
 	resetGameState,
@@ -15,7 +11,7 @@ import {
 } from "$lib/modules/render/systems/sync-render.system";
 import { GameEngine, GameEvents } from "./event-bus";
 import { GameLoop } from "./game-loop";
-import { setAppState, AppState, pauseGame, resumeGame } from "./world";
+import { setAppState, AppState } from "$lib/core/app-state.svelte";
 
 let canvas: HTMLCanvasElement | null = null;
 let isGameRunning = false;
@@ -52,10 +48,6 @@ export const setGameCanvas = (newCanvas: HTMLCanvasElement) => {
 	canvas = newCanvas;
 };
 
-const setGameState = (state: GameStateType) => {
-	uiState.gameState = state;
-};
-
 export const initGameStateMachine = () => {
 	const resizeObserver = new ResizeObserver(handleResize);
 	let gameOverTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -70,30 +62,25 @@ export const initGameStateMachine = () => {
 		}
 		resetGameState();
 		startGame();
-		setAppState(AppState.ACTIVE_GAME);
-		setGameState(GameState.PLAYING);
+		setAppState(AppState.PLAYING);
 	});
 
 	GameEngine.on(GameEvents.PAUSE_GAME, () => {
 		setAppState(AppState.PAUSED);
-		setGameState(GameState.PAUSED);
 	});
 
 	GameEngine.on(GameEvents.RESUME_GAME, () => {
-		setAppState(AppState.ACTIVE_GAME);
-		setGameState(GameState.PLAYING);
+		setAppState(AppState.PLAYING);
 	});
 
 	GameEngine.on(GameEvents.STOP_GAME, () => {
 		setAppState(AppState.GAME_OVER_ANIMATING);
-		setGameState(GameState.GAME_OVER_ANIMATING);
 
 		if (gameOverTimeout) {
 			clearTimeout(gameOverTimeout);
 		}
 		gameOverTimeout = setTimeout(() => {
 			setAppState(AppState.GAME_OVER);
-			setGameState(GameState.GAME_OVER);
 			gameOverTimeout = null;
 		}, 3000);
 	});
@@ -104,8 +91,7 @@ export const initGameStateMachine = () => {
 			gameOverTimeout = null;
 		}
 		resetGameState();
-		setAppState(AppState.ACTIVE_GAME);
-		setGameState(GameState.MENU);
+		setAppState(AppState.MENU);
 		stopGame();
 	});
 

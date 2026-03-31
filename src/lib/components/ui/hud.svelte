@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
-	import { GameEngine, GameEvents } from "$lib/core/event-bus";
+	import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
+	import { AppState, setAppState } from "$lib/core/app-state.svelte";
 	import IconSettings from "~icons/lucide/settings";
 
 	function togglePause() {
-		GameEngine.emit(GameEvents.PAUSE_GAME);
+		setAppState(AppState.PAUSED);
 	}
 </script>
 
 <div class="hud">
 	<div class="hud-panel">
 		<span class="gold-label">Золото:</span>
-		<span class="gold-value">{uiState.gold}</span>
+		<span class="gold-value">{hudState.gold}</span>
 	</div>
 
 	<div class="hud-panel">
 		<span class="wave-label">Волна:</span>
-		<span class="wave-value">{uiState.wave}</span>
+		<span class="wave-value">{hudState.wave}</span>
 	</div>
 
 	<div class="hud-panel hp-panel">
@@ -24,11 +24,11 @@
 		<div class="hp-bar">
 			<div
 				class="hp-fill"
-				style="width: {(uiState.towerHp / uiState.towerMaxHp) * 100}%"
+				style="width: {(hudState.towerHp / hudState.towerMaxHp) * 100}%"
 			></div>
 		</div>
 		<span class="hp-value">
-			{Math.floor(uiState.towerHp)} / {Math.floor(uiState.towerMaxHp)}
+			{Math.floor(hudState.towerHp)} / {Math.floor(hudState.towerMaxHp)}
 		</span>
 	</div>
 

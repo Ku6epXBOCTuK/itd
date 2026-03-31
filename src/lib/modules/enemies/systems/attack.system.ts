@@ -1,5 +1,4 @@
-import { world, EnemyState, TowerState, type EnemyStateType } from "$lib/core/world";
-import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+import { world, EnemyState, TowerState } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
 let gameTriggered = false;
@@ -59,9 +58,6 @@ export const AttackSystem = (deltaTime: number) => {
 
 						const newHp = Math.max(0, towerHp - (enemy.damage ?? 0));
 						tower.hp = newHp;
-
-						uiState.towerHp = Math.floor(newHp);
-						uiState.towerMaxHp = Math.floor(towerMaxHp);
 
 						if (newHp <= 0 && !gameTriggered) {
 							gameTriggered = true;

@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
-	import { GameEngine, GameEvents } from "$lib/core/event-bus";
+	import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
+	import { AppState, setAppState } from "$lib/core/app-state.svelte";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconArrowLeft from "~icons/lucide/arrow-left";
 	import IconVolume2 from "~icons/lucide/volume-2";
 	import IconVolumeX from "~icons/lucide/volume-x";
 
 	function goBack() {
-		GameEngine.emit(GameEvents.TO_MENU);
+		setAppState(AppState.MENU);
 	}
 </script>
 
@@ -22,15 +22,15 @@
 					type="range"
 					min="0"
 					max="100"
-					disabled={!uiState.settings.musicEnabled}
-					value={uiState.settings.musicVolume}
-					oninput={(e) => uiState.settings.musicVolume = parseInt(e.currentTarget.value)}
+					disabled={!hudState.settings.musicEnabled}
+					value={hudState.settings.musicVolume}
+					oninput={(e) => hudState.settings.musicVolume = parseInt(e.currentTarget.value)}
 				/>
-				<span class="value">{uiState.settings.musicVolume}%</span>
+				<span class="value">{hudState.settings.musicVolume}%</span>
 				<Button
-					icon={uiState.settings.musicEnabled ? IconVolume2 : IconVolumeX}
-					variant={uiState.settings.musicEnabled ? "primary" : "outline"}
-					onclick={() => uiState.settings.musicEnabled = !uiState.settings.musicEnabled}
+					icon={hudState.settings.musicEnabled ? IconVolume2 : IconVolumeX}
+					variant={hudState.settings.musicEnabled ? "primary" : "outline"}
+					onclick={() => hudState.settings.musicEnabled = !hudState.settings.musicEnabled}
 				/>
 			</div>
 
@@ -40,15 +40,15 @@
 					type="range"
 					min="0"
 					max="100"
-					disabled={!uiState.settings.sfxEnabled}
-					value={uiState.settings.sfxVolume}
-					oninput={(e) => uiState.settings.sfxVolume = parseInt(e.currentTarget.value)}
+					disabled={!hudState.settings.sfxEnabled}
+					value={hudState.settings.sfxVolume}
+					oninput={(e) => hudState.settings.sfxVolume = parseInt(e.currentTarget.value)}
 				/>
-				<span class="value">{uiState.settings.sfxVolume}%</span>
+				<span class="value">{hudState.settings.sfxVolume}%</span>
 				<Button
-					icon={uiState.settings.sfxEnabled ? IconVolume2 : IconVolumeX}
-					variant={uiState.settings.sfxEnabled ? "primary" : "outline"}
-					onclick={() => uiState.settings.sfxEnabled = !uiState.settings.sfxEnabled}
+					icon={hudState.settings.sfxEnabled ? IconVolume2 : IconVolumeX}
+					variant={hudState.settings.sfxEnabled ? "primary" : "outline"}
+					onclick={() => hudState.settings.sfxEnabled = !hudState.settings.sfxEnabled}
 				/>
 			</div>
 		</div>
