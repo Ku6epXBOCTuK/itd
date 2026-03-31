@@ -1,20 +1,15 @@
 <script lang="ts">
-	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
-	import { resumeGame } from "$lib/core/world";
-	import { resetGameState } from "$lib/modules/economy/factories";
+	import { GameEngine } from "$lib/core/event-bus";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconPlay from "~icons/lucide/play";
 	import IconLogOut from "~icons/lucide/log-out";
 
 	function handleResume() {
-		resumeGame();
-		uiState.gameState = GameState.PLAYING;
+		GameEngine.emit("resume-game");
 	}
 
 	function exitToMenu() {
-		resumeGame();
-		resetGameState();
-		uiState.gameState = GameState.MENU;
+		GameEngine.emit("to-menu");
 	}
 </script>
 

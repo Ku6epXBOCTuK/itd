@@ -8,19 +8,23 @@
 ## ⚡ Критичные правила (СТРОГОЕ СОБЛЮДЕНИЕ)
 
 ### 1. Только TypeScript
+
 - ❌ **ЗАПРЕЩЕНЫ** `.js` файлы
 - ✅ **ИСПОЛЬЗУЙ** `.ts`, `.svelte.ts`, `.svelte`
 
 ### 2. Минимальные Svelte компоненты
+
 - Только отображение UI
 - Минимум кода в `onMount`
 - Вся логика в `modules/*/systems/`
 
 ### 3. Без комментариев
+
 - Код должен быть самодокументированным
 - Исключение: сложные алгоритмы
 
 ### 4. Enum-подобные типы
+
 ```typescript
 // ✅ ПРАВИЛЬНО
 export const EnemyState = {
@@ -33,15 +37,18 @@ export type EnemyState = "moving" | "attacking";
 ```
 
 ### 5. Импорты
+
 - ✅ Все импорты должны быть в начале файла (в `<script>`)
 - ❌ **ЗАПРЕЩЕНЫ** динамические `import()` внутри функций
 - ✅ Исключение: реально необходимая ленивая загрузка (только по согласованию)
 
 ### 6. tsconfig.json
+
 - ❌ **ЗАПРЕЩЕНО** менять tsconfig.json без явного разрешения
 - ✅ Если нужна настройка — спроси у пользователя
 
 ### 7. Единые компоненты для статов
+
 - ✅ **Health** — `hp: number, maxHp: number` для башен и врагов
 - ✅ **Damage** — `damage: number` для всех атакующих
 - ✅ **Speed** — `speed: number` для всех движущихся
@@ -53,6 +60,7 @@ export type EnemyState = "moving" | "attacking";
 ## 🏛️ Архитектура
 
 ### Структура модуля (строго 3 файла)
+
 ```
 modules/feature/
 ├── feature.components.ts   # Типы для ECS
@@ -62,10 +70,12 @@ modules/feature/
 ```
 
 ### Запрещённые папки
+
 - ❌ `components/`, `systems/`, `utils/`, `helpers/`
 - ✅ `economy/`, `towers/`, `waves/`, `enemies/`
 
 ### Анти-Overengineering
+
 - ❌ Классы-фабрики, Repository, Strategy
 - ❌ Интерфейсы с префиксом `I`
 - ✅ Простые `type` и функции
@@ -102,6 +112,7 @@ src/lib/
 ## 🔄 Взаимодействие
 
 ### Логика → Визуал
+
 ```typescript
 // Система логики (не знает о Three.js)
 entity.position.x += 1;
@@ -111,21 +122,25 @@ entity.view.mesh.position.copy(entity.position);
 ```
 
 ### Игра → UI (данные)
+
 ```typescript
 // modules/economy/system/income.system.ts
 uiState.gold = player.gold; // Прямое присваивание
 
 // routes/+page.svelte
-{uiState.gold} // Авто-реактивность
+{
+	uiState.gold;
+} // Авто-реактивность
 ```
 
 ### UI → Игра (действия)
+
 ```typescript
 // Svelte компонент
-GameEngine.emit("spawn-tower", { type: "archer", x: 10 });
+GameEngine.emit("spawn-enemy", { type: "archer", x: 10 });
 
 // modules/towers/system/spawn.system.ts
-GameEngine.on("spawn-tower", (data) => {
+GameEngine.on("spawn-enemy", (data) => {
 	createArcherTower(data.x);
 });
 ```
@@ -135,6 +150,7 @@ GameEngine.on("spawn-tower", (data) => {
 ## 🧪 Тестирование
 
 Тестируем **только** `modules/*/systems/`:
+
 ```typescript
 // ❌ Не мокать: Three.js, Svelte, DOM
 // ✅ Тестировать: чистые функции с данными
@@ -145,6 +161,7 @@ GameEngine.on("spawn-tower", (data) => {
 ## 📝 Примеры
 
 ### Компонент (types)
+
 ```typescript
 // towers/towers.components.ts
 export const TowerType = {
@@ -160,6 +177,7 @@ export type Tower = {
 ```
 
 ### Фабрика
+
 ```typescript
 // towers/factories.ts
 export const createArcherTower = (x: number, z: number) => {
@@ -174,6 +192,7 @@ export const createArcherTower = (x: number, z: number) => {
 ```
 
 ### Система
+
 ```typescript
 // towers/systems/attack.system.ts
 export const AttackSystem = (deltaTime: number) => {
@@ -186,6 +205,7 @@ export const AttackSystem = (deltaTime: number) => {
 ```
 
 ### UI мост
+
 ```typescript
 // adapters/ui-state/game-state.svelte.ts
 export const uiState = $state({
@@ -196,6 +216,7 @@ export const uiState = $state({
 ```
 
 ### Svelte компонент
+
 ```svelte
 <script lang="ts">
 	import { uiState } from "$lib/adapters/ui-state/game-state.svelte";
@@ -204,9 +225,7 @@ export const uiState = $state({
 
 <div class="hud">
 	<p>Золото: {uiState.gold}</p>
-	<button onclick={() => GameEngine.emit("buy-tower")}>
-		Построить
-	</button>
+	<button onclick={() => GameEngine.emit("buy-tower")}> Построить </button>
 </div>
 ```
 

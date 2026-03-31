@@ -1,7 +1,10 @@
 type EventMap = {
-	"spawn-tower": (data: { type: string; x: number; z: number }) => void;
+	"spawn-enemy": (data: { type: string; x: number; z: number }) => void;
+	"start-game": () => void;
 	"pause-game": () => void;
 	"resume-game": () => void;
+	"stop-game": () => void;
+	"to-menu": () => void;
 };
 
 type EventCallback<T extends keyof EventMap> = EventMap[T];

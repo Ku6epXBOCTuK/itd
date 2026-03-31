@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+	import { GameEngine } from "$lib/core/event-bus";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconPlay from "~icons/lucide/play";
 	import IconSettings from "~icons/lucide/settings";
 	import IconLogOut from "~icons/lucide/log-out";
 
 	function startGame() {
-		uiState.gameState = GameState.PLAYING;
+		GameEngine.emit("start-game");
 	}
 
 	function openSettings() {

@@ -1,11 +1,13 @@
 import { GameLoop } from "./game-loop";
-import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
+import { uiState, GameState, type GameStateType } from "$lib/adapters/ui-state/game-state.svelte";
 import {
 	initRender,
 	resizeRenderer,
 	disposeRenderer,
 } from "$lib/modules/render/systems/sync-render.system";
-import { initializeGameState } from "$lib/modules/economy/factories";
+import { initializeGameState, resetGameState } from "$lib/modules/economy/factories";
+import { GameEngine } from "./event-bus";
+import { resumeGame } from "./world";
 
 let canvas: HTMLCanvasElement | null = null;
 let isGameRunning = false;
@@ -38,23 +40,38 @@ export const setGameCanvas = (newCanvas: HTMLCanvasElement) => {
 	canvas = newCanvas;
 };
 
+const setGameState = (state: GameStateType) => {
+	uiState.gameState = state;
+};
+
 export const initGameStateMachine = () => {
 	const resizeObserver = new ResizeObserver(handleResize);
 
-	$effect(() => {
-		if (uiState.gameState === GameState.PLAYING && !isGameRunning) {
-			startGame();
-		}
+	GameEngine.on("start-game", () => {
+		resetGameState();
+		startGame();
+		setGameState(GameState.PLAYING);
+	});
 
-		if (
-			uiState.gameState === GameState.MENU ||
-			uiState.gameState === GameState.SETTINGS ||
-			uiState.gameState === GameState.GAME_OVER
-		) {
-			if (isGameRunning) {
-				stopGame();
-			}
-		}
+	GameEngine.on("pause-game", () => {
+		setGameState(GameState.PAUSED);
+	});
+
+	GameEngine.on("resume-game", () => {
+		resumeGame();
+		setGameState(GameState.PLAYING);
+	});
+
+	GameEngine.on("stop-game", () => {
+		setGameState(GameState.GAME_OVER);
+		stopGame();
+	});
+
+	GameEngine.on("to-menu", () => {
+		resetGameState();
+		resumeGame();
+		setGameState(GameState.MENU);
+		stopGame();
 	});
 
 	$effect(() => {
