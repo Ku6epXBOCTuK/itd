@@ -1,35 +1,34 @@
 import { world, EnemyState } from "$lib/core/world";
 
 export const MoveSystem = (deltaTime: number) => {
-	const enemies = world.with("enemy", "x", "y", "z", "speed", "target", "attackRange", "enemyState");
+	const enemies = world.with("enemy", "position");
 
 	for (const enemy of enemies) {
-		if (enemy.enemyState !== EnemyState.MOVING) continue;
+		if (enemy.enemy.enemyState !== EnemyState.MOVING) continue;
 
-		const tx = enemy.target?.x ?? 0;
-		const ty = enemy.target?.y ?? 0;
-		const tz = enemy.target?.z ?? 0;
-		const ex = enemy.x ?? 0;
-		const ey = enemy.y ?? 0;
-		const ez = enemy.z ?? 0;
+		const tx = enemy.enemy.target.x;
+		const ty = enemy.enemy.target.y;
+		const tz = enemy.enemy.target.z;
+		const ex = enemy.position.x;
+		const ey = enemy.position.y;
+		const ez = enemy.position.z;
 
 		const dx = tx - ex;
 		const dy = ty - ey;
 		const dz = tz - ez;
 		const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-		const attackRange = enemy.attackRange ?? 0;
-		if (distance > attackRange) {
+		if (distance > enemy.enemy.attackRange) {
 			const direction = {
 				x: dx / distance,
 				y: dy / distance,
 				z: dz / distance,
 			};
 
-			const moveDistance = (enemy.speed ?? 0) * (deltaTime / 1000);
-			enemy.x! += direction.x * moveDistance;
-			enemy.y! += direction.y * moveDistance;
-			enemy.z! += direction.z * moveDistance;
+			const moveDistance = enemy.enemy.speed * (deltaTime / 1000);
+			enemy.position.x += direction.x * moveDistance;
+			enemy.position.y += direction.y * moveDistance;
+			enemy.position.z += direction.z * moveDistance;
 		}
 	}
 };

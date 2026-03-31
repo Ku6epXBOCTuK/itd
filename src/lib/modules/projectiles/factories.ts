@@ -1,9 +1,9 @@
-import { world } from "$lib/core/world";
+import { world, type Position, type View } from "$lib/core/world";
 import * as THREE from "three";
 
 export const createProjectile = (
 	scene: THREE.Scene,
-	startPos: { x: number; y: number; z: number },
+	startPos: Position,
 	targetId: number,
 	damage: number,
 ) => {
@@ -19,13 +19,12 @@ export const createProjectile = (
 	scene.add(mesh);
 
 	return world.add({
-		x: startPos.x,
-		y: startPos.y,
-		z: startPos.z,
-		mesh,
-		originalColor: 0xff4444,
-		projectile: true,
-		damage,
-		targetId,
+		position: startPos,
+		view: { mesh, originalColor: 0xff4444 } as View,
+		projectile: {
+			projectile: true,
+			damage,
+			targetId,
+		},
 	});
 };

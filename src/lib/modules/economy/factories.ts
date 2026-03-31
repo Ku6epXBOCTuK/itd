@@ -1,4 +1,4 @@
-import { world, EnemyVariant } from "$lib/core/world";
+import { world, EnemyVariant, type Player } from "$lib/core/world";
 import { resumeGame } from "$lib/core/app-state.svelte";
 import { createEnemy } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
@@ -14,9 +14,11 @@ export const setScene = (s: Scene) => {
 
 export const createGameState = () => {
 	world.add({
-		player: true,
-		gold: 100,
-		incomePerSecond: 10,
+		player: {
+			player: true,
+			gold: 100,
+			incomePerSecond: 10,
+		} as Player,
 	});
 };
 

@@ -79,43 +79,16 @@ export type Projectile = {
 	targetId: number;
 };
 
-// ============ MINIPLEX WORLD ============
+// ============ UNIFIED ENTITY TYPE ============
 // Все компоненты опциональны, сущности могут иметь любой набор компонентов
-export const world = new World<{
-	// Position
-	x?: number;
-	y?: number;
-	z?: number;
+export type Entity = {
+	position?: Position;
+	view?: View;
+	player?: Player;
+	tower?: Tower;
+	enemy?: Enemy;
+	projectile?: Projectile;
+};
 
-	// View
-	mesh?: THREE.Mesh;
-	originalColor?: number;
-
-	// Player
-	player?: true;
-	gold?: number;
-	incomePerSecond?: number;
-
-	// Tower
-	tower?: true;
-	hp?: number;
-	maxHp?: number;
-	damage?: number;
-	attackRange?: number;
-	attackCooldown?: number;
-	attackAnimationDuration?: number;
-	towerState?: TowerStateType;
-	attackStartTime?: number;
-	targetId?: number;
-
-	// Enemy
-	enemy?: true;
-	type?: EnemyVariantType;
-	enemyState?: EnemyStateType;
-	speed?: number;
-	attackDuration?: number;
-	target?: { x: number; y: number; z: number };
-
-	// Projectile
-	projectile?: true;
-}>();
+// ============ MINIPLEX WORLD ============
+export const world = new World<Entity>();

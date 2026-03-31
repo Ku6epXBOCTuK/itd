@@ -47,41 +47,41 @@ export const initRender = (
 };
 
 export const SyncRenderSystem = () => {
-	const enemies = world.with("enemy", "x", "y", "z", "mesh", "enemyState");
-	const projectiles = world.with("projectile", "x", "y", "z", "mesh");
-	const towers = world.with("tower", "x", "y", "z", "mesh", "towerState");
+	const enemies = world.with("enemy", "position", "view");
+	const projectiles = world.with("projectile", "position", "view");
+	const towers = world.with("tower", "position", "view");
 
 	for (const enemy of enemies) {
-		if (enemy.mesh && enemy.x !== undefined && enemy.y !== undefined && enemy.z !== undefined) {
-			enemy.mesh.position.set(enemy.x, enemy.y, enemy.z);
+		if (enemy.view && enemy.position) {
+			enemy.view.mesh.position.set(enemy.position.x, enemy.position.y, enemy.position.z);
 
-			const color = enemy.enemyState === EnemyState.ATTACKING
+			const color = enemy.enemy.enemyState === EnemyState.ATTACKING
 				? 0xff4444
-				: enemy.enemyState === EnemyState.COOLDOWN
+				: enemy.enemy.enemyState === EnemyState.COOLDOWN
 					? 0xffff00
-					: enemy.enemyState === EnemyState.HAPPY
+					: enemy.enemy.enemyState === EnemyState.HAPPY
 						? 0x4444ff
 						: 0x00ff00;
 
-			(enemy.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
+			(enemy.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
 		}
 	}
 
 	for (const projectile of projectiles) {
-		if (projectile.mesh && projectile.x !== undefined && projectile.y !== undefined && projectile.z !== undefined) {
-			projectile.mesh.position.set(projectile.x, projectile.y, projectile.z);
+		if (projectile.view && projectile.position) {
+			projectile.view.mesh.position.set(projectile.position.x, projectile.position.y, projectile.position.z);
 		}
 	}
 
 	for (const tower of towers) {
-		if (tower.mesh && tower.x !== undefined && tower.y !== undefined && tower.z !== undefined) {
-			tower.mesh.position.set(tower.x, tower.y, tower.z);
+		if (tower.view && tower.position) {
+			tower.view.mesh.position.set(tower.position.x, tower.position.y, tower.position.z);
 
-			const color = tower.towerState === TowerState.BROKEN
+			const color = tower.tower.towerState === TowerState.BROKEN
 				? 0xff0000
 				: 0x4a4a4a;
 
-			(tower.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
+			(tower.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
 		}
 	}
 
@@ -107,7 +107,7 @@ export const disposeRenderer = () => {
 export const clearGameEntities = () => {
 	if (!scene) return;
 
-	const entities = world.with("mesh");
+	const entities = world.with("view");
 	const toRemove: Array<ReturnType<typeof world.with>[number]> = [];
 
 	for (const entity of entities) {
@@ -115,13 +115,13 @@ export const clearGameEntities = () => {
 	}
 
 	for (const entity of toRemove) {
-		if (entity.mesh) {
-			scene.remove(entity.mesh);
-			entity.mesh.geometry.dispose();
-			if (Array.isArray(entity.mesh.material)) {
-				entity.mesh.material.forEach((m: THREE.Material) => m.dispose());
+		if (entity.view) {
+			scene.remove(entity.view.mesh);
+			entity.view.mesh.geometry.dispose();
+			if (Array.isArray(entity.view.mesh.material)) {
+				entity.view.mesh.material.forEach((m: THREE.Material) => m.dispose());
 			} else {
-				(entity.mesh.material as THREE.Material).dispose();
+				(entity.view.mesh.material as THREE.Material).dispose();
 			}
 		}
 	}

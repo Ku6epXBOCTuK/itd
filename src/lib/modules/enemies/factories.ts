@@ -1,4 +1,4 @@
-import { world, EnemyState, EnemyVariant, type EnemyVariantType } from "$lib/core/world";
+import { world, EnemyState, EnemyVariant, type EnemyVariantType, type Position, type View } from "$lib/core/world";
 import * as THREE from "three";
 
 export { EnemyVariant };
@@ -59,22 +59,21 @@ export const createEnemy = (
 	scene.add(mesh);
 
 	return world.add({
-		enemy: true,
-		type: type as EnemyVariantType,
-		enemyState: EnemyState.MOVING,
-		x,
-		y: 0.5,
-		z,
-		speed: stats.speed,
-		hp: stats.hp,
-		maxHp: stats.maxHp,
-		damage: stats.damage,
-		attackRange: stats.attackRange,
-		attackCooldown: stats.attackCooldown,
-		attackDuration: stats.attackDuration,
-		attackStartTime: 0,
-		target: { x: 0, y: 1, z: 0 },
-		mesh,
-		originalColor: enemyColors[EnemyState.MOVING],
+		position: { x, y: 0.5, z } as Position,
+		view: { mesh, originalColor: enemyColors[EnemyState.MOVING] } as View,
+		enemy: {
+			enemy: true,
+			type: type as EnemyVariantType,
+			enemyState: EnemyState.MOVING,
+			speed: stats.speed,
+			hp: stats.hp,
+			maxHp: stats.maxHp,
+			damage: stats.damage,
+			attackRange: stats.attackRange,
+			attackCooldown: stats.attackCooldown,
+			attackDuration: stats.attackDuration,
+			attackStartTime: 0,
+			target: { x: 0, y: 1, z: 0 },
+		},
 	});
 };

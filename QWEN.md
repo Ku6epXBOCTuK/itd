@@ -81,6 +81,42 @@ modules/feature/
 - ✅ Простые `type` и функции
 - ✅ Плоские объекты данных
 
+### Типизация Miniplex (ECS)
+
+Все сущности описываются в `core/world.ts` через единый тип `Entity`:
+
+```typescript
+// ✅ ПРАВИЛЬНО — компоненты как объекты
+export type Entity = {
+	position?: Position;  // { x, y, z }
+	view?: View;          // { mesh, originalColor }
+	player?: Player;      // { player: true, gold, incomePerSecond }
+	tower?: Tower;        // { tower: true, hp, maxHp, damage, ... }
+	enemy?: Enemy;        // { enemy: true, type, enemyState, speed, hp, ... }
+	projectile?: Projectile; // { projectile: true, damage, targetId }
+};
+
+export const world = new World<Entity>();
+```
+
+```typescript
+// ❌ НЕПРАВИЛЬНО — плоские свойства в корне World
+export const world = new World<{
+	x?: number;
+	y?: number;
+	z?: number;
+	mesh?: THREE.Mesh;
+	hp?: number;
+	// ...
+}>();
+```
+
+**Преимущества:**
+- Компоненты сгруппированы по логическим объектам
+- Автокомплит работает лучше (пишешь `tower.` и видишь все свойства)
+- Типобезопасность — нельзя случайно использовать `hp` врага для башни
+- Чёткое разделение данных разных типов сущностей
+
 ---
 
 ## 📁 Структура проекта

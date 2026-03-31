@@ -1,4 +1,4 @@
-import { world, TowerState } from "$lib/core/world";
+import { world, TowerState, type Position, type View } from "$lib/core/world";
 import * as THREE from "three";
 import { setTowerScene } from "./system/attack.system";
 
@@ -13,21 +13,20 @@ export const createTower = (scene: THREE.Scene, x: number, z: number) => {
 	scene.add(mesh);
 
 	const tower = world.add({
-		x,
-		y: 1,
-		z,
-		mesh,
-		originalColor: 0x4a4a4a,
-		tower: true,
-		hp: 500,
-		maxHp: 500,
-		damage: 25,
-		attackRange: 4,
-		attackCooldown: 1000,
-		attackAnimationDuration: 300,
-		towerState: TowerState.IDLE,
-		attackStartTime: 0,
-		targetId: undefined,
+		position: { x, y: 1, z } as Position,
+		view: { mesh, originalColor: 0x4a4a4a } as View,
+		tower: {
+			tower: true,
+			hp: 500,
+			maxHp: 500,
+			damage: 25,
+			attackRange: 4,
+			attackCooldown: 1000,
+			attackAnimationDuration: 300,
+			towerState: TowerState.IDLE,
+			attackStartTime: 0,
+			targetId: undefined,
+		},
 	});
 
 	return tower;

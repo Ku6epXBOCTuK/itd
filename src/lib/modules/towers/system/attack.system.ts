@@ -10,62 +10,62 @@ export const setTowerScene = (s: THREE.Scene) => {
 
 export const TowerAttackSystem = (deltaTime: number) => {
 	const currentTime = Date.now();
-	const towers = world.with("tower", "x", "y", "z", "damage", "attackRange", "attackCooldown", "attackAnimationDuration", "towerState", "attackStartTime", "targetId");
-	const enemies = world.with("enemy", "hp", "x", "y", "z");
+	const towers = world.with("tower", "position");
+	const enemies = world.with("enemy", "position");
 
 	for (const tower of towers) {
-		if (tower.towerState === TowerState.COOLDOWN) {
-			const cooldownElapsed = currentTime - tower.attackStartTime;
-			if (cooldownElapsed >= tower.attackCooldown) {
-				tower.towerState = TowerState.IDLE;
-				(tower.targetId as number | undefined) = undefined;
+		if (tower.tower.towerState === TowerState.COOLDOWN) {
+			const cooldownElapsed = currentTime - tower.tower.attackStartTime;
+			if (cooldownElapsed >= tower.tower.attackCooldown) {
+				tower.tower.towerState = TowerState.IDLE;
+				tower.tower.targetId = undefined;
 			}
 			continue;
 		}
 
-		if (tower.towerState === TowerState.FIRING) {
-			const animationElapsed = currentTime - tower.attackStartTime;
-			if (animationElapsed >= tower.attackAnimationDuration) {
-				if (tower.targetId !== undefined) {
-					const targetEnemy = world.entity(tower.targetId);
-					if (targetEnemy && targetEnemy.hp !== undefined && targetEnemy.hp > 0) {
+		if (tower.tower.towerState === TowerState.FIRING) {
+			const animationElapsed = currentTime - tower.tower.attackStartTime;
+			if (animationElapsed >= tower.tower.attackAnimationDuration) {
+				if (tower.tower.targetId !== undefined) {
+					const targetEnemy = world.entity(tower.tower.targetId);
+					if (targetEnemy && targetEnemy.enemy && targetEnemy.enemy.hp > 0) {
 						if (scene) {
 							createProjectile(
 								scene,
-								{ x: tower.x!, y: tower.y!, z: tower.z! },
-								tower.targetId,
-								tower.damage!,
+								tower.position,
+								tower.tower.targetId,
+								tower.tower.damage,
 							);
 						}
 					}
 				}
-				tower.towerState = TowerState.COOLDOWN;
-				tower.attackStartTime = currentTime;
+				tower.tower.towerState = TowerState.COOLDOWN;
+				tower.tower.attackStartTime = currentTime;
 			}
 			continue;
 		}
 
 		let targetEnemy: ReturnType<typeof world.with>[number] | null = null;
-		let minDistance = tower.attackRange!;
+		let minDistance = tower.tower.attackRange;
 
 		for (const enemy of enemies) {
-			if ((enemy.hp ?? 0) <= 0) continue;
+			if (enemy.enemy.hp <= 0) continue;
 
-			const dx = (enemy.x ?? 0) - (tower.x ?? 0);
-			const dy = (enemy.y ?? 0) - (tower.y ?? 0);
-			const dz = (enemy.z ?? 0) - (tower.z ?? 0);
+			const dx = enemy.position.x - tower.position.x;
+			const dy = enemy.position.y - tower.position.y;
+			const dz = enemy.position.z - tower.position.z;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance <= (tower.attackRange ?? 0) && distance < minDistance) {
+			if (distance <= tower.tower.attackRange && distance < minDistance) {
 				minDistance = distance;
 				targetEnemy = enemy;
 			}
 		}
 
 		if (targetEnemy) {
-			tower.towerState = TowerState.FIRING;
-			tower.targetId = targetEnemy.id;
-			tower.attackStartTime = currentTime;
+			tower.tower.towerState = TowerState.FIRING;
+			tower.tower.targetId = targetEnemy.id;
+			tower.tower.attackStartTime = currentTime;
 		}
 	}
 };

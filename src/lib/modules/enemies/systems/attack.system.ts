@@ -9,31 +9,30 @@ export const resetAttackSystem = () => {
 
 export const AttackSystem = (deltaTime: number) => {
 	const currentTime = Date.now();
-	const enemies = world.with("enemy", "x", "y", "z", "attackRange", "damage", "attackCooldown", "attackDuration", "attackStartTime", "enemyState", "target", "hp");
-	const towers = world.with("tower", "hp", "maxHp", "towerState");
+	const enemies = world.with("enemy", "position");
+	const towers = world.with("tower");
 
 	for (const enemy of enemies) {
-		if (enemy.enemyState === EnemyState.HAPPY) {
+		if (enemy.enemy.enemyState === EnemyState.HAPPY) {
 			continue;
 		}
 
-		const tx = enemy.target?.x ?? 0;
-		const ty = enemy.target?.y ?? 0;
-		const tz = enemy.target?.z ?? 0;
-		const ex = enemy.x ?? 0;
-		const ey = enemy.y ?? 0;
-		const ez = enemy.z ?? 0;
+		const tx = enemy.enemy.target.x;
+		const ty = enemy.enemy.target.y;
+		const tz = enemy.enemy.target.z;
+		const ex = enemy.position.x;
+		const ey = enemy.position.y;
+		const ez = enemy.position.z;
 
 		const dx = tx - ex;
 		const dy = ty - ey;
 		const dz = tz - ez;
 		const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-		const attackRange = enemy.attackRange ?? 0;
-		if (distance <= attackRange) {
+		if (distance <= enemy.enemy.attackRange) {
 			let hasActiveTower = false;
 			for (const tower of towers) {
-				if (tower.towerState !== TowerState.BROKEN) {
+				if (tower.tower.towerState !== TowerState.BROKEN) {
 					hasActiveTower = true;
 					break;
 				}
@@ -43,30 +42,30 @@ export const AttackSystem = (deltaTime: number) => {
 				continue;
 			}
 
-			if (enemy.enemyState === EnemyState.MOVING) {
-				enemy.enemyState = EnemyState.ATTACKING;
-				enemy.attackStartTime = currentTime;
+			if (enemy.enemy.enemyState === EnemyState.MOVING) {
+				enemy.enemy.enemyState = EnemyState.ATTACKING;
+				enemy.enemy.attackStartTime = currentTime;
 			}
 
-			if (enemy.enemyState === EnemyState.ATTACKING) {
-				const attackElapsed = currentTime - enemy.attackStartTime;
+			if (enemy.enemy.enemyState === EnemyState.ATTACKING) {
+				const attackElapsed = currentTime - enemy.enemy.attackStartTime;
 
-				if (attackElapsed >= (enemy.attackDuration ?? 0)) {
+				if (attackElapsed >= enemy.enemy.attackDuration) {
 					for (const tower of towers) {
-						const towerHp = tower.hp ?? 0;
-						const towerMaxHp = tower.maxHp ?? 500;
+						const towerHp = tower.tower.hp;
+						const towerMaxHp = tower.tower.maxHp;
 
-						const newHp = Math.max(0, towerHp - (enemy.damage ?? 0));
-						tower.hp = newHp;
+						const newHp = Math.max(0, towerHp - enemy.enemy.damage);
+						tower.tower.hp = newHp;
 
 						if (newHp <= 0 && !gameTriggered) {
 							gameTriggered = true;
-							tower.towerState = TowerState.BROKEN;
+							tower.tower.towerState = TowerState.BROKEN;
 
-							const allEnemies = world.with("enemy", "enemyState");
+							const allEnemies = world.with("enemy");
 							for (const e of allEnemies) {
-								e.enemyState = EnemyState.HAPPY;
-								e.attackStartTime = 0;
+								e.enemy.enemyState = EnemyState.HAPPY;
+								e.enemy.attackStartTime = 0;
 							}
 
 							GameEngine.emit(GameEvents.STOP_GAME);
@@ -74,21 +73,21 @@ export const AttackSystem = (deltaTime: number) => {
 						}
 					}
 
-					enemy.enemyState = EnemyState.COOLDOWN;
-					enemy.attackStartTime = currentTime;
+					enemy.enemy.enemyState = EnemyState.COOLDOWN;
+					enemy.enemy.attackStartTime = currentTime;
 				}
 			}
 
-			if (enemy.enemyState === EnemyState.COOLDOWN) {
-				const cooldownElapsed = currentTime - enemy.attackStartTime;
+			if (enemy.enemy.enemyState === EnemyState.COOLDOWN) {
+				const cooldownElapsed = currentTime - enemy.enemy.attackStartTime;
 
-				if (cooldownElapsed >= (enemy.attackCooldown ?? 0)) {
-					enemy.enemyState = EnemyState.ATTACKING;
-					enemy.attackStartTime = currentTime;
+				if (cooldownElapsed >= enemy.enemy.attackCooldown) {
+					enemy.enemy.enemyState = EnemyState.ATTACKING;
+					enemy.enemy.attackStartTime = currentTime;
 				}
 			}
 		} else {
-			enemy.enemyState = EnemyState.MOVING;
+			enemy.enemy.enemyState = EnemyState.MOVING;
 		}
 	}
 };
