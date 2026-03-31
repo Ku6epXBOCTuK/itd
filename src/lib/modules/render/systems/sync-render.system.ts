@@ -101,6 +101,8 @@ export const disposeRenderer = () => {
 	if (renderer) {
 		renderer.dispose();
 		renderer = null;
+		scene = null;
+		camera = null;
 	}
 };
 
@@ -124,9 +126,6 @@ export const clearGameEntities = () => {
 				(entity.view.mesh.material as THREE.Material).dispose();
 			}
 		}
-	}
-
-	for (const entity of toRemove) {
 		world.remove(entity);
 	}
 };

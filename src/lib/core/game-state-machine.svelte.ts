@@ -9,6 +9,7 @@ import {
 	resizeRenderer,
 	SyncRenderSystem,
 } from "$lib/modules/render/systems/sync-render.system";
+import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import { GameEngine, GameEvents } from "./event-bus";
 import { GameLoop } from "./game-loop";
 import { setAppState, AppState } from "$lib/core/app-state.svelte";
@@ -23,8 +24,9 @@ function startGame() {
 	initRender(canvas, width, height);
 	initializeGameState();
 
-	// Форсируем первый рендер после инициализации
+	// Форсируем первый рендер и обновление HUD
 	SyncRenderSystem();
+	UpdateHudSystem();
 
 	GameLoop.start();
 	isGameRunning = true;

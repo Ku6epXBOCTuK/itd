@@ -1,5 +1,6 @@
 import { world, EnemyVariant, type Player } from "$lib/core/world";
 import { resumeGame } from "$lib/core/app-state.svelte";
+import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 import { createEnemy } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
 import { clearGameEntities } from "$lib/modules/render/systems/sync-render.system";
@@ -35,6 +36,12 @@ export const resetGameState = () => {
 	resetAttackSystem();
 
 	world.clear();
+
+	hudState.gold = 0;
+	hudState.wave = 0;
+	hudState.towerHp = 0;
+	hudState.towerMaxHp = 0;
+
 	resumeGame();
 };
 
