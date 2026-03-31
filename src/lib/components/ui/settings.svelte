@@ -2,6 +2,8 @@
 	import { uiState, GameState } from "$lib/adapters/ui-state/game-state.svelte";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconArrowLeft from "~icons/lucide/arrow-left";
+	import IconVolume2 from "~icons/lucide/volume-2";
+	import IconVolumeX from "~icons/lucide/volume-x";
 
 	function goBack() {
 		uiState.gameState = GameState.MENU;
@@ -14,49 +16,39 @@
 
 		<div class="settings-group">
 			<div class="setting-row">
-				<label>Громкость музыки</label>
+				<span class="label-text">Громкость музыки</span>
 				<input
 					type="range"
 					min="0"
 					max="100"
+					disabled={!uiState.settings.musicEnabled}
 					value={uiState.settings.musicVolume}
 					oninput={(e) => uiState.settings.musicVolume = parseInt(e.currentTarget.value)}
 				/>
 				<span class="value">{uiState.settings.musicVolume}%</span>
+				<Button
+					icon={uiState.settings.musicEnabled ? IconVolume2 : IconVolumeX}
+					variant={uiState.settings.musicEnabled ? "primary" : "outline"}
+					onclick={() => uiState.settings.musicEnabled = !uiState.settings.musicEnabled}
+				/>
 			</div>
 
 			<div class="setting-row">
-				<label>Громкость звуков</label>
+				<span class="label-text">Громкость звуков</span>
 				<input
 					type="range"
 					min="0"
 					max="100"
+					disabled={!uiState.settings.sfxEnabled}
 					value={uiState.settings.sfxVolume}
 					oninput={(e) => uiState.settings.sfxVolume = parseInt(e.currentTarget.value)}
 				/>
 				<span class="value">{uiState.settings.sfxVolume}%</span>
-			</div>
-
-			<div class="setting-row">
-				<label>Музыка</label>
-				<button
-					class="toggle-btn"
-					class:enabled={uiState.settings.musicEnabled}
-					onclick={() => uiState.settings.musicEnabled = !uiState.settings.musicEnabled}
-				>
-					{uiState.settings.musicEnabled ? "ВКЛ" : "ВЫКЛ"}
-				</button>
-			</div>
-
-			<div class="setting-row">
-				<label>Звуки</label>
-				<button
-					class="toggle-btn"
-					class:enabled={uiState.settings.sfxEnabled}
+				<Button
+					icon={uiState.settings.sfxEnabled ? IconVolume2 : IconVolumeX}
+					variant={uiState.settings.sfxEnabled ? "primary" : "outline"}
 					onclick={() => uiState.settings.sfxEnabled = !uiState.settings.sfxEnabled}
-				>
-					{uiState.settings.sfxEnabled ? "ВКЛ" : "ВЫКЛ"}
-				</button>
+				/>
 			</div>
 		</div>
 
@@ -103,10 +95,10 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 1rem;
+		gap: 0.75rem;
 	}
 
-	.setting-row label {
+	.setting-row .label-text {
 		color: #fff;
 		font-size: 1.1rem;
 		min-width: 150px;
@@ -115,10 +107,15 @@
 	.setting-row input[type="range"] {
 		flex: 1;
 		height: 8px;
-		-webkit-appearance: none;
 		background: rgba(255, 255, 255, 0.2);
 		border-radius: 4px;
 		outline: none;
+		cursor: pointer;
+	}
+
+	.setting-row input[type="range"]:disabled {
+		opacity: 0.3;
+		cursor: not-allowed;
 	}
 
 	.setting-row input[type="range"]::-webkit-slider-thumb {
@@ -128,6 +125,25 @@
 		background: #667eea;
 		border-radius: 50%;
 		cursor: pointer;
+	}
+
+	.setting-row input[type="range"]:disabled::-webkit-slider-thumb {
+		background: #999;
+		cursor: not-allowed;
+	}
+
+	.setting-row input[type="range"]::-moz-range-thumb {
+		width: 20px;
+		height: 20px;
+		background: #667eea;
+		border-radius: 50%;
+		cursor: pointer;
+		border: none;
+	}
+
+	.setting-row input[type="range"]:disabled::-moz-range-thumb {
+		background: #999;
+		cursor: not-allowed;
 	}
 
 	.setting-row .value {
