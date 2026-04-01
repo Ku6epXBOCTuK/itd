@@ -3,6 +3,7 @@ export interface HudState {
 	wave: number;
 	towerHp: number;
 	towerMaxHp: number;
+	waveAnnouncement: string;
 	settings: {
 		musicVolume: number;
 		sfxVolume: number;
@@ -16,6 +17,7 @@ export const hudState = $state<HudState>({
 	wave: 0,
 	towerHp: 0,
 	towerMaxHp: 0,
+	waveAnnouncement: "",
 	settings: {
 		musicVolume: 50,
 		sfxVolume: 50,

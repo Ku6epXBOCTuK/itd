@@ -4,6 +4,7 @@ import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 export const UpdateHudSystem = () => {
 	const players = world.with("player");
 	const towers = world.with("tower");
+	const waveControl = Array.from(world.with("waveControl"))[0];
 
 	for (const player of players) {
 		hudState.gold = Math.floor(player.player.gold);
@@ -12,5 +13,10 @@ export const UpdateHudSystem = () => {
 	for (const tower of towers) {
 		hudState.towerHp = Math.floor(tower.tower.hp);
 		hudState.towerMaxHp = Math.floor(tower.tower.maxHp);
+	}
+
+	if (waveControl) {
+		hudState.wave = waveControl.waveControl.currentWave;
+		hudState.waveAnnouncement = waveControl.waveControl.announcementText;
 	}
 };

@@ -31,6 +31,15 @@ export const EnemyVariant = {
 
 export type EnemyVariantType = (typeof EnemyVariant)[keyof typeof EnemyVariant];
 
+export const WaveStatus = {
+	WAITING: "waiting",
+	SPAWNING: "spawning",
+	CLEARING: "clearing",
+	COMPLETED: "completed",
+} as const;
+
+export type WaveStatusType = (typeof WaveStatus)[keyof typeof WaveStatus];
+
 // ============ ENTITY COMPONENTS ============
 
 export type Position = { x: number; y: number; z: number };
@@ -107,6 +116,16 @@ export type Settings = {
 	showHpBar: boolean;
 };
 
+export type WaveControl = {
+	waveControl: true;
+	currentWave: number;
+	status: WaveStatusType;
+	spawnTimer: number;
+	remainingEnemies: number;
+	waveDelayTimer: number;
+	announcementText: string;
+};
+
 // ============ UNIFIED ENTITY TYPE ============
 // Все компоненты опциональны, сущности могут иметь любой набор компонентов
 export type Entity = {
@@ -120,6 +139,7 @@ export type Entity = {
 	ballistic?: Ballistic;
 	orbit?: Orbit;
 	settings?: Settings;
+	waveControl?: WaveControl;
 };
 
 // ============ MINIPLEX WORLD ============

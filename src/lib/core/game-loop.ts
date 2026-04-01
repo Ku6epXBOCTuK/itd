@@ -7,7 +7,10 @@ import { TargetingSystem } from "$lib/modules/projectiles/systems/targeting.syst
 import { HomingMovementSystem } from "$lib/modules/projectiles/systems/homing-movement.system";
 import { BallisticMovementSystem } from "$lib/modules/projectiles/systems/ballistic-movement.system";
 import { CollisionSystem } from "$lib/modules/projectiles/systems/collision.system";
-import { RespawnSystem } from "$lib/modules/waves/systems/respawn.system";
+import {
+	WaveSystem,
+	SpawnSystem,
+} from "$lib/modules/waves/systems/respawn.system";
 import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
 import { appState, AppState } from "$lib/core/app-state.svelte";
@@ -16,7 +19,11 @@ import { FRAME_MS } from "$lib/core/constants";
 type GameplaySystem = (deltaTime: number) => void;
 type RenderSystem = () => void;
 
-const ActiveGameSystems: GameplaySystem[] = [AttackSystem, RespawnSystem];
+const ActiveGameSystems: GameplaySystem[] = [
+	AttackSystem,
+	WaveSystem,
+	SpawnSystem,
+];
 const GameplaySystems: GameplaySystem[] = [
 	IncomeSystem,
 	MoveSystem,

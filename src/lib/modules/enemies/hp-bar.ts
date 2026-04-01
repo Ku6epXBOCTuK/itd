@@ -34,19 +34,21 @@ const fragmentShader = `
     }
 `;
 
-const hpBarMaterial = new THREE.ShaderMaterial({
-	uniforms: {
-		uHpPercent: { value: 1.0 },
-	},
-	vertexShader,
-	fragmentShader,
-	transparent: true,
-	depthTest: false,
-});
+const createHpBarMaterial = () => {
+	return new THREE.ShaderMaterial({
+		uniforms: {
+			uHpPercent: { value: 1.0 },
+		},
+		vertexShader,
+		fragmentShader,
+		transparent: true,
+		depthTest: false,
+	});
+};
 
 export const createHpBarSprite = (scene: THREE.Scene) => {
 	const sprite = new THREE.Sprite(
-		hpBarMaterial as unknown as THREE.SpriteMaterial,
+		createHpBarMaterial() as unknown as THREE.SpriteMaterial,
 	);
 	sprite.scale.set(
 		GEOMETRY.hpBar.width,

@@ -119,3 +119,27 @@ export const GAME_CONFIG = {
 export const ENEMY_SPAWN = {
 	y: 0.5,
 } as const;
+
+export const WAVE_CONFIG = {
+	delayBetweenSpawns: 500,
+	delayBetweenWaves: 2000,
+	announcementDuration: 2000,
+} as const;
+
+export const WAVE_DEFINITIONS = [
+	{
+		enemies: [{ type: EnemyVariant.BASIC, count: 3 }],
+	},
+	{
+		enemies: [
+			{ type: EnemyVariant.BASIC, count: 5 },
+			{ type: EnemyVariant.FAST, count: 2 },
+		],
+	},
+	{
+		enemies: [
+			{ type: EnemyVariant.TANK, count: 2 },
+			{ type: EnemyVariant.FAST, count: 4 },
+		],
+	},
+] as const;

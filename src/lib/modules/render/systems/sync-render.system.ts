@@ -181,6 +181,7 @@ export const clearGameEntities = () => {
 		}
 		if (entity.enemy?.sprite) {
 			scene.remove(entity.enemy.sprite);
+			(entity.enemy.sprite.material as THREE.Material).dispose();
 		}
 		world.remove(entity);
 	}

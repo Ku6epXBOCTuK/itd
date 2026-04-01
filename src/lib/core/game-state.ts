@@ -1,17 +1,17 @@
-import { world, EnemyVariant, type Player } from "$lib/core/world";
+import { world, WaveStatus, type Player } from "$lib/core/world";
 import { resumeGame } from "$lib/core/app-state.svelte";
 import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
-import { createEnemy } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
 import { clearGameEntities } from "$lib/modules/render/systems/sync-render.system";
 import { resetAttackSystem } from "$lib/modules/enemies/systems/attack.system";
+import { setSpawnScene } from "$lib/modules/waves/systems/spawn.system";
 import type { Scene } from "three";
-import { SPAWN_X, SPAWN_Z } from "$lib/core/constants";
 
 let scene: Scene | null = null;
 
 export const setScene = (s: Scene) => {
 	scene = s;
+	setSpawnScene(s);
 };
 
 export const createGameState = () => {
@@ -29,14 +29,18 @@ export const createGameState = () => {
 			showHpBar: true,
 		},
 	});
-};
 
-export const spawnInitialEnemies = () => {
-	if (!scene) {
-		return;
-	}
-
-	createEnemy(scene, EnemyVariant.BASIC, SPAWN_X, SPAWN_Z);
+	world.add({
+		waveControl: {
+			waveControl: true,
+			currentWave: 0,
+			status: WaveStatus.CLEARING,
+			spawnTimer: 0,
+			remainingEnemies: 0,
+			waveDelayTimer: 1000,
+			announcementText: "",
+		},
+	});
 };
 
 export const resetGameState = () => {
@@ -49,6 +53,7 @@ export const resetGameState = () => {
 	hudState.wave = 0;
 	hudState.towerHp = 0;
 	hudState.towerMaxHp = 0;
+	hudState.waveAnnouncement = "";
 
 	resumeGame();
 };
@@ -58,6 +63,5 @@ export const initializeGameState = () => {
 
 	if (scene) {
 		createTower(scene, 0, 0);
-		spawnInitialEnemies();
 	}
 };

@@ -21,6 +21,7 @@ export const EnemyDeathSystem = () => {
 			}
 			if (enemy.enemy.sprite) {
 				enemy.enemy.sprite.removeFromParent();
+				(enemy.enemy.sprite.material as THREE.Material).dispose();
 			}
 			world.remove(enemy);
 		}

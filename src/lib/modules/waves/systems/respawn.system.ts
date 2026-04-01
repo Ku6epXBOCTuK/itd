@@ -1,5 +1,2 @@
-import { world } from "$lib/core/world";
-
-export const RespawnSystem = (deltaTime: number) => {
-	// TODO: логика респавна врагов по волнам
-};
+export { WaveSystem } from "./wave.system";
+export { SpawnSystem, setSpawnScene } from "./spawn.system";
