@@ -26,10 +26,14 @@
 ### 4. Enum-подобные типы
 
 ```typescript
+// ПРАВИЛЬНО
 export const EnemyState = {
 	MOVING: "moving",
 	ATTACKING: "attacking",
 } as const;
+
+// НЕПРАВИЛЬНО
+export type EnemyState = "moving" | "attacking";
 ```
 
 ### 5. Импорты
@@ -59,6 +63,18 @@ modules/feature/
 └── systems/
     └── system.name.ts
 ```
+
+### Структура папок (Screaming Architecture)
+
+- Папки называть по тому, ЧТО делают (`enemies/`, `waves/`, `towers/`), а не по слою (`systems/`, `components/`)
+- Внутри модуля могут быть любые папки с понятными названиями (`handlers/`, `ui/`, `physics/`)
+- НЕ создавать: `components/`, `utils/`, `helpers/` (неинформативные названия)
+
+### Анти-Overengineering
+
+- НЕ использовать: классы-фабрики, Repository, Strategy паттерны
+- НЕ использовать: интерфейсы с префиксом `I`
+- ИСПОЛЬЗОВАТЬ: простые `type`, функции, плоские объекты данных
 
 ### Типизация Miniplex
 
@@ -93,6 +109,12 @@ modules/feature/
 - При remove: только `mesh.removeFromParent()`
 - Sprite material — уникальный, нужно dispose
 
+### Взаимодействие
+
+- **Логика → Визуал:** Системы меняют данные (position, hp), SyncRenderSystem синхронизирует с Three.js
+- **Игра → UI:** Только `modules/hud/systems/update-hud.system.ts` записывает в `$state` (hudState)
+- **UI → Игра:** UI вызывает `GameEngine.emit(event, data)`, системы подписываются
+
 ---
 
 ## Чек-лист перед коммитом
@@ -101,6 +123,9 @@ modules/feature/
 - [ ] Нет лишних комментариев
 - [ ] Логика в `modules/*/systems/`
 - [ ] Использованы `const object` для enum
+- [ ] Svelte компоненты минимальны (только отображение)
+- [ ] Модули не импортируют фабрики друг друга
+- [ ] UI использует `GameEngine.emit()` для действий
 
 ## Команды разработки
 
