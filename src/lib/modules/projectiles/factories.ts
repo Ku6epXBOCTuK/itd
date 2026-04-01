@@ -1,9 +1,4 @@
-import { world, type Position, type View, type Entity } from "$lib/core/world";
-import * as THREE from "three";
-import {
-	SHARED_GEOMETRIES,
-	SHARED_PROJECTILE_MATERIAL,
-} from "$lib/core/game-config";
+import { world, type Position, type Entity } from "$lib/core/world";
 
 type ProjectileBehavior =
 	| { homing: true; speed: number }
@@ -18,16 +13,8 @@ export const createProjectile = (
 	targetPosition: Position | null = null,
 	lifetime: number = 2000,
 ) => {
-	const mesh = new THREE.Mesh(
-		SHARED_GEOMETRIES.projectile,
-		SHARED_PROJECTILE_MATERIAL,
-	);
-	mesh.position.copy(startPos);
-	mesh.castShadow = true;
-
 	const projectile = world.add({
 		position: { x: startPos.x, y: startPos.y, z: startPos.z },
-		view: { mesh, originalColor: 0xff4444 } as View,
 		projectile: {
 			projectile: true,
 			damage,

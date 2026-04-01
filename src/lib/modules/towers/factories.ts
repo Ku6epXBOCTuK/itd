@@ -1,18 +1,8 @@
-import { TowerState, world, type Position, type View } from "$lib/core/world";
-import * as THREE from "three";
-import {
-	SHARED_GEOMETRIES,
-	SHARED_TOWER_MATERIAL,
-} from "$lib/core/game-config";
+import { TowerState, world, type Position } from "$lib/core/world";
 
 export const createTower = (x: number, z: number) => {
-	const mesh = new THREE.Mesh(SHARED_GEOMETRIES.tower, SHARED_TOWER_MATERIAL);
-	mesh.position.set(x, 1, z);
-	mesh.castShadow = true;
-
 	const tower = world.add({
 		position: { x, y: 1, z } as Position,
-		view: { mesh, originalColor: 0x4a4a4a } as View,
 		tower: {
 			tower: true,
 			hp: 500,
