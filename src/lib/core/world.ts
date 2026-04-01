@@ -149,22 +149,3 @@ export type Entity = {
 
 // ============ MINIPLEX WORLD ============
 export const world = new World<Entity>();
-
-// ============ ENTITY CLEANUP ============
-export const cleanupEntity = (entity: Entity) => {
-	if (entity.view) {
-		const mesh = entity.view.mesh;
-		mesh.removeFromParent();
-		mesh.geometry.dispose();
-		if (Array.isArray(mesh.material)) {
-			mesh.material.forEach((m) => m.dispose());
-		} else {
-			mesh.material.dispose();
-		}
-	}
-	if (entity.enemy?.sprite) {
-		entity.enemy.sprite.removeFromParent();
-		entity.enemy.sprite.material.dispose();
-	}
-	world.remove(entity);
-};

@@ -1,15 +1,28 @@
-import { world, EnemyState, TowerState } from "$lib/core/world";
+import { world, EnemyState, TowerState, type Entity } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround } from "../factories";
 import {
-	ENEMY_COLORS,
 	RENDER_CONFIG,
-	TOWER_COLORS,
+	SHARED_ENEMY_MATERIALS,
+	SHARED_TOWER_MATERIAL,
+	SHARED_TOWER_BROKEN_MATERIAL,
 } from "$lib/core/game-config";
 
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
 let camera: THREE.PerspectiveCamera | null = null;
+
+const cleanupEntityResources = (entity: Entity) => {
+	if (entity.view) {
+		entity.view.mesh.removeFromParent();
+	}
+	if (entity.enemy?.sprite) {
+		entity.enemy.sprite.removeFromParent();
+		entity.enemy.sprite.material.dispose();
+	}
+};
+
+world.onEntityRemoved.subscribe(cleanupEntityResources);
 
 export const initRender = (
 	canvas: HTMLCanvasElement,
@@ -99,11 +112,7 @@ export const SyncRenderSystem = () => {
 				enemy.position.z,
 			);
 
-			const color = ENEMY_COLORS[enemy.enemy.enemyState];
-
-			(enemy.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(
-				color,
-			);
+			enemy.view.mesh.material = SHARED_ENEMY_MATERIALS[enemy.enemy.enemyState];
 		}
 
 		if (enemy.enemy.sprite) {
@@ -138,14 +147,10 @@ export const SyncRenderSystem = () => {
 				tower.position.z,
 			);
 
-			const color =
+			tower.view.mesh.material =
 				tower.tower.towerState === TowerState.BROKEN
-					? TOWER_COLORS[TowerState.BROKEN]
-					: TOWER_COLORS[TowerState.IDLE];
-
-			(tower.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(
-				color,
-			);
+					? SHARED_TOWER_BROKEN_MATERIAL
+					: SHARED_TOWER_MATERIAL;
 		}
 	}
 

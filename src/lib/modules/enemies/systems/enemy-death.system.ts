@@ -1,4 +1,4 @@
-import { world, EnemyState, cleanupEntity } from "$lib/core/world";
+import { world, EnemyState } from "$lib/core/world";
 import { GAME_CONFIG } from "$lib/core/game-config";
 
 export const EnemyDeathSystem = () => {
@@ -13,7 +13,7 @@ export const EnemyDeathSystem = () => {
 		const deathElapsed = currentTime - enemy.enemy.deathStartTime;
 
 		if (deathElapsed >= GAME_CONFIG.deathAnimationDuration) {
-			cleanupEntity(enemy);
+			world.remove(enemy);
 		}
 	}
 };

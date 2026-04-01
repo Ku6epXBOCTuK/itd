@@ -9,10 +9,10 @@ import {
 import * as THREE from "three";
 import { createHpBarSprite } from "./hp-bar";
 import {
-	ENEMY_COLORS,
 	ENEMY_CONFIGS,
 	ENEMY_SPAWN,
-	GEOMETRY,
+	SHARED_GEOMETRIES,
+	SHARED_ENEMY_MATERIALS,
 } from "$lib/core/game-config";
 
 export { EnemyVariant };
@@ -26,15 +26,10 @@ export const createEnemy = (
 ) => {
 	const stats = ENEMY_CONFIGS[type] as EnemyStats;
 
-	const geometry = new THREE.SphereGeometry(
-		GEOMETRY.enemy.radius,
-		GEOMETRY.enemy.segments,
-		GEOMETRY.enemy.segments,
+	const mesh = new THREE.Mesh(
+		SHARED_GEOMETRIES.enemy,
+		SHARED_ENEMY_MATERIALS[EnemyState.MOVING],
 	);
-	const material = new THREE.MeshStandardMaterial({
-		color: ENEMY_COLORS[EnemyState.MOVING],
-	});
-	const mesh = new THREE.Mesh(geometry, material);
 	mesh.position.set(x, ENEMY_SPAWN.y, z);
 	mesh.castShadow = true;
 
@@ -42,7 +37,7 @@ export const createEnemy = (
 
 	const enemy = world.add({
 		position: { x, y: ENEMY_SPAWN.y, z } as Position,
-		view: { mesh, originalColor: ENEMY_COLORS[EnemyState.MOVING] } as View,
+		view: { mesh, originalColor: 0x00ff00 } as View,
 		enemy: {
 			enemy: true,
 			type: type as EnemyVariantType,

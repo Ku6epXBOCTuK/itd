@@ -1,4 +1,4 @@
-import { world, EnemyState, cleanupEntity } from "$lib/core/world";
+import { world, EnemyState } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
 const HIT_THRESHOLD = 0.3;
@@ -20,19 +20,19 @@ export const CollisionSystem = () => {
 				GameEngine.emit(GameEvents.PROJECTILE_MISS, {
 					position: projectile.position,
 				});
-				cleanupEntity(projectile);
+				world.remove(projectile);
 				continue;
 			}
 		}
 
 		if (target) {
 			if (!world.has(target) || !target.position) {
-				cleanupEntity(projectile);
+				world.remove(projectile);
 				continue;
 			}
 
 			if (target.enemy && target.enemy.hp <= 0) {
-				cleanupEntity(projectile);
+				world.remove(projectile);
 				continue;
 			}
 
@@ -59,7 +59,7 @@ export const CollisionSystem = () => {
 					}
 				}
 
-				cleanupEntity(projectile);
+				world.remove(projectile);
 			}
 		}
 	}

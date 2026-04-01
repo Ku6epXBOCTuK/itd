@@ -84,6 +84,14 @@ modules/feature/
 - Запрос ожидающих добавления: `world.with("view").without("inScene")`
 - При добавлении entity в сцену: сначала `scene.add()`, потом `world.addComponent(entity, "inScene", { inScene: true })`
 - При удалении из сцены: `world.removeComponent(entity, "inScene")`
+- Подписки на события мира: `world.onEntityAdded.subscribe()`, `world.onEntityRemoved.subscribe()`
+
+#### Three.js
+
+- Все shared геометрии и материалы — в `game-config.ts` (не в factories)
+- Shared объекты нельзя dispose при удалении сущности
+- При remove: только `mesh.removeFromParent()`
+- Sprite material — уникальный, нужно dispose
 
 ---
 

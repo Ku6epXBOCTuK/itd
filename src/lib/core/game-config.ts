@@ -1,4 +1,5 @@
 import { EnemyState, EnemyVariant, TowerState } from "./world";
+import * as THREE from "three";
 
 export const ENEMY_CONFIGS = {
 	[EnemyVariant.BASIC]: {
@@ -107,6 +108,51 @@ export const GEOMETRY = {
 		depth: 1.0,
 	},
 } as const;
+
+export const SHARED_GEOMETRIES = {
+	enemy: new THREE.SphereGeometry(
+		GEOMETRY.enemy.radius,
+		GEOMETRY.enemy.segments,
+		GEOMETRY.enemy.segments,
+	),
+	projectile: new THREE.SphereGeometry(
+		GEOMETRY.projectile.radius,
+		GEOMETRY.projectile.segments,
+		GEOMETRY.projectile.segments,
+	),
+	tower: new THREE.BoxGeometry(1, 2, 1),
+} as const;
+
+export const SHARED_ENEMY_MATERIALS = {
+	[EnemyState.MOVING]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[EnemyState.MOVING],
+	}),
+	[EnemyState.ATTACKING]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[EnemyState.ATTACKING],
+	}),
+	[EnemyState.COOLDOWN]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[EnemyState.COOLDOWN],
+	}),
+	[EnemyState.HAPPY]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[EnemyState.HAPPY],
+	}),
+	[EnemyState.DYING]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[EnemyState.DYING],
+	}),
+} as const;
+
+export const SHARED_TOWER_MATERIAL = new THREE.MeshStandardMaterial({
+	color: TOWER_COLORS[TowerState.IDLE],
+});
+export const SHARED_TOWER_BROKEN_MATERIAL = new THREE.MeshStandardMaterial({
+	color: TOWER_COLORS[TowerState.BROKEN],
+});
+
+export const SHARED_PROJECTILE_MATERIAL = new THREE.MeshStandardMaterial({
+	color: GEOMETRY.projectile.color,
+	emissive: GEOMETRY.projectile.color,
+	emissiveIntensity: GEOMETRY.projectile.emissiveIntensity,
+});
 
 export const GAME_CONFIG = {
 	deathAnimationDuration: 500,
