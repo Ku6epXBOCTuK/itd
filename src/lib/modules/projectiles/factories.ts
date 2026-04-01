@@ -1,15 +1,19 @@
-import { world, type Position, type View, ProjectileVariant, type ProjectileVariantType, ProjectileMode, type ProjectileModeType } from "$lib/core/world";
+import { world, type Position, type View, type Entity } from "$lib/core/world";
 import * as THREE from "three";
+
+type ProjectileBehavior =
+	| { homing: true; speed: number }
+	| { ballistic: true; speed: number }
+	| { orbit: true; speed: number; radius: number; center: Position };
 
 export const createProjectile = (
 	scene: THREE.Scene,
 	startPos: Position,
 	damage: number,
-	mode: ProjectileModeType,
-	targetId: number | null = null,
+	behavior: ProjectileBehavior,
+	target: Entity | null = null,
 	targetPosition: Position | null = null,
 	lifetime: number = 2000,
-	projectileType: ProjectileVariantType = ProjectileVariant.BASIC,
 ) => {
 	const geometry = new THREE.SphereGeometry(0.2, 8, 8);
 	const material = new THREE.MeshStandardMaterial({
@@ -27,13 +31,14 @@ export const createProjectile = (
 		view: { mesh, originalColor: 0xff4444 } as View,
 		projectile: {
 			projectile: true,
-			type: projectileType,
-			mode,
 			damage,
-			targetId,
+			target,
 			targetPosition,
 			lifetime,
 			createdAt: Date.now(),
 		},
+		...("homing" in behavior ? { homing: behavior } : {}),
+		...("ballistic" in behavior ? { ballistic: behavior } : {}),
+		...("orbit" in behavior ? { orbit: behavior } : {}),
 	});
 };

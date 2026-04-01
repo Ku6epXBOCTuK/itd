@@ -3,8 +3,10 @@ import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system
 import { MoveSystem } from "$lib/modules/enemies/systems/move.system";
 import { AttackSystem } from "$lib/modules/enemies/systems/attack.system";
 import { TowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
-import { ProjectileMoveSystem } from "$lib/modules/projectiles/systems/move.system";
-import { HitSystem } from "$lib/modules/projectiles/systems/hit.system";
+import { TargetingSystem } from "$lib/modules/projectiles/systems/targeting.system";
+import { HomingMovementSystem } from "$lib/modules/projectiles/systems/homing-movement.system";
+import { BallisticMovementSystem } from "$lib/modules/projectiles/systems/ballistic-movement.system";
+import { CollisionSystem } from "$lib/modules/projectiles/systems/collision.system";
 import { RespawnSystem } from "$lib/modules/waves/systems/respawn.system";
 import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
@@ -15,7 +17,7 @@ type RenderSystem = () => void;
 
 const ActiveGameSystems: GameplaySystem[] = [AttackSystem, RespawnSystem];
 const GameplaySystems: GameplaySystem[] = [IncomeSystem, MoveSystem, TowerAttackSystem, EnemyDeathSystem];
-const ProjectileSystems: GameplaySystem[] = [ProjectileMoveSystem, HitSystem];
+const ProjectileSystems: GameplaySystem[] = [TargetingSystem, HomingMovementSystem, BallisticMovementSystem, CollisionSystem];
 const AlwaysSystems: RenderSystem[] = [SyncRenderSystem, UpdateHudSystem];
 
 let isRunning = false;

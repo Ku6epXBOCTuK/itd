@@ -1,4 +1,4 @@
-import { world, TowerState, ProjectileMode } from "$lib/core/world";
+import { world, TowerState, type Entity } from "$lib/core/world";
 import { createProjectile } from "$lib/modules/projectiles/factories";
 import * as THREE from "three";
 
@@ -18,7 +18,7 @@ export const TowerAttackSystem = (deltaTime: number) => {
 			const cooldownElapsed = currentTime - tower.tower.attackStartTime;
 			if (cooldownElapsed >= tower.tower.attackCooldown) {
 				tower.tower.towerState = TowerState.IDLE;
-				tower.tower.targetId = undefined;
+				tower.tower.target = undefined;
 			}
 			continue;
 		}
@@ -26,19 +26,16 @@ export const TowerAttackSystem = (deltaTime: number) => {
 		if (tower.tower.towerState === TowerState.FIRING) {
 			const animationElapsed = currentTime - tower.tower.attackStartTime;
 			if (animationElapsed >= tower.tower.attackAnimationDuration) {
-				const targetId = tower.tower.targetId;
-				if (targetId !== undefined) {
-					const targetEnemy = world.entity(targetId);
-					if (targetEnemy && targetEnemy.enemy && targetEnemy.enemy.hp > 0) {
-						if (scene) {
-							createProjectile(
-								scene,
-								tower.position,
-								tower.tower.damage,
-								ProjectileMode.HOMING,
-								targetId,
-							);
-						}
+				const target = tower.tower.target;
+				if (target && world.has(target) && target.enemy && target.enemy.hp > 0) {
+					if (scene) {
+						createProjectile(
+							scene,
+							tower.position,
+							tower.tower.damage,
+							{ homing: true, speed: 8 },
+							target,
+						);
 					}
 				}
 				tower.tower.towerState = TowerState.COOLDOWN;
@@ -66,7 +63,7 @@ export const TowerAttackSystem = (deltaTime: number) => {
 
 		if (targetEnemy) {
 			tower.tower.towerState = TowerState.FIRING;
-			tower.tower.targetId = (targetEnemy as any).id;
+			tower.tower.target = targetEnemy;
 			tower.tower.attackStartTime = currentTime;
 		}
 	}

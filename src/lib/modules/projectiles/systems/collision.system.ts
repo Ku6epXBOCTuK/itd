@@ -1,24 +1,23 @@
-import { world, EnemyState, ProjectileMode } from "$lib/core/world";
+import { world, EnemyState } from "$lib/core/world";
 import * as THREE from "three";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
-export const HitSystem = () => {
+const HIT_THRESHOLD = 0.3;
+
+export const CollisionSystem = () => {
 	const projectiles = world.with("projectile", "position", "view");
 
 	for (const projectile of projectiles) {
-		const target = projectile.projectile.targetId !== null
-			? world.entity(projectile.projectile.targetId)
-			: null;
-
+		const target = projectile.projectile.target;
 		const targetPos = projectile.projectile.targetPosition;
 
-		if (projectile.projectile.mode === ProjectileMode.DIRECT && targetPos) {
+		if (targetPos && !target) {
 			const dx = targetPos.x - projectile.position.x;
 			const dy = targetPos.y - projectile.position.y;
 			const dz = targetPos.z - projectile.position.z;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance < 0.3 || projectile.position.y <= 0) {
+			if (distance < HIT_THRESHOLD || projectile.position.y <= 0) {
 				GameEngine.emit(GameEvents.PROJECTILE_MISS, { position: projectile.position });
 
 				if (projectile.view) {
@@ -31,8 +30,8 @@ export const HitSystem = () => {
 			}
 		}
 
-		if (projectile.projectile.mode === ProjectileMode.HOMING && target) {
-			if (!target.position) {
+		if (target) {
+			if (!world.has(target) || !target.position) {
 				if (projectile.view) {
 					projectile.view.mesh.removeFromParent();
 					projectile.view.mesh.geometry.dispose();
@@ -57,12 +56,12 @@ export const HitSystem = () => {
 			const dz = target.position.z - projectile.position.z;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance < 0.3) {
+			if (distance < HIT_THRESHOLD) {
 				if (target.enemy) {
 					target.enemy.hp = Math.max(0, target.enemy.hp - projectile.projectile.damage);
 
 					GameEngine.emit(GameEvents.ENEMY_HIT, {
-						targetId: projectile.projectile.targetId!,
+						targetId: (target as any).id,
 						damage: projectile.projectile.damage,
 					});
 

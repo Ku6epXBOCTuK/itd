@@ -31,19 +31,6 @@ export const EnemyVariant = {
 
 export type EnemyVariantType = (typeof EnemyVariant)[keyof typeof EnemyVariant];
 
-export const ProjectileVariant = {
-	BASIC: "basic",
-} as const;
-
-export type ProjectileVariantType = (typeof ProjectileVariant)[keyof typeof ProjectileVariant];
-
-export const ProjectileMode = {
-	HOMING: "homing",
-	DIRECT: "direct",
-} as const;
-
-export type ProjectileModeType = (typeof ProjectileMode)[keyof typeof ProjectileMode];
-
 // ============ ENTITY COMPONENTS ============
 
 export type Position = { x: number; y: number; z: number };
@@ -69,7 +56,7 @@ export type Tower = {
 	attackAnimationDuration: number;
 	towerState: TowerStateType;
 	attackStartTime: number;
-	targetId?: number;
+	target?: Entity;
 };
 
 export type Enemy = {
@@ -88,12 +75,27 @@ export type Enemy = {
 	target: { x: number; y: number; z: number };
 };
 
+export type Homing = {
+	homing: true;
+	speed: number;
+};
+
+export type Ballistic = {
+	ballistic: true;
+	speed: number;
+};
+
+export type Orbit = {
+	orbit: true;
+	speed: number;
+	radius: number;
+	center: Position;
+};
+
 export type Projectile = {
 	projectile: true;
-	type: ProjectileVariantType;
-	mode: ProjectileModeType;
 	damage: number;
-	targetId: number | null;
+	target: Entity | null;
 	targetPosition: Position | null;
 	lifetime: number;
 	createdAt: number;
@@ -108,6 +110,9 @@ export type Entity = {
 	tower?: Tower;
 	enemy?: Enemy;
 	projectile?: Projectile;
+	homing?: Homing;
+	ballistic?: Ballistic;
+	orbit?: Orbit;
 };
 
 // ============ MINIPLEX WORLD ============
