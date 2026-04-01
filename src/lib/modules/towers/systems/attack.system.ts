@@ -27,7 +27,12 @@ export const TowerAttackSystem = (deltaTime: number) => {
 			const animationElapsed = currentTime - tower.tower.attackStartTime;
 			if (animationElapsed >= tower.tower.attackAnimationDuration) {
 				const target = tower.tower.target;
-				if (target && world.has(target) && target.enemy && target.enemy.hp > 0) {
+				if (
+					target &&
+					world.has(target) &&
+					target.enemy &&
+					target.enemy.hp > 0
+				) {
 					if (scene) {
 						createProjectile(
 							scene,

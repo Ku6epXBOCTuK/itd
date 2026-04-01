@@ -108,7 +108,9 @@
 		border-radius: 0.5rem;
 		cursor: pointer;
 		pointer-events: auto;
-		transition: background 0.2s, transform 0.2s;
+		transition:
+			background 0.2s,
+			transform 0.2s;
 	}
 
 	.pause-btn:hover {

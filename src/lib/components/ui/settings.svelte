@@ -24,13 +24,15 @@
 					max="100"
 					disabled={!hudState.settings.musicEnabled}
 					value={hudState.settings.musicVolume}
-					oninput={(e) => hudState.settings.musicVolume = parseInt(e.currentTarget.value)}
+					oninput={(e) =>
+						(hudState.settings.musicVolume = parseInt(e.currentTarget.value))}
 				/>
 				<span class="value">{hudState.settings.musicVolume}%</span>
 				<Button
 					icon={hudState.settings.musicEnabled ? IconVolume2 : IconVolumeX}
 					variant={hudState.settings.musicEnabled ? "primary" : "outline"}
-					onclick={() => hudState.settings.musicEnabled = !hudState.settings.musicEnabled}
+					onclick={() =>
+						(hudState.settings.musicEnabled = !hudState.settings.musicEnabled)}
 				/>
 			</div>
 
@@ -42,18 +44,25 @@
 					max="100"
 					disabled={!hudState.settings.sfxEnabled}
 					value={hudState.settings.sfxVolume}
-					oninput={(e) => hudState.settings.sfxVolume = parseInt(e.currentTarget.value)}
+					oninput={(e) =>
+						(hudState.settings.sfxVolume = parseInt(e.currentTarget.value))}
 				/>
 				<span class="value">{hudState.settings.sfxVolume}%</span>
 				<Button
 					icon={hudState.settings.sfxEnabled ? IconVolume2 : IconVolumeX}
 					variant={hudState.settings.sfxEnabled ? "primary" : "outline"}
-					onclick={() => hudState.settings.sfxEnabled = !hudState.settings.sfxEnabled}
+					onclick={() =>
+						(hudState.settings.sfxEnabled = !hudState.settings.sfxEnabled)}
 				/>
 			</div>
 		</div>
 
-		<Button icon={IconArrowLeft} label="Назад" onclick={goBack} variant="outline" />
+		<Button
+			icon={IconArrowLeft}
+			label="Назад"
+			onclick={goBack}
+			variant="outline"
+		/>
 	</div>
 </div>
 

@@ -23,11 +23,20 @@
 		<h1 class="title">Idle Tower Defense</h1>
 
 		<div class="menu-buttons">
-			<Button icon={IconPlay} label="Начать игру" onclick={() => GameEngine.emit(GameEvents.START_GAME)} />
+			<Button
+				icon={IconPlay}
+				label="Начать игру"
+				onclick={() => GameEngine.emit(GameEvents.START_GAME)}
+			/>
 
 			<Button icon={IconSettings} label="Настройки" onclick={openSettings} />
 
-			<Button icon={IconLogOut} label="Выход" onclick={exitGame} variant="outline" />
+			<Button
+				icon={IconLogOut}
+				label="Выход"
+				onclick={exitGame}
+				variant="outline"
+			/>
 		</div>
 	</div>
 </div>

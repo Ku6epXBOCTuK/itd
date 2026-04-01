@@ -88,11 +88,11 @@ modules/feature/
 ```typescript
 // ✅ ПРАВИЛЬНО — компоненты как объекты
 export type Entity = {
-	position?: Position;  // { x, y, z }
-	view?: View;          // { mesh, originalColor }
-	player?: Player;      // { player: true, gold, incomePerSecond }
-	tower?: Tower;        // { tower: true, hp, maxHp, damage, ... }
-	enemy?: Enemy;        // { enemy: true, type, enemyState, speed, hp, ... }
+	position?: Position; // { x, y, z }
+	view?: View; // { mesh, originalColor }
+	player?: Player; // { player: true, gold, incomePerSecond }
+	tower?: Tower; // { tower: true, hp, maxHp, damage, ... }
+	enemy?: Enemy; // { enemy: true, type, enemyState, speed, hp, ... }
 	projectile?: Projectile; // { projectile: true, damage, targetId }
 };
 
@@ -112,6 +112,7 @@ export const world = new World<{
 ```
 
 **Преимущества:**
+
 - Компоненты сгруппированы по логическим объектам
 - Автокомплит работает лучше (пишешь `tower.` и видишь все свойства)
 - Типобезопасность — нельзя случайно использовать `hp` врага для башни

@@ -19,9 +19,18 @@
 		<p class="subtitle">Башня разрушена</p>
 
 		<div class="buttons">
-			<Button icon={IconRotateCcw} label="Начать заново" onclick={restartGame} />
+			<Button
+				icon={IconRotateCcw}
+				label="Начать заново"
+				onclick={restartGame}
+			/>
 
-			<Button icon={IconLogOut} label="Выйти в меню" onclick={exitToMenu} variant="outline" />
+			<Button
+				icon={IconLogOut}
+				label="Выйти в меню"
+				onclick={exitToMenu}
+				variant="outline"
+			/>
 		</div>
 	</div>
 </div>

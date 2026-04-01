@@ -9,7 +9,9 @@ export const AppState = {
 
 export type AppStateType = (typeof AppState)[keyof typeof AppState];
 
-export const appState = $state<{ current: AppStateType }>({ current: AppState.MENU });
+export const appState = $state<{ current: AppStateType }>({
+	current: AppState.MENU,
+});
 
 export const setAppState = (state: AppStateType) => {
 	appState.current = state;

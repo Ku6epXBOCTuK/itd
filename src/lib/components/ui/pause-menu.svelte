@@ -20,7 +20,12 @@
 		<div class="pause-buttons">
 			<Button icon={IconPlay} label="Продолжить" onclick={handleResume} />
 
-			<Button icon={IconLogOut} label="В главное меню" onclick={exitToMenu} variant="outline" />
+			<Button
+				icon={IconLogOut}
+				label="В главное меню"
+				onclick={exitToMenu}
+				variant="outline"
+			/>
 		</div>
 	</div>
 </div>

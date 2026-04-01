@@ -18,7 +18,9 @@ export const CollisionSystem = () => {
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 			if (distance < HIT_THRESHOLD || projectile.position.y <= 0) {
-				GameEngine.emit(GameEvents.PROJECTILE_MISS, { position: projectile.position });
+				GameEngine.emit(GameEvents.PROJECTILE_MISS, {
+					position: projectile.position,
+				});
 
 				if (projectile.view) {
 					projectile.view.mesh.removeFromParent();
@@ -58,7 +60,10 @@ export const CollisionSystem = () => {
 
 			if (distance < HIT_THRESHOLD) {
 				if (target.enemy) {
-					target.enemy.hp = Math.max(0, target.enemy.hp - projectile.projectile.damage);
+					target.enemy.hp = Math.max(
+						0,
+						target.enemy.hp - projectile.projectile.damage,
+					);
 
 					GameEngine.emit(GameEvents.ENEMY_HIT, {
 						targetId: (target as any).id,

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import { appState, AppState } from "$lib/core/app-state.svelte";
-	import { initGameStateMachine, setGameCanvas } from "$lib/core/game-state-machine.svelte";
+	import {
+		initGameStateMachine,
+		setGameCanvas,
+	} from "$lib/core/game-state-machine.svelte";
 	import MainMenu from "$lib/components/ui/main-menu.svelte";
 	import Settings from "$lib/components/ui/settings.svelte";
 	import GameOver from "$lib/components/ui/game-over.svelte";
