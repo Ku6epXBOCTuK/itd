@@ -11,13 +11,24 @@ import { RespawnSystem } from "$lib/modules/waves/systems/respawn.system";
 import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
 import { appState, AppState } from "$lib/core/app-state.svelte";
+import { FRAME_MS } from "$lib/core/constants";
 
 type GameplaySystem = (deltaTime: number) => void;
 type RenderSystem = () => void;
 
 const ActiveGameSystems: GameplaySystem[] = [AttackSystem, RespawnSystem];
-const GameplaySystems: GameplaySystem[] = [IncomeSystem, MoveSystem, TowerAttackSystem, EnemyDeathSystem];
-const ProjectileSystems: GameplaySystem[] = [TargetingSystem, HomingMovementSystem, BallisticMovementSystem, CollisionSystem];
+const GameplaySystems: GameplaySystem[] = [
+	IncomeSystem,
+	MoveSystem,
+	TowerAttackSystem,
+	EnemyDeathSystem,
+];
+const ProjectileSystems: GameplaySystem[] = [
+	TargetingSystem,
+	HomingMovementSystem,
+	BallisticMovementSystem,
+	CollisionSystem,
+];
 const AlwaysSystems: RenderSystem[] = [SyncRenderSystem, UpdateHudSystem];
 
 let isRunning = false;
@@ -52,7 +63,7 @@ function gameLoop(deltaTime: number) {
 function loop(timestamp: number) {
 	if (!isRunning) return;
 
-	gameLoop(16);
+	gameLoop(FRAME_MS);
 	animationFrameId = requestAnimationFrame(loop);
 }
 

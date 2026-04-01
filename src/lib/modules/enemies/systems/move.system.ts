@@ -1,4 +1,5 @@
 import { world, EnemyState } from "$lib/core/world";
+import { SECOND_MS } from "$lib/core/constants";
 
 export const MoveSystem = (deltaTime: number) => {
 	const enemies = world.with("enemy", "position");
@@ -25,7 +26,7 @@ export const MoveSystem = (deltaTime: number) => {
 				z: dz / distance,
 			};
 
-			const moveDistance = enemy.enemy.speed * (deltaTime / 1000);
+			const moveDistance = enemy.enemy.speed * (deltaTime / SECOND_MS);
 			enemy.position.x += direction.x * moveDistance;
 			enemy.position.y += direction.y * moveDistance;
 			enemy.position.z += direction.z * moveDistance;

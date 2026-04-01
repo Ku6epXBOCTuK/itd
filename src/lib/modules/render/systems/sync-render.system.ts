@@ -1,9 +1,12 @@
 import { world, EnemyState, TowerState } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround } from "../factories";
-import { createEnemy } from "$lib/modules/enemies/factories";
-import { createTower } from "$lib/modules/towers/factories";
 import { setScene } from "$lib/core/game-state";
+import {
+	ENEMY_COLORS,
+	RENDER_CONFIG,
+	TOWER_COLORS,
+} from "$lib/core/game-config";
 
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
@@ -16,27 +19,41 @@ export const initRender = (
 ) => {
 	if (!scene) {
 		scene = new THREE.Scene();
-		scene.background = new THREE.Color(0x1a1a2e);
+		scene.background = new THREE.Color(RENDER_CONFIG.colors.background);
 		setScene(scene);
 
-		camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-		camera.position.set(0, 10, 10);
+		const { fov, near, far, position } = RENDER_CONFIG.camera;
+		camera = new THREE.PerspectiveCamera(fov, width / height, near, far);
+		camera.position.set(position.x, position.y, position.z);
 		camera.lookAt(0, 0, 0);
 		camera.layers.enable(1);
 
 		renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 		renderer.setSize(width, height);
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+		const ambientLight = new THREE.AmbientLight(
+			RENDER_CONFIG.colors.ambient,
+			RENDER_CONFIG.light.ambientIntensity,
+		);
 		scene.add(ambientLight);
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-		directionalLight.position.set(10, 10, 5);
+		const directionalLight = new THREE.DirectionalLight(
+			RENDER_CONFIG.colors.directional,
+			RENDER_CONFIG.light.directionalIntensity,
+		);
+		const { x, y, z } = RENDER_CONFIG.light.directionalPosition;
+		directionalLight.position.set(x, y, z);
 		scene.add(directionalLight);
 
 		createGround(scene);
 
-		const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
+		const grid = RENDER_CONFIG.grid;
+		const gridHelper = new THREE.GridHelper(
+			grid.size,
+			grid.divisions,
+			grid.colorCenterLine,
+			grid.colorGrid,
+		);
 		scene.add(gridHelper);
 	}
 
@@ -71,16 +88,7 @@ export const SyncRenderSystem = () => {
 				enemy.position.z,
 			);
 
-			const color =
-				enemy.enemy.enemyState === EnemyState.ATTACKING
-					? 0xff4444
-					: enemy.enemy.enemyState === EnemyState.COOLDOWN
-						? 0xffff00
-						: enemy.enemy.enemyState === EnemyState.HAPPY
-							? 0x4444ff
-							: enemy.enemy.enemyState === EnemyState.DYING
-								? 0xff69b4
-								: 0x00ff00;
+			const color = ENEMY_COLORS[enemy.enemy.enemyState];
 
 			(enemy.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(
 				color,
@@ -120,7 +128,9 @@ export const SyncRenderSystem = () => {
 			);
 
 			const color =
-				tower.tower.towerState === TowerState.BROKEN ? 0xff0000 : 0x4a4a4a;
+				tower.tower.towerState === TowerState.BROKEN
+					? TOWER_COLORS[TowerState.BROKEN]
+					: TOWER_COLORS[TowerState.IDLE];
 
 			(tower.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(
 				color,

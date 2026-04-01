@@ -1,4 +1,5 @@
 import { world } from "$lib/core/world";
+import { SECOND_MS } from "$lib/core/constants";
 
 const HIT_THRESHOLD = 0.3;
 
@@ -24,7 +25,7 @@ export const HomingMovementSystem = (deltaTime: number) => {
 			z: dz / distance,
 		};
 
-		const moveDistance = projectile.homing.speed * (deltaTime / 1000);
+		const moveDistance = projectile.homing.speed * (deltaTime / SECOND_MS);
 		projectile.position.x += direction.x * moveDistance;
 		projectile.position.y += direction.y * moveDistance;
 		projectile.position.z += direction.z * moveDistance;

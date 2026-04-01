@@ -8,69 +8,43 @@ import {
 } from "$lib/core/world";
 import * as THREE from "three";
 import { createHpBarSprite } from "./hp-bar";
+import {
+	ENEMY_COLORS,
+	ENEMY_CONFIGS,
+	ENEMY_SPAWN,
+	GEOMETRY,
+} from "$lib/core/game-config";
 
 export { EnemyVariant };
 
-const enemyTypes = {
-	[EnemyVariant.BASIC]: {
-		speed: 2,
-		hp: 100,
-		maxHp: 100,
-		damage: 10,
-		attackRange: 1.5,
-		attackCooldown: 1000,
-		attackDuration: 300,
-	},
-	[EnemyVariant.FAST]: {
-		speed: 4,
-		hp: 50,
-		maxHp: 50,
-		damage: 50,
-		attackRange: 1.5,
-		attackCooldown: 500,
-		attackDuration: 200,
-	},
-	[EnemyVariant.TANK]: {
-		speed: 1,
-		hp: 200,
-		maxHp: 200,
-		damage: 200,
-		attackRange: 1.5,
-		attackCooldown: 2000,
-		attackDuration: 500,
-	},
-} as const;
-
-type EnemyStats = (typeof enemyTypes)[EnemyVariantType];
-
-const enemyColors = {
-	[EnemyState.MOVING]: 0x00ff00,
-	[EnemyState.ATTACKING]: 0xff4444,
-	[EnemyState.COOLDOWN]: 0xffff00,
-};
+type EnemyStats = (typeof ENEMY_CONFIGS)[EnemyVariantType];
 
 export const createEnemy = (
 	scene: THREE.Scene,
-	type: keyof typeof enemyTypes,
+	type: keyof typeof ENEMY_CONFIGS,
 	x: number,
 	z: number,
 ) => {
-	const stats = enemyTypes[type] as EnemyStats;
+	const stats = ENEMY_CONFIGS[type] as EnemyStats;
 
-	const geometry = new THREE.SphereGeometry(0.5, 16, 16);
+	const geometry = new THREE.SphereGeometry(
+		GEOMETRY.enemy.radius,
+		GEOMETRY.enemy.segments,
+		GEOMETRY.enemy.segments,
+	);
 	const material = new THREE.MeshStandardMaterial({
-		color: enemyColors[EnemyState.MOVING],
+		color: ENEMY_COLORS[EnemyState.MOVING],
 	});
 	const mesh = new THREE.Mesh(geometry, material);
-	mesh.position.set(x, 0.5, z);
+	mesh.position.set(x, ENEMY_SPAWN.y, z);
 	mesh.castShadow = true;
 	scene.add(mesh);
 
 	const hpBarSprite = createHpBarSprite(scene);
 
 	const enemy = world.add({
-		position: { x, y: 0.5, z } as Position,
-		view: { mesh, originalColor: enemyColors[EnemyState.MOVING] } as View,
+		position: { x, y: ENEMY_SPAWN.y, z } as Position,
+		view: { mesh, originalColor: ENEMY_COLORS[EnemyState.MOVING] } as View,
 		enemy: {
 			enemy: true,
 			type: type as EnemyVariantType,

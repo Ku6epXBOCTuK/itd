@@ -1,7 +1,6 @@
 import { world, EnemyState } from "$lib/core/world";
 import * as THREE from "three";
-
-const DEATH_ANIMATION_DURATION = 500;
+import { GAME_CONFIG } from "$lib/core/game-config";
 
 export const EnemyDeathSystem = () => {
 	const enemies = world.with("enemy", "position", "view");
@@ -14,7 +13,7 @@ export const EnemyDeathSystem = () => {
 
 		const deathElapsed = currentTime - enemy.enemy.deathStartTime;
 
-		if (deathElapsed >= DEATH_ANIMATION_DURATION) {
+		if (deathElapsed >= GAME_CONFIG.deathAnimationDuration) {
 			if (enemy.view) {
 				enemy.view.mesh.removeFromParent();
 				enemy.view.mesh.geometry.dispose();

@@ -1,4 +1,5 @@
 import { world } from "$lib/core/world";
+import { SECOND_MS } from "$lib/core/constants";
 
 const HIT_THRESHOLD = 0.3;
 
@@ -6,7 +7,8 @@ export const BallisticMovementSystem = (deltaTime: number) => {
 	const projectiles = world.with("projectile", "ballistic", "position");
 
 	for (const projectile of projectiles) {
-		if (!projectile.ballistic || !projectile.projectile.targetPosition) continue;
+		if (!projectile.ballistic || !projectile.projectile.targetPosition)
+			continue;
 
 		const targetPos = projectile.projectile.targetPosition;
 
@@ -23,7 +25,7 @@ export const BallisticMovementSystem = (deltaTime: number) => {
 			z: dz / distance,
 		};
 
-		const moveDistance = projectile.ballistic.speed * (deltaTime / 1000);
+		const moveDistance = projectile.ballistic.speed * (deltaTime / SECOND_MS);
 		projectile.position.x += direction.x * moveDistance;
 		projectile.position.y += direction.y * moveDistance;
 		projectile.position.z += direction.z * moveDistance;

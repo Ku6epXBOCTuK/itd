@@ -1,9 +1,7 @@
 import { world } from "$lib/core/world";
-
-const TARGETING_INTERVAL = 100;
+import { GAME_CONFIG } from "$lib/core/game-config";
 
 export const TargetingSystem = () => {
-	const currentTime = Date.now();
 	const homingProjectiles = world.with("projectile", "homing", "position");
 
 	for (const projectile of homingProjectiles) {
@@ -18,7 +16,7 @@ export const TargetingSystem = () => {
 		if (needsNewTarget) {
 			const enemies = world.with("enemy", "position");
 			let nearest: ReturnType<typeof world.with>[number] | null = null;
-			let minDistance = 10;
+			let minDistance: number = GAME_CONFIG.targetingMinDistance;
 
 			for (const enemy of enemies) {
 				if (enemy.enemy.hp <= 0) continue;

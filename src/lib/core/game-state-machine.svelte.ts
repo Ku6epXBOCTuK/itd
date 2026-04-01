@@ -1,8 +1,5 @@
 import { AppState, setAppState } from "$lib/core/app-state.svelte";
-import {
-	initializeGameState,
-	resetGameState,
-} from "$lib/core/game-state";
+import { initializeGameState, resetGameState } from "$lib/core/game-state";
 import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import {
 	disposeRenderer,
@@ -12,6 +9,8 @@ import {
 } from "$lib/modules/render/systems/sync-render.system";
 import { GameEngine, GameEvents } from "./event-bus";
 import { GameLoop } from "./game-loop";
+
+const GAME_OVER_ANIMATION_DURATION = 3000;
 
 let canvas: HTMLCanvasElement | null = null;
 let isGameRunning = false;
@@ -95,7 +94,7 @@ export const initGameStateMachine = () => {
 		gameOverTimeout = setTimeout(() => {
 			setAppState(AppState.GAME_OVER);
 			gameOverTimeout = null;
-		}, 3000);
+		}, GAME_OVER_ANIMATION_DURATION);
 	});
 
 	GameEngine.on(GameEvents.TO_MENU, () => {

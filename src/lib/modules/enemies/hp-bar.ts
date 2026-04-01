@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { GEOMETRY } from "$lib/core/game-config";
 
 const vertexShader = `
     varying vec2 vUv;
@@ -47,7 +48,11 @@ export const createHpBarSprite = (scene: THREE.Scene) => {
 	const sprite = new THREE.Sprite(
 		hpBarMaterial as unknown as THREE.SpriteMaterial,
 	);
-	sprite.scale.set(1.0, 0.15, 1.0);
+	sprite.scale.set(
+		GEOMETRY.hpBar.width,
+		GEOMETRY.hpBar.height,
+		GEOMETRY.hpBar.depth,
+	);
 	sprite.renderOrder = 1;
 	sprite.layers.set(1);
 	scene.add(sprite);

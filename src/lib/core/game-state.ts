@@ -6,6 +6,7 @@ import { createTower } from "$lib/modules/towers/factories";
 import { clearGameEntities } from "$lib/modules/render/systems/sync-render.system";
 import { resetAttackSystem } from "$lib/modules/enemies/systems/attack.system";
 import type { Scene } from "three";
+import { SPAWN_X, SPAWN_Z } from "$lib/core/constants";
 
 let scene: Scene | null = null;
 
@@ -35,7 +36,7 @@ export const spawnInitialEnemies = () => {
 		return;
 	}
 
-	createEnemy(scene, EnemyVariant.BASIC, 5, 5);
+	createEnemy(scene, EnemyVariant.BASIC, SPAWN_X, SPAWN_Z);
 };
 
 export const resetGameState = () => {
