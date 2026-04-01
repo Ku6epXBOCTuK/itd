@@ -61,7 +61,9 @@ export const SyncRenderSystem = () => {
 					? 0xffff00
 					: enemy.enemy.enemyState === EnemyState.HAPPY
 						? 0x4444ff
-						: 0x00ff00;
+						: enemy.enemy.enemyState === EnemyState.DYING
+							? 0xff69b4
+							: 0x00ff00;
 
 			(enemy.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
 		}

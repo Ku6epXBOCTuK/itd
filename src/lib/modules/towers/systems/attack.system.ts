@@ -1,4 +1,4 @@
-import { world, TowerState } from "$lib/core/world";
+import { world, TowerState, ProjectileMode } from "$lib/core/world";
 import { createProjectile } from "$lib/modules/projectiles/factories";
 import * as THREE from "three";
 
@@ -26,15 +26,17 @@ export const TowerAttackSystem = (deltaTime: number) => {
 		if (tower.tower.towerState === TowerState.FIRING) {
 			const animationElapsed = currentTime - tower.tower.attackStartTime;
 			if (animationElapsed >= tower.tower.attackAnimationDuration) {
-				if (tower.tower.targetId !== undefined) {
-					const targetEnemy = world.entity(tower.tower.targetId);
+				const targetId = tower.tower.targetId;
+				if (targetId !== undefined) {
+					const targetEnemy = world.entity(targetId);
 					if (targetEnemy && targetEnemy.enemy && targetEnemy.enemy.hp > 0) {
 						if (scene) {
 							createProjectile(
 								scene,
 								tower.position,
-								tower.tower.targetId,
 								tower.tower.damage,
+								ProjectileMode.HOMING,
+								targetId,
 							);
 						}
 					}
@@ -64,7 +66,7 @@ export const TowerAttackSystem = (deltaTime: number) => {
 
 		if (targetEnemy) {
 			tower.tower.towerState = TowerState.FIRING;
-			tower.tower.targetId = targetEnemy.id;
+			tower.tower.targetId = (targetEnemy as any).id;
 			tower.tower.attackStartTime = currentTime;
 		}
 	}

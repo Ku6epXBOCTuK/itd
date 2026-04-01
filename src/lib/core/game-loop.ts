@@ -2,18 +2,19 @@ import { IncomeSystem } from "$lib/modules/economy/systems/income.system";
 import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
 import { MoveSystem } from "$lib/modules/enemies/systems/move.system";
 import { AttackSystem } from "$lib/modules/enemies/systems/attack.system";
-import { TowerAttackSystem } from "$lib/modules/towers/system/attack.system";
+import { TowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
 import { ProjectileMoveSystem } from "$lib/modules/projectiles/systems/move.system";
 import { HitSystem } from "$lib/modules/projectiles/systems/hit.system";
 import { RespawnSystem } from "$lib/modules/waves/systems/respawn.system";
 import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
+import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
 import { appState, AppState } from "$lib/core/app-state.svelte";
 
 type GameplaySystem = (deltaTime: number) => void;
 type RenderSystem = () => void;
 
 const ActiveGameSystems: GameplaySystem[] = [AttackSystem, RespawnSystem];
-const GameplaySystems: GameplaySystem[] = [IncomeSystem, MoveSystem, TowerAttackSystem];
+const GameplaySystems: GameplaySystem[] = [IncomeSystem, MoveSystem, TowerAttackSystem, EnemyDeathSystem];
 const ProjectileSystems: GameplaySystem[] = [ProjectileMoveSystem, HitSystem];
 const AlwaysSystems: RenderSystem[] = [SyncRenderSystem, UpdateHudSystem];
 

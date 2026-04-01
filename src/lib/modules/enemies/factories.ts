@@ -1,4 +1,11 @@
-import { world, EnemyState, EnemyVariant, type EnemyVariantType, type Position, type View } from "$lib/core/world";
+import {
+	EnemyState,
+	EnemyVariant,
+	world,
+	type EnemyVariantType,
+	type Position,
+	type View,
+} from "$lib/core/world";
 import * as THREE from "three";
 
 export { EnemyVariant };
@@ -8,7 +15,7 @@ const enemyTypes = {
 		speed: 2,
 		hp: 100,
 		maxHp: 100,
-		damage: 100,
+		damage: 10,
 		attackRange: 1.5,
 		attackCooldown: 1000,
 		attackDuration: 300,
@@ -33,7 +40,7 @@ const enemyTypes = {
 	},
 } as const;
 
-type EnemyStats = typeof enemyTypes[EnemyVariantType];
+type EnemyStats = (typeof enemyTypes)[EnemyVariantType];
 
 const enemyColors = {
 	[EnemyState.MOVING]: 0x00ff00,
@@ -73,6 +80,7 @@ export const createEnemy = (
 			attackCooldown: stats.attackCooldown,
 			attackDuration: stats.attackDuration,
 			attackStartTime: 0,
+			deathStartTime: 0,
 			target: { x: 0, y: 1, z: 0 },
 		},
 	});

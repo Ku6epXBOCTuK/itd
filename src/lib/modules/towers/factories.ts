@@ -1,6 +1,6 @@
 import { world, TowerState, type Position, type View } from "$lib/core/world";
 import * as THREE from "three";
-import { setTowerScene } from "./system/attack.system";
+import { setTowerScene } from "./systems/attack.system";
 
 export const createTower = (scene: THREE.Scene, x: number, z: number) => {
 	setTowerScene(scene);
@@ -20,7 +20,7 @@ export const createTower = (scene: THREE.Scene, x: number, z: number) => {
 			hp: 500,
 			maxHp: 500,
 			damage: 25,
-			attackRange: 4,
+			attackRange: 10,
 			attackCooldown: 1000,
 			attackAnimationDuration: 300,
 			towerState: TowerState.IDLE,

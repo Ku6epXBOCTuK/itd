@@ -17,7 +17,8 @@ export const EnemyState = {
 	MOVING: "moving",
 	ATTACKING: "attacking",
 	COOLDOWN: "cooldown",
-	HAPPY: "happy", // Враг радуется победе
+	HAPPY: "happy",
+	DYING: "dying",
 } as const;
 
 export type EnemyStateType = (typeof EnemyState)[keyof typeof EnemyState];
@@ -29,6 +30,19 @@ export const EnemyVariant = {
 } as const;
 
 export type EnemyVariantType = (typeof EnemyVariant)[keyof typeof EnemyVariant];
+
+export const ProjectileVariant = {
+	BASIC: "basic",
+} as const;
+
+export type ProjectileVariantType = (typeof ProjectileVariant)[keyof typeof ProjectileVariant];
+
+export const ProjectileMode = {
+	HOMING: "homing",
+	DIRECT: "direct",
+} as const;
+
+export type ProjectileModeType = (typeof ProjectileMode)[keyof typeof ProjectileMode];
 
 // ============ ENTITY COMPONENTS ============
 
@@ -70,13 +84,19 @@ export type Enemy = {
 	attackCooldown: number;
 	attackDuration: number;
 	attackStartTime: number;
+	deathStartTime: number;
 	target: { x: number; y: number; z: number };
 };
 
 export type Projectile = {
 	projectile: true;
+	type: ProjectileVariantType;
+	mode: ProjectileModeType;
 	damage: number;
-	targetId: number;
+	targetId: number | null;
+	targetPosition: Position | null;
+	lifetime: number;
+	createdAt: number;
 };
 
 // ============ UNIFIED ENTITY TYPE ============
