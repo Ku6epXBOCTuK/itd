@@ -1,18 +1,17 @@
-import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
+import { AppState, setAppState } from "$lib/core/app-state.svelte";
 import {
 	initializeGameState,
 	resetGameState,
 } from "$lib/modules/economy/factories";
+import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import {
 	disposeRenderer,
 	initRender,
 	resizeRenderer,
 	SyncRenderSystem,
 } from "$lib/modules/render/systems/sync-render.system";
-import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import { GameEngine, GameEvents } from "./event-bus";
 import { GameLoop } from "./game-loop";
-import { setAppState, AppState } from "$lib/core/app-state.svelte";
 
 let canvas: HTMLCanvasElement | null = null;
 let isGameRunning = false;
@@ -24,7 +23,6 @@ function startGame() {
 	initRender(canvas, width, height);
 	initializeGameState();
 
-	// Форсируем первый рендер и обновление HUD
 	SyncRenderSystem();
 	UpdateHudSystem();
 
@@ -53,6 +51,19 @@ export const setGameCanvas = (newCanvas: HTMLCanvasElement) => {
 export const initGameStateMachine = () => {
 	const resizeObserver = new ResizeObserver(handleResize);
 	let gameOverTimeout: ReturnType<typeof setTimeout> | null = null;
+
+	const cleanup = $effect.root(() => {
+		$effect(() => {
+			if (canvas) {
+				resizeObserver.observe(canvas);
+				return () => {
+					if (canvas) {
+						resizeObserver.unobserve(canvas);
+					}
+				};
+			}
+		});
+	});
 
 	GameEngine.on(GameEvents.START_GAME, () => {
 		if (isGameRunning) {
@@ -97,14 +108,10 @@ export const initGameStateMachine = () => {
 		stopGame();
 	});
 
-	$effect(() => {
-		if (canvas) {
-			resizeObserver.observe(canvas);
-			return () => {
-				if (canvas) {
-					resizeObserver.unobserve(canvas);
-				}
-			};
+	return () => {
+		cleanup();
+		if (gameOverTimeout) {
+			clearTimeout(gameOverTimeout);
 		}
-	});
+	};
 };

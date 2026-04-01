@@ -30,10 +30,10 @@
 		"lint:css-vars": "node scripts/css-vars.js",
 		"prepare": "svelte-kit sync || echo ''",
 		"preview": "vite preview",
-		"test": "npm run test:unit -- --run && npm run test:e2e",
-		"test:e2e": "playwright test",
-		"test:run": "vitest run",
-		"test:unit": "vitest"
+		"test": "npm run test:unit -- --run && npm run test:integration -- --run",
+		"test:unit": "vitest",
+		"test:integration": "vitest --config tests/vitest.config.ts",
+		"test:e2e": "playwright test"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.2",
