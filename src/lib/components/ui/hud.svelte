@@ -37,6 +37,12 @@
 	</button>
 </div>
 
+{#if hudState.waveAnnouncement}
+	<div class="wave-announcement">
+		{hudState.waveAnnouncement}
+	</div>
+{/if}
+
 <style>
 	.hud {
 		position: absolute;
@@ -116,5 +122,21 @@
 	.pause-btn:hover {
 		background: rgba(0, 0, 0, 0.9);
 		transform: scale(1.05);
+	}
+
+	.wave-announcement {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: rgba(0, 0, 0, 0.9);
+		color: #ff4444;
+		padding: 1.5rem 3rem;
+		border-radius: 0.5rem;
+		font-family: sans-serif;
+		font-size: 3rem;
+		font-weight: bold;
+		pointer-events: none;
+		text-align: center;
 	}
 </style>
