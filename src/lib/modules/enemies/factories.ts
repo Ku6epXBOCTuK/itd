@@ -65,7 +65,7 @@ export const createEnemy = (
 	mesh.castShadow = true;
 	scene.add(mesh);
 
-	return world.add({
+	const enemy = world.add({
 		position: { x, y: 0.5, z } as Position,
 		view: { mesh, originalColor: enemyColors[EnemyState.MOVING] } as View,
 		enemy: {
@@ -84,4 +84,6 @@ export const createEnemy = (
 			target: { x: 0, y: 1, z: 0 },
 		},
 	});
+
+	return enemy;
 };

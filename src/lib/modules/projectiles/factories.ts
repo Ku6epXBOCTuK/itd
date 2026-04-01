@@ -27,7 +27,7 @@ export const createProjectile = (
 	scene.add(mesh);
 
 	return world.add({
-		position: startPos,
+		position: { x: startPos.x, y: startPos.y, z: startPos.z },
 		view: { mesh, originalColor: 0xff4444 } as View,
 		projectile: {
 			projectile: true,
