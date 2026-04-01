@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { createGround } from "../factories";
 import { createEnemy } from "$lib/modules/enemies/factories";
 import { createTower } from "$lib/modules/towers/factories";
-import { setScene } from "$lib/modules/economy/factories";
+import { setScene } from "$lib/core/game-state";
 
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
@@ -50,6 +50,9 @@ export const SyncRenderSystem = () => {
 	const enemies = world.with("enemy", "position", "view");
 	const projectiles = world.with("projectile", "position", "view");
 	const towers = world.with("tower", "position", "view");
+	const settingsEntity = Array.from(world.with("settings"))[0];
+
+	const showHpBar = settingsEntity?.settings.showHpBar ?? true;
 
 	for (const enemy of enemies) {
 		if (enemy.view && enemy.position) {

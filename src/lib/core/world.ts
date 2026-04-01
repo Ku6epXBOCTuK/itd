@@ -101,6 +101,11 @@ export type Projectile = {
 	createdAt: number;
 };
 
+export type Settings = {
+	settings: true;
+	showHpBar: boolean;
+};
+
 // ============ UNIFIED ENTITY TYPE ============
 // Все компоненты опциональны, сущности могут иметь любой набор компонентов
 export type Entity = {
@@ -113,6 +118,7 @@ export type Entity = {
 	homing?: Homing;
 	ballistic?: Ballistic;
 	orbit?: Orbit;
+	settings?: Settings;
 };
 
 // ============ MINIPLEX WORLD ============
