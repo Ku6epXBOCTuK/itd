@@ -1,7 +1,6 @@
 import { world, EnemyState, TowerState } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround } from "../factories";
-import { setScene } from "$lib/core/game-state";
 import {
 	ENEMY_COLORS,
 	RENDER_CONFIG,
@@ -20,7 +19,6 @@ export const initRender = (
 	if (!scene) {
 		scene = new THREE.Scene();
 		scene.background = new THREE.Color(RENDER_CONFIG.colors.background);
-		setScene(scene);
 
 		const { fov, near, far, position } = RENDER_CONFIG.camera;
 		camera = new THREE.PerspectiveCamera(fov, width / height, near, far);
@@ -65,6 +63,19 @@ export const initRender = (
 };
 
 export const SyncRenderSystem = () => {
+	const pendingScene = world.with("view").without("inScene");
+	for (const entity of pendingScene) {
+		if (scene) {
+			if (entity.view) {
+				scene.add(entity.view.mesh);
+			}
+			if (entity.enemy?.sprite) {
+				scene.add(entity.enemy.sprite);
+			}
+		}
+		world.addComponent(entity, "inScene", { inScene: true });
+	}
+
 	const enemies = world.with("enemy", "position", "view");
 	const projectiles = world.with("projectile", "position", "view");
 	const towers = world.with("tower", "position", "view");
@@ -160,28 +171,16 @@ export const disposeRenderer = () => {
 };
 
 export const clearGameEntities = () => {
-	if (!scene) return;
-
-	const entities = world.with("view", "enemy");
-	const toRemove: Array<ReturnType<typeof world.with>[number]> = [];
-
+	const entities = world.with("view");
 	for (const entity of entities) {
-		toRemove.push(entity);
-	}
-
-	for (const entity of toRemove) {
-		if (entity.view) {
-			scene.remove(entity.view.mesh);
-			entity.view.mesh.geometry.dispose();
-			if (Array.isArray(entity.view.mesh.material)) {
-				entity.view.mesh.material.forEach((m: THREE.Material) => m.dispose());
-			} else {
-				(entity.view.mesh.material as THREE.Material).dispose();
+		if (entity.inScene && scene) {
+			world.removeComponent(entity, "inScene");
+			if (entity.view) {
+				scene.remove(entity.view.mesh);
 			}
-		}
-		if (entity.enemy?.sprite) {
-			scene.remove(entity.enemy.sprite);
-			(entity.enemy.sprite.material as THREE.Material).dispose();
+			if (entity.enemy?.sprite) {
+				scene.remove(entity.enemy.sprite);
+			}
 		}
 		world.remove(entity);
 	}

@@ -1,5 +1,4 @@
-import { world, EnemyState } from "$lib/core/world";
-import * as THREE from "three";
+import { world, EnemyState, cleanupEntity } from "$lib/core/world";
 import { GAME_CONFIG } from "$lib/core/game-config";
 
 export const EnemyDeathSystem = () => {
@@ -14,16 +13,7 @@ export const EnemyDeathSystem = () => {
 		const deathElapsed = currentTime - enemy.enemy.deathStartTime;
 
 		if (deathElapsed >= GAME_CONFIG.deathAnimationDuration) {
-			if (enemy.view) {
-				enemy.view.mesh.removeFromParent();
-				enemy.view.mesh.geometry.dispose();
-				(enemy.view.mesh.material as THREE.Material).dispose();
-			}
-			if (enemy.enemy.sprite) {
-				enemy.enemy.sprite.removeFromParent();
-				(enemy.enemy.sprite.material as THREE.Material).dispose();
-			}
-			world.remove(enemy);
+			cleanupEntity(enemy);
 		}
 	}
 };

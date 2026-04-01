@@ -1,2 +1,2 @@
 export { WaveSystem } from "./wave.system";
-export { SpawnSystem, setSpawnScene } from "./spawn.system";
+export { SpawnSystem } from "./spawn.system";

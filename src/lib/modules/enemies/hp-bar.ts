@@ -46,7 +46,7 @@ const createHpBarMaterial = () => {
 	});
 };
 
-export const createHpBarSprite = (scene: THREE.Scene) => {
+export const createHpBarSprite = () => {
 	const sprite = new THREE.Sprite(
 		createHpBarMaterial() as unknown as THREE.SpriteMaterial,
 	);
@@ -57,6 +57,5 @@ export const createHpBarSprite = (scene: THREE.Scene) => {
 	);
 	sprite.renderOrder = 1;
 	sprite.layers.set(1);
-	scene.add(sprite);
 	return sprite;
 };

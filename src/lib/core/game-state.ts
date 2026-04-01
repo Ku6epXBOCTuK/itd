@@ -4,15 +4,6 @@ import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 import { createTower } from "$lib/modules/towers/factories";
 import { clearGameEntities } from "$lib/modules/render/systems/sync-render.system";
 import { resetAttackSystem } from "$lib/modules/enemies/systems/attack.system";
-import { setSpawnScene } from "$lib/modules/waves/systems/spawn.system";
-import type { Scene } from "three";
-
-let scene: Scene | null = null;
-
-export const setScene = (s: Scene) => {
-	scene = s;
-	setSpawnScene(s);
-};
 
 export const createGameState = () => {
 	world.add({
@@ -60,8 +51,5 @@ export const resetGameState = () => {
 
 export const initializeGameState = () => {
 	createGameState();
-
-	if (scene) {
-		createTower(scene, 0, 0);
-	}
+	createTower(0, 0);
 };

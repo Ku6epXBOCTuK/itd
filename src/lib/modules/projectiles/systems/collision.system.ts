@@ -1,5 +1,4 @@
-import { world, EnemyState } from "$lib/core/world";
-import * as THREE from "three";
+import { world, EnemyState, cleanupEntity } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
 const HIT_THRESHOLD = 0.3;
@@ -21,35 +20,19 @@ export const CollisionSystem = () => {
 				GameEngine.emit(GameEvents.PROJECTILE_MISS, {
 					position: projectile.position,
 				});
-
-				if (projectile.view) {
-					projectile.view.mesh.removeFromParent();
-					projectile.view.mesh.geometry.dispose();
-					(projectile.view.mesh.material as THREE.Material).dispose();
-				}
-				world.remove(projectile);
+				cleanupEntity(projectile);
 				continue;
 			}
 		}
 
 		if (target) {
 			if (!world.has(target) || !target.position) {
-				if (projectile.view) {
-					projectile.view.mesh.removeFromParent();
-					projectile.view.mesh.geometry.dispose();
-					(projectile.view.mesh.material as THREE.Material).dispose();
-				}
-				world.remove(projectile);
+				cleanupEntity(projectile);
 				continue;
 			}
 
 			if (target.enemy && target.enemy.hp <= 0) {
-				if (projectile.view) {
-					projectile.view.mesh.removeFromParent();
-					projectile.view.mesh.geometry.dispose();
-					(projectile.view.mesh.material as THREE.Material).dispose();
-				}
-				world.remove(projectile);
+				cleanupEntity(projectile);
 				continue;
 			}
 
@@ -76,12 +59,7 @@ export const CollisionSystem = () => {
 					}
 				}
 
-				if (projectile.view) {
-					projectile.view.mesh.removeFromParent();
-					projectile.view.mesh.geometry.dispose();
-					(projectile.view.mesh.material as THREE.Material).dispose();
-				}
-				world.remove(projectile);
+				cleanupEntity(projectile);
 			}
 		}
 	}

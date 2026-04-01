@@ -73,6 +73,18 @@ modules/feature/
 
 Импортировать из этих файлов, НЕ использовать числа напрямую.
 
+### Правила использования библиотек
+
+#### Miniplex ECS
+
+- Добавление компонента: `world.addComponent(entity, "componentName", value)`
+- Удаление компонента: `world.removeComponent(entity, "componentName")`
+- Удаление сущности: `world.remove(entity)`
+- Компонент `inScene` — сущность уже в сцене
+- Запрос ожидающих добавления: `world.with("view").without("inScene")`
+- При добавлении entity в сцену: сначала `scene.add()`, потом `world.addComponent(entity, "inScene", { inScene: true })`
+- При удалении из сцены: `world.removeComponent(entity, "inScene")`
+
 ---
 
 ## Чек-лист перед коммитом

@@ -2,21 +2,13 @@ import { world, WaveStatus } from "$lib/core/world";
 import { SPAWN_X, SPAWN_Z } from "$lib/core/constants";
 import { WAVE_CONFIG, WAVE_DEFINITIONS } from "$lib/core/game-config";
 import { createEnemy } from "$lib/modules/enemies/factories";
-import type { Scene } from "three";
 
 const SPAWN_SPREAD = 4;
-
-let scene: Scene | null = null;
-
-export const setSpawnScene = (s: Scene) => {
-	scene = s;
-};
 
 export const SpawnSystem = (deltaTime: number) => {
 	const waveControl = Array.from(world.with("waveControl"))[0];
 	if (!waveControl) return;
 	if (waveControl.waveControl.status !== WaveStatus.SPAWNING) return;
-	if (!scene) return;
 
 	const waveIndex = Math.min(
 		waveControl.waveControl.currentWave,
@@ -43,7 +35,7 @@ export const SpawnSystem = (deltaTime: number) => {
 
 		if (totalSpawned < spawnPositions.length) {
 			const pos = spawnPositions[totalSpawned];
-			createEnemy(scene, waveDef.enemies[0].type, pos.x, pos.z);
+			createEnemy(waveDef.enemies[0].type, pos.x, pos.z);
 			waveControl.waveControl.remainingEnemies--;
 		}
 

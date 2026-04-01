@@ -116,6 +116,10 @@ export type Settings = {
 	showHpBar: boolean;
 };
 
+export type InScene = {
+	inScene: true;
+};
+
 export type WaveControl = {
 	waveControl: true;
 	currentWave: number;
@@ -140,7 +144,27 @@ export type Entity = {
 	orbit?: Orbit;
 	settings?: Settings;
 	waveControl?: WaveControl;
+	inScene?: InScene;
 };
 
 // ============ MINIPLEX WORLD ============
 export const world = new World<Entity>();
+
+// ============ ENTITY CLEANUP ============
+export const cleanupEntity = (entity: Entity) => {
+	if (entity.view) {
+		const mesh = entity.view.mesh;
+		mesh.removeFromParent();
+		mesh.geometry.dispose();
+		if (Array.isArray(mesh.material)) {
+			mesh.material.forEach((m) => m.dispose());
+		} else {
+			mesh.material.dispose();
+		}
+	}
+	if (entity.enemy?.sprite) {
+		entity.enemy.sprite.removeFromParent();
+		entity.enemy.sprite.material.dispose();
+	}
+	world.remove(entity);
+};

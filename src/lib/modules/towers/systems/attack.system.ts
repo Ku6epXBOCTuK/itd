@@ -1,12 +1,5 @@
-import { world, TowerState, type Entity } from "$lib/core/world";
+import { world, TowerState } from "$lib/core/world";
 import { createProjectile } from "$lib/modules/projectiles/factories";
-import * as THREE from "three";
-
-let scene: THREE.Scene | null = null;
-
-export const setTowerScene = (s: THREE.Scene) => {
-	scene = s;
-};
 
 export const TowerAttackSystem = (deltaTime: number) => {
 	const currentTime = Date.now();
@@ -33,15 +26,12 @@ export const TowerAttackSystem = (deltaTime: number) => {
 					target.enemy &&
 					target.enemy.hp > 0
 				) {
-					if (scene) {
-						createProjectile(
-							scene,
-							tower.position,
-							tower.tower.damage,
-							{ homing: true, speed: 8 },
-							target,
-						);
-					}
+					createProjectile(
+						tower.position,
+						tower.tower.damage,
+						{ homing: true, speed: 8 },
+						target,
+					);
 				}
 				tower.tower.towerState = TowerState.COOLDOWN;
 				tower.tower.attackStartTime = currentTime;

@@ -20,7 +20,6 @@ export { EnemyVariant };
 type EnemyStats = (typeof ENEMY_CONFIGS)[EnemyVariantType];
 
 export const createEnemy = (
-	scene: THREE.Scene,
 	type: keyof typeof ENEMY_CONFIGS,
 	x: number,
 	z: number,
@@ -38,9 +37,8 @@ export const createEnemy = (
 	const mesh = new THREE.Mesh(geometry, material);
 	mesh.position.set(x, ENEMY_SPAWN.y, z);
 	mesh.castShadow = true;
-	scene.add(mesh);
 
-	const hpBarSprite = createHpBarSprite(scene);
+	const hpBarSprite = createHpBarSprite();
 
 	const enemy = world.add({
 		position: { x, y: ENEMY_SPAWN.y, z } as Position,

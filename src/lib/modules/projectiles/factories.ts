@@ -8,7 +8,6 @@ type ProjectileBehavior =
 	| { orbit: true; speed: number; radius: number; center: Position };
 
 export const createProjectile = (
-	scene: THREE.Scene,
 	startPos: Position,
 	damage: number,
 	behavior: ProjectileBehavior,
@@ -29,9 +28,8 @@ export const createProjectile = (
 	const mesh = new THREE.Mesh(geometry, material);
 	mesh.position.copy(startPos);
 	mesh.castShadow = true;
-	scene.add(mesh);
 
-	return world.add({
+	const projectile = world.add({
 		position: { x: startPos.x, y: startPos.y, z: startPos.z },
 		view: { mesh, originalColor: GEOMETRY.projectile.color } as View,
 		projectile: {
@@ -46,4 +44,6 @@ export const createProjectile = (
 		...("ballistic" in behavior ? { ballistic: behavior } : {}),
 		...("orbit" in behavior ? { orbit: behavior } : {}),
 	});
+
+	return projectile;
 };
