@@ -7,6 +7,7 @@ import {
 	type View,
 } from "$lib/core/world";
 import * as THREE from "three";
+import { createHpBarSprite } from "./hp-bar";
 
 export { EnemyVariant };
 
@@ -65,6 +66,8 @@ export const createEnemy = (
 	mesh.castShadow = true;
 	scene.add(mesh);
 
+	const hpBarSprite = createHpBarSprite(scene);
+
 	const enemy = world.add({
 		position: { x, y: 0.5, z } as Position,
 		view: { mesh, originalColor: enemyColors[EnemyState.MOVING] } as View,
@@ -82,6 +85,7 @@ export const createEnemy = (
 			attackStartTime: 0,
 			deathStartTime: 0,
 			target: { x: 0, y: 1, z: 0 },
+			sprite: hpBarSprite,
 		},
 	});
 

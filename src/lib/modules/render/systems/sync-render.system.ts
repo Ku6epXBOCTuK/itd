@@ -22,6 +22,7 @@ export const initRender = (
 		camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 		camera.position.set(0, 10, 10);
 		camera.lookAt(0, 0, 0);
+		camera.layers.enable(1);
 
 		renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 		renderer.setSize(width, height);
@@ -54,39 +55,76 @@ export const SyncRenderSystem = () => {
 
 	const showHpBar = settingsEntity?.settings.showHpBar ?? true;
 
+	if (camera) {
+		if (showHpBar) {
+			camera.layers.enable(1);
+		} else {
+			camera.layers.disable(1);
+		}
+	}
+
 	for (const enemy of enemies) {
 		if (enemy.view && enemy.position) {
-			enemy.view.mesh.position.set(enemy.position.x, enemy.position.y, enemy.position.z);
+			enemy.view.mesh.position.set(
+				enemy.position.x,
+				enemy.position.y,
+				enemy.position.z,
+			);
 
-			const color = enemy.enemy.enemyState === EnemyState.ATTACKING
-				? 0xff4444
-				: enemy.enemy.enemyState === EnemyState.COOLDOWN
-					? 0xffff00
-					: enemy.enemy.enemyState === EnemyState.HAPPY
-						? 0x4444ff
-						: enemy.enemy.enemyState === EnemyState.DYING
-							? 0xff69b4
-							: 0x00ff00;
+			const color =
+				enemy.enemy.enemyState === EnemyState.ATTACKING
+					? 0xff4444
+					: enemy.enemy.enemyState === EnemyState.COOLDOWN
+						? 0xffff00
+						: enemy.enemy.enemyState === EnemyState.HAPPY
+							? 0x4444ff
+							: enemy.enemy.enemyState === EnemyState.DYING
+								? 0xff69b4
+								: 0x00ff00;
 
-			(enemy.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
+			(enemy.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(
+				color,
+			);
+		}
+
+		if (enemy.enemy.sprite) {
+			const hpPercent = enemy.enemy.hp / enemy.enemy.maxHp;
+			(
+				enemy.enemy.sprite.material as unknown as THREE.ShaderMaterial
+			).uniforms.uHpPercent.value = hpPercent;
+			enemy.enemy.sprite.position.set(
+				enemy.position!.x,
+				enemy.position!.y + 1.0,
+				enemy.position!.z,
+			);
+			enemy.enemy.sprite.visible = enemy.enemy.enemyState !== EnemyState.DYING;
 		}
 	}
 
 	for (const projectile of projectiles) {
 		if (projectile.view && projectile.position) {
-			projectile.view.mesh.position.set(projectile.position.x, projectile.position.y, projectile.position.z);
+			projectile.view.mesh.position.set(
+				projectile.position.x,
+				projectile.position.y,
+				projectile.position.z,
+			);
 		}
 	}
 
 	for (const tower of towers) {
 		if (tower.view && tower.position) {
-			tower.view.mesh.position.set(tower.position.x, tower.position.y, tower.position.z);
+			tower.view.mesh.position.set(
+				tower.position.x,
+				tower.position.y,
+				tower.position.z,
+			);
 
-			const color = tower.tower.towerState === TowerState.BROKEN
-				? 0xff0000
-				: 0x4a4a4a;
+			const color =
+				tower.tower.towerState === TowerState.BROKEN ? 0xff0000 : 0x4a4a4a;
 
-			(tower.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(color);
+			(tower.view.mesh.material as THREE.MeshStandardMaterial).color.setHex(
+				color,
+			);
 		}
 	}
 
@@ -114,7 +152,7 @@ export const disposeRenderer = () => {
 export const clearGameEntities = () => {
 	if (!scene) return;
 
-	const entities = world.with("view");
+	const entities = world.with("view", "enemy");
 	const toRemove: Array<ReturnType<typeof world.with>[number]> = [];
 
 	for (const entity of entities) {
@@ -130,6 +168,9 @@ export const clearGameEntities = () => {
 			} else {
 				(entity.view.mesh.material as THREE.Material).dispose();
 			}
+		}
+		if (entity.enemy?.sprite) {
+			scene.remove(entity.enemy.sprite);
 		}
 		world.remove(entity);
 	}

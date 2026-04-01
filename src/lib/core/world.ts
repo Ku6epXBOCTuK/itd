@@ -73,6 +73,7 @@ export type Enemy = {
 	attackStartTime: number;
 	deathStartTime: number;
 	target: { x: number; y: number; z: number };
+	sprite?: THREE.Sprite;
 };
 
 export type Homing = {

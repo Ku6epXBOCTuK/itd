@@ -20,6 +20,9 @@ export const EnemyDeathSystem = () => {
 				enemy.view.mesh.geometry.dispose();
 				(enemy.view.mesh.material as THREE.Material).dispose();
 			}
+			if (enemy.enemy.sprite) {
+				enemy.enemy.sprite.removeFromParent();
+			}
 			world.remove(enemy);
 		}
 	}
