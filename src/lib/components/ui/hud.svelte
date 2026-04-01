@@ -1,11 +1,36 @@
 <script lang="ts">
 	import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 	import { AppState, setAppState } from "$lib/core/app-state.svelte";
+	import { GameEngine, GameEvents } from "$lib/core/event-bus";
+	import { WAVE_CONFIG } from "$lib/core/game-config";
 	import IconSettings from "~icons/lucide/settings";
 
 	function togglePause() {
 		setAppState(AppState.PAUSED);
 	}
+
+	let showAnnouncement = $state(false);
+	let announcement = $state("");
+
+	function showForDuration(text: string) {
+		announcement = text;
+		showAnnouncement = true;
+		setTimeout(() => {
+			showAnnouncement = false;
+		}, WAVE_CONFIG.announcementDuration);
+	}
+
+	GameEngine.on(GameEvents.WAVE_START, (data) => {
+		if (data && "waveNumber" in data) {
+			showForDuration(`Wave ${data.waveNumber} Starting...`);
+		}
+	});
+
+	GameEngine.on(GameEvents.WAVE_COMPLETE, (data) => {
+		if (data && "waveNumber" in data) {
+			showForDuration(`Wave ${data.waveNumber} Complete!`);
+		}
+	});
 </script>
 
 <div class="hud">
@@ -37,9 +62,9 @@
 	</button>
 </div>
 
-{#if hudState.waveAnnouncement}
+{#if showAnnouncement}
 	<div class="wave-announcement">
-		{hudState.waveAnnouncement}
+		{announcement}
 	</div>
 {/if}
 

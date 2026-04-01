@@ -1,5 +1,6 @@
 import { world, WaveStatus } from "$lib/core/world";
 import { WAVE_CONFIG, WAVE_DEFINITIONS } from "$lib/core/game-config";
+import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
 export const WaveSystem = (deltaTime: number) => {
 	const waveControl = Array.from(world.with("waveControl"))[0];
@@ -28,7 +29,9 @@ export const WaveSystem = (deltaTime: number) => {
 			if (aliveEnemies.length === 0) {
 				waveControl.waveControl.currentWave++;
 				waveControl.waveControl.status = WaveStatus.COMPLETED;
-				waveControl.waveControl.announcementText = `Wave ${waveControl.waveControl.currentWave} Complete!`;
+				GameEngine.emit(GameEvents.WAVE_COMPLETE, {
+					waveNumber: waveControl.waveControl.currentWave,
+				});
 				waveControl.waveControl.waveDelayTimer =
 					WAVE_CONFIG.announcementDuration;
 			} else {
@@ -50,7 +53,9 @@ export const WaveSystem = (deltaTime: number) => {
 			waveControl.waveControl.remainingEnemies = totalEnemies;
 			waveControl.waveControl.spawnTimer = 0;
 			waveControl.waveControl.status = WaveStatus.SPAWNING;
-			waveControl.waveControl.announcementText = `Wave ${waveControl.waveControl.currentWave + 1} Starting...`;
+			GameEngine.emit(GameEvents.WAVE_START, {
+				waveNumber: waveControl.waveControl.currentWave,
+			});
 			waveControl.waveControl.waveDelayTimer = WAVE_CONFIG.announcementDuration;
 		}
 	}

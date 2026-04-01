@@ -43,7 +43,6 @@ export const SpawnSystem = (deltaTime: number) => {
 
 		if (waveControl.waveControl.remainingEnemies === 0) {
 			waveControl.waveControl.status = WaveStatus.WAITING;
-			waveControl.waveControl.announcementText = "";
 		}
 	}
 };

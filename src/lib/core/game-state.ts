@@ -29,7 +29,6 @@ export const createGameState = () => {
 			spawnTimer: 0,
 			remainingEnemies: 0,
 			waveDelayTimer: 1000,
-			announcementText: "",
 		},
 	});
 };
@@ -44,7 +43,6 @@ export const resetGameState = () => {
 	hudState.wave = 0;
 	hudState.towerHp = 0;
 	hudState.towerMaxHp = 0;
-	hudState.waveAnnouncement = "";
 
 	resumeGame();
 };

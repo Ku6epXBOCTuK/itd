@@ -17,6 +17,5 @@ export const UpdateHudSystem = () => {
 
 	if (waveControl) {
 		hudState.wave = waveControl.waveControl.currentWave;
-		hudState.waveAnnouncement = waveControl.waveControl.announcementText;
 	}
 };

@@ -127,7 +127,6 @@ export type WaveControl = {
 	spawnTimer: number;
 	remainingEnemies: number;
 	waveDelayTimer: number;
-	announcementText: string;
 };
 
 // ============ UNIFIED ENTITY TYPE ============

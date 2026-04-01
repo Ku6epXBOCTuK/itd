@@ -9,6 +9,8 @@ export const GameEvents = {
 	TO_MENU: Symbol("to-menu"),
 	ENEMY_HIT: Symbol("enemy-hit"),
 	PROJECTILE_MISS: Symbol("projectile-miss"),
+	WAVE_START: Symbol("wave-start"),
+	WAVE_COMPLETE: Symbol("wave-complete"),
 } as const;
 
 export type GameEventType = (typeof GameEvents)[keyof typeof GameEvents];
@@ -22,6 +24,8 @@ type EventDataMap = {
 	[GameEvents.TO_MENU]: undefined;
 	[GameEvents.ENEMY_HIT]: { targetId: number; damage: number };
 	[GameEvents.PROJECTILE_MISS]: { position: Position };
+	[GameEvents.WAVE_START]: { waveNumber: number };
+	[GameEvents.WAVE_COMPLETE]: { waveNumber: number };
 };
 
 type EventCallback<T extends GameEventType> = (data: EventDataMap[T]) => void;
