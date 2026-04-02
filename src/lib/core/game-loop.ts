@@ -12,47 +12,41 @@ import {
 	SpawnSystem,
 } from "$lib/modules/waves/systems/respawn.system";
 import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
+import { FpsSystem } from "$lib/modules/debug/systems/fps.system";
 import { UpdateDebugSystem } from "$lib/modules/debug/systems/update-debug.system";
 import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
 import { appState, AppState } from "$lib/core/app-state.svelte";
-import { FRAME_MS } from "$lib/core/constants";
+import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
 
-type GameplaySystem = (_deltaTime: number) => void;
-type RenderSystem = () => void;
+type System = (deltaTime: number) => void;
 
-const ActiveGameSystems: GameplaySystem[] = [
-	AttackSystem,
-	WaveSystem,
-	SpawnSystem,
-];
-const GameplaySystems: GameplaySystem[] = [
-	IncomeSystem,
-	MoveSystem,
-	TowerAttackSystem,
-	EnemyDeathSystem,
-];
-const ProjectileSystems: GameplaySystem[] = [
+const ActiveSystems: System[] = [AttackSystem, WaveSystem, SpawnSystem];
+const GameSystems: System[] = [MoveSystem, TowerAttackSystem, EnemyDeathSystem];
+const ProjectileSystems: System[] = [
 	TargetingSystem,
 	HomingMovementSystem,
 	BallisticMovementSystem,
 	CollisionSystem,
 ];
-const AlwaysSystems: RenderSystem[] = [
+const SecondTickSystems: System[] = [IncomeSystem];
+const FrameSystems: System[] = [
 	SyncRenderSystem,
 	UpdateHudSystem,
+	FpsSystem,
 	UpdateDebugSystem,
 ];
 
 let isRunning = false;
 let animationFrameId: number | null = null;
+let secondTickTimer = 0;
 
 function gameLoop(deltaTime: number) {
 	if (appState.current === AppState.PLAYING) {
-		for (const system of ActiveGameSystems) {
+		for (const system of ActiveSystems) {
 			system(deltaTime);
 		}
 
-		for (const system of GameplaySystems) {
+		for (const system of GameSystems) {
 			system(deltaTime);
 		}
 
@@ -67,8 +61,20 @@ function gameLoop(deltaTime: number) {
 		}
 	}
 
-	for (const system of AlwaysSystems) {
-		system();
+	secondTickTimer += deltaTime;
+	if (secondTickTimer >= SECOND_MS) {
+		const ticks = Math.floor(secondTickTimer / SECOND_MS);
+		secondTickTimer %= SECOND_MS;
+
+		for (let i = 0; i < ticks; i++) {
+			for (const system of SecondTickSystems) {
+				system(SECOND_MS);
+			}
+		}
+	}
+
+	for (const system of FrameSystems) {
+		system(deltaTime);
 	}
 }
 
