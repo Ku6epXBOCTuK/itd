@@ -1,4 +1,4 @@
 declare module "~icons/*" {
-	const component: any;
+	const component: unknown;
 	export default component;
 }

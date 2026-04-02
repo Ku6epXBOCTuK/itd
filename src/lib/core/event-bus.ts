@@ -7,7 +7,6 @@ export const GameEvents = {
 	RESUME_GAME: Symbol("resume-game"),
 	STOP_GAME: Symbol("stop-game"),
 	TO_MENU: Symbol("to-menu"),
-	ENEMY_HIT: Symbol("enemy-hit"),
 	PROJECTILE_MISS: Symbol("projectile-miss"),
 	WAVE_START: Symbol("wave-start"),
 	WAVE_COMPLETE: Symbol("wave-complete"),
@@ -22,15 +21,14 @@ type EventDataMap = {
 	[GameEvents.RESUME_GAME]: undefined;
 	[GameEvents.STOP_GAME]: undefined;
 	[GameEvents.TO_MENU]: undefined;
-	[GameEvents.ENEMY_HIT]: { targetId: number; damage: number };
 	[GameEvents.PROJECTILE_MISS]: { position: Position };
 	[GameEvents.WAVE_START]: { waveNumber: number };
 	[GameEvents.WAVE_COMPLETE]: { waveNumber: number };
 };
 
-type EventCallback<T extends GameEventType> = (data: EventDataMap[T]) => void;
+type EventCallback = (...args: unknown[]) => void;
 
-const listeners = new Map<GameEventType, Set<EventCallback<any>>>();
+const listeners = new Map<GameEventType, Set<EventCallback>>();
 
 export const GameEngine = {
 	emit<T extends GameEventType>(event: T, data?: EventDataMap[T]) {
@@ -42,14 +40,14 @@ export const GameEngine = {
 		}
 	},
 
-	on<T extends GameEventType>(event: T, callback: EventCallback<T>) {
+	on(event: GameEventType, callback: EventCallback) {
 		if (!listeners.has(event)) {
 			listeners.set(event, new Set());
 		}
 		listeners.get(event)!.add(callback);
 	},
 
-	off<T extends GameEventType>(event: T, callback: EventCallback<T>) {
+	off(event: GameEventType, callback: EventCallback) {
 		const eventListeners = listeners.get(event);
 		if (eventListeners) {
 			eventListeners.delete(callback);

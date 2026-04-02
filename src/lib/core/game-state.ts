@@ -1,5 +1,4 @@
 import { world, WaveStatus, type Player } from "$lib/core/world";
-import { WAVE_CONFIG } from "$lib/core/game-config";
 import { resumeGame } from "$lib/core/app-state.svelte";
 import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 import { createTower } from "$lib/modules/towers/factories";

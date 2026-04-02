@@ -7,7 +7,7 @@ export const resetAttackSystem = () => {
 	gameTriggered = false;
 };
 
-export const AttackSystem = (deltaTime: number) => {
+export const AttackSystem = (_deltaTime: number) => {
 	const currentTime = Date.now();
 	const enemies = world.with("enemy", "position");
 	const towers = world.with("tower");
@@ -53,7 +53,6 @@ export const AttackSystem = (deltaTime: number) => {
 				if (attackElapsed >= enemy.enemy.attackDuration) {
 					for (const tower of towers) {
 						const towerHp = tower.tower.hp;
-						const towerMaxHp = tower.tower.maxHp;
 
 						const newHp = Math.max(0, towerHp - enemy.enemy.damage);
 						tower.tower.hp = newHp;

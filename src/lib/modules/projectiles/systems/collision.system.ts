@@ -48,11 +48,6 @@ export const CollisionSystem = () => {
 						target.enemy.hp - projectile.projectile.damage,
 					);
 
-					GameEngine.emit(GameEvents.ENEMY_HIT, {
-						targetId: (target as any).id,
-						damage: projectile.projectile.damage,
-					});
-
 					if (target.enemy.hp <= 0) {
 						target.enemy.enemyState = EnemyState.DYING;
 						target.enemy.deathStartTime = Date.now();

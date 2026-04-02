@@ -1,7 +1,7 @@
 import { world, TowerState } from "$lib/core/world";
 import { createProjectile } from "$lib/modules/projectiles/factories";
 
-export const TowerAttackSystem = (deltaTime: number) => {
+export const TowerAttackSystem = (_deltaTime: number) => {
 	const currentTime = Date.now();
 	const towers = world.with("tower", "position");
 	const enemies = world.with("enemy", "position");

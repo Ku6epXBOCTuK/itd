@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 	import { AppState, setAppState } from "$lib/core/app-state.svelte";
 	import { GameEngine, GameEvents } from "$lib/core/event-bus";
 	import Button from "$lib/components/ui/button.svelte";

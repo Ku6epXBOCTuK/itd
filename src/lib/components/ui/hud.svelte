@@ -3,6 +3,7 @@
 	import { AppState, setAppState } from "$lib/core/app-state.svelte";
 	import { GameEngine, GameEvents } from "$lib/core/event-bus";
 	import { WAVE_CONFIG } from "$lib/core/game-config";
+	import { PERCENT } from "$lib/core/constants";
 	import IconSettings from "~icons/lucide/settings";
 
 	function togglePause() {
@@ -62,7 +63,7 @@
 		<div class="hp-bar">
 			<div
 				class="hp-fill"
-				style="width: {(hudState.towerHp / hudState.towerMaxHp) * 100}%"
+				style="width: {(hudState.towerHp / hudState.towerMaxHp) * PERCENT}%"
 			></div>
 		</div>
 		<span class="hp-value">

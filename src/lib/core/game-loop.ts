@@ -16,7 +16,7 @@ import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.syste
 import { appState, AppState } from "$lib/core/app-state.svelte";
 import { FRAME_MS } from "$lib/core/constants";
 
-type GameplaySystem = (deltaTime: number) => void;
+type GameplaySystem = (_deltaTime: number) => void;
 type RenderSystem = () => void;
 
 const ActiveGameSystems: GameplaySystem[] = [
@@ -67,7 +67,7 @@ function gameLoop(deltaTime: number) {
 	}
 }
 
-function loop(timestamp: number) {
+function loop(_timestamp: number) {
 	if (!isRunning) return;
 
 	gameLoop(FRAME_MS);

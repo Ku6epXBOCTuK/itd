@@ -26,7 +26,7 @@ export default defineConfig(
 		languageOptions: { globals: { ...globals.browser, ...globals.node } },
 		rules: {
 			"no-undef": "off",
-			"no-unused-vars": "error",
+			"no-unused-vars": "off",
 			"no-console": ["error", { allow: ["warn", "error"] }],
 			"@typescript-eslint/no-magic-numbers": [
 				"error",
