@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { GameEngine, GameEvents } from "$lib/core/event-bus";
+	import MenuLayout from "$lib/components/layouts/menu.svelte";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconRotateCcw from "~icons/lucide/rotate-ccw";
 	import IconLogOut from "~icons/lucide/log-out";
@@ -13,7 +14,7 @@
 	}
 </script>
 
-<div class="game-over">
+<MenuLayout>
 	<div class="game-over-content">
 		<h1 class="title">Игра окончена!</h1>
 		<p class="subtitle">Башня разрушена</p>
@@ -33,25 +34,12 @@
 			/>
 		</div>
 	</div>
-</div>
+</MenuLayout>
 
 <style>
-	.game-over {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(0, 0, 0, 0.9);
-		z-index: 100;
-	}
-
 	.game-over-content {
 		text-align: center;
-		background: rgba(255, 255, 255, 0.1);
+		background: #1a1a2e;
 		padding: 3rem 4rem;
 		border-radius: 1rem;
 	}

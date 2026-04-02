@@ -117,6 +117,27 @@ modules/feature/
 - **Debug → UI:** Только `modules/debug/systems/update-debug.system.ts` записывает в `$state` (debugState)
 - **UI → Игра:** UI вызывает `GameEngine.emit(event, data)`, системы подписываются
 
+### Структура Svelte компонентов
+
+- `src/lib/components/ui/` — UI примитивы (button, input и т.д.)
+- `src/lib/components/layouts/` — layout-компоненты (обёртки для позиционирования)
+- `src/lib/components/` — остальные компоненты (hud, menus, panels и т.д.)
+
+### Типизация props в Svelte
+
+Props всегда должны быть типизированы через `interface Props` или `type Props`:
+
+```svelte
+<script lang="ts">
+	interface Props {
+		label: string;
+		onclick: () => void;
+	}
+
+	let { label, onclick }: Props = $props();
+</script>
+```
+
 ---
 
 ## Чек-лист перед коммитом

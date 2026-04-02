@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { AppState, setAppState } from "$lib/core/app-state.svelte";
 	import { GameEngine, GameEvents } from "$lib/core/event-bus";
+	import MenuLayout from "$lib/components/layouts/menu.svelte";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconPlay from "~icons/lucide/play";
 	import IconSettings from "~icons/lucide/settings";
@@ -17,7 +18,7 @@
 	}
 </script>
 
-<div class="main-menu">
+<MenuLayout>
 	<div class="menu-content">
 		<h1 class="title">Idle Tower Defense</h1>
 
@@ -38,24 +39,14 @@
 			/>
 		</div>
 	</div>
-</div>
+</MenuLayout>
 
 <style>
-	.main-menu {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(0, 0, 0, 0.85);
-		z-index: 100;
-	}
-
 	.menu-content {
 		text-align: center;
+		background: #1a1a2e;
+		padding: 3rem 4rem;
+		border-radius: 1rem;
 	}
 
 	.title {

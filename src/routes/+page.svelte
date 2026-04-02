@@ -5,12 +5,12 @@
 		initGameStateMachine,
 		setGameCanvas,
 	} from "$lib/core/game-state-machine.svelte";
-	import MainMenu from "$lib/components/ui/main-menu.svelte";
-	import Settings from "$lib/components/ui/settings.svelte";
-	import GameOver from "$lib/components/ui/game-over.svelte";
-	import PauseMenu from "$lib/components/ui/pause-menu.svelte";
-	import Hud from "$lib/components/ui/hud.svelte";
-	import DebugPanel from "$lib/components/ui/debug-panel.svelte";
+	import MainMenu from "$lib/components/main-menu.svelte";
+	import Settings from "$lib/components/settings.svelte";
+	import GameOver from "$lib/components/game-over.svelte";
+	import PauseMenu from "$lib/components/pause-menu.svelte";
+	import Hud from "$lib/components/hud.svelte";
+	import DebugPanel from "$lib/components/debug-panel.svelte";
 
 	let canvas: HTMLCanvasElement;
 

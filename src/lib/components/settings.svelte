@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 	import { AppState, setAppState } from "$lib/core/app-state.svelte";
+	import MenuLayout from "$lib/components/layouts/menu.svelte";
 	import Button from "$lib/components/ui/button.svelte";
 	import IconArrowLeft from "~icons/lucide/arrow-left";
 	import IconVolume2 from "~icons/lucide/volume-2";
@@ -11,7 +12,7 @@
 	}
 </script>
 
-<div class="settings">
+<MenuLayout>
 	<div class="settings-content">
 		<h1 class="title">Настройки</h1>
 
@@ -64,24 +65,11 @@
 			variant="outline"
 		/>
 	</div>
-</div>
+</MenuLayout>
 
 <style>
-	.settings {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(0, 0, 0, 0.85);
-		z-index: 100;
-	}
-
 	.settings-content {
-		background: rgba(255, 255, 255, 0.1);
+		background: #1a1a2e;
 		padding: 3rem;
 		border-radius: 1rem;
 		min-width: 400px;
