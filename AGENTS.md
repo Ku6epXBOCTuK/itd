@@ -114,6 +114,7 @@ modules/feature/
 
 - **Логика → Визуал:** Системы меняют данные (position, hp), SyncRenderSystem синхронизирует с Three.js
 - **Игра → UI:** Только `modules/hud/systems/update-hud.system.ts` записывает в `$state` (hudState)
+- **Debug → UI:** Только `modules/debug/systems/update-debug.system.ts` записывает в `$state` (debugState)
 - **UI → Игра:** UI вызывает `GameEngine.emit(event, data)`, системы подписываются
 
 ---

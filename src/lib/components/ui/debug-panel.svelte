@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
+	import { debugState } from "$lib/adapters/ui-state/debug-state.svelte";
 </script>
 
 <div class="debug-panel">
-	<div class="debug-item">FPS: {hudState.fps}</div>
-	<div class="debug-item">Enemies: {hudState.enemyCount}</div>
-	<div class="debug-item">Projectiles: {hudState.projectileCount}</div>
+	<div class="debug-item">FPS: {debugState.fps}</div>
+	<div class="debug-item">Enemies: {debugState.enemyCount}</div>
+	<div class="debug-item">Projectiles: {debugState.projectileCount}</div>
 </div>
 
 <style>
@@ -20,5 +20,6 @@
 		font-family: monospace;
 		font-size: 0.8rem;
 		pointer-events: none;
+		z-index: 200;
 	}
 </style>
