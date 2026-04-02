@@ -11,13 +11,26 @@
 
 	let showAnnouncement = $state(false);
 	let announcement = $state("");
+	let eventQueue = $state<string[]>([]);
 
-	function showForDuration(text: string) {
-		announcement = text;
+	function showNextEvent() {
+		if (eventQueue.length === 0) return;
+		const [next, ...rest] = eventQueue;
+		eventQueue = rest;
+		announcement = next;
 		showAnnouncement = true;
 		setTimeout(() => {
 			showAnnouncement = false;
+			showNextEvent();
 		}, WAVE_CONFIG.announcementDuration);
+	}
+
+	function showForDuration(text: string) {
+		const isFirst = eventQueue.length === 0 && !showAnnouncement;
+		eventQueue = [...eventQueue, text];
+		if (isFirst) {
+			showNextEvent();
+		}
 	}
 
 	GameEngine.on(GameEvents.WAVE_START, (data) => {

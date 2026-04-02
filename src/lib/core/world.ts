@@ -32,10 +32,9 @@ export const EnemyVariant = {
 export type EnemyVariantType = (typeof EnemyVariant)[keyof typeof EnemyVariant];
 
 export const WaveStatus = {
-	WAITING: "waiting",
+	PREPARING: "preparing",
 	SPAWNING: "spawning",
-	CLEARING: "clearing",
-	COMPLETED: "completed",
+	WAITING: "waiting",
 } as const;
 
 export type WaveStatusType = (typeof WaveStatus)[keyof typeof WaveStatus];

@@ -13,34 +13,7 @@ export const WaveSystem = (deltaTime: number) => {
 
 	const status = waveControl.waveControl.status;
 
-	if (status === WaveStatus.WAITING) {
-		if (
-			aliveEnemies.length === 0 &&
-			waveControl.waveControl.remainingEnemies === 0
-		) {
-			waveControl.waveControl.status = WaveStatus.CLEARING;
-			waveControl.waveControl.waveDelayTimer = WAVE_CONFIG.delayBetweenWaves;
-		}
-	}
-
-	if (status === WaveStatus.CLEARING) {
-		waveControl.waveControl.waveDelayTimer -= deltaTime;
-		if (waveControl.waveControl.waveDelayTimer <= 0) {
-			if (aliveEnemies.length === 0) {
-				waveControl.waveControl.currentWave++;
-				waveControl.waveControl.status = WaveStatus.COMPLETED;
-				GameEngine.emit(GameEvents.WAVE_COMPLETE, {
-					waveNumber: waveControl.waveControl.currentWave,
-				});
-				waveControl.waveControl.waveDelayTimer =
-					WAVE_CONFIG.announcementDuration;
-			} else {
-				waveControl.waveControl.waveDelayTimer = WAVE_CONFIG.delayBetweenWaves;
-			}
-		}
-	}
-
-	if (status === WaveStatus.COMPLETED) {
+	if (status === WaveStatus.PREPARING) {
 		waveControl.waveControl.waveDelayTimer -= deltaTime;
 		if (waveControl.waveControl.waveDelayTimer <= 0) {
 			const waveIndex = Math.min(
@@ -56,7 +29,20 @@ export const WaveSystem = (deltaTime: number) => {
 			GameEngine.emit(GameEvents.WAVE_START, {
 				waveNumber: waveControl.waveControl.currentWave,
 			});
-			waveControl.waveControl.waveDelayTimer = WAVE_CONFIG.announcementDuration;
+		}
+	}
+
+	if (status === WaveStatus.WAITING) {
+		if (
+			aliveEnemies.length === 0 &&
+			waveControl.waveControl.remainingEnemies === 0
+		) {
+			GameEngine.emit(GameEvents.WAVE_COMPLETE, {
+				waveNumber: waveControl.waveControl.currentWave,
+			});
+			waveControl.waveControl.currentWave++;
+			waveControl.waveControl.status = WaveStatus.PREPARING;
+			waveControl.waveControl.waveDelayTimer = WAVE_CONFIG.delayBetweenWaves;
 		}
 	}
 };

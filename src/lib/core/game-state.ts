@@ -1,4 +1,5 @@
 import { world, WaveStatus, type Player } from "$lib/core/world";
+import { WAVE_CONFIG } from "$lib/core/game-config";
 import { resumeGame } from "$lib/core/app-state.svelte";
 import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 import { createTower } from "$lib/modules/towers/factories";
@@ -24,11 +25,11 @@ export const createGameState = () => {
 	world.add({
 		waveControl: {
 			waveControl: true,
-			currentWave: 0,
-			status: WaveStatus.CLEARING,
+			currentWave: 1,
+			status: WaveStatus.PREPARING,
 			spawnTimer: 0,
 			remainingEnemies: 0,
-			waveDelayTimer: 1000,
+			waveDelayTimer: 0,
 		},
 	});
 };

@@ -11,7 +11,7 @@ export const SpawnSystem = (deltaTime: number) => {
 	if (waveControl.waveControl.status !== WaveStatus.SPAWNING) return;
 
 	const waveIndex = Math.min(
-		waveControl.waveControl.currentWave,
+		waveControl.waveControl.currentWave - 1,
 		WAVE_DEFINITIONS.length - 1,
 	);
 	const waveDef = WAVE_DEFINITIONS[waveIndex];
