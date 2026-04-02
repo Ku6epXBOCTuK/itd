@@ -164,6 +164,7 @@ export const GAME_CONFIG = {
 
 export const ENEMY_SPAWN = {
 	y: 0.5,
+	radius: 10,
 } as const;
 
 export const WAVE_CONFIG = {

@@ -1,9 +1,10 @@
 import { world, WaveStatus } from "$lib/core/world";
-import { SPAWN_X, SPAWN_Z } from "$lib/core/constants";
-import { WAVE_CONFIG, WAVE_DEFINITIONS } from "$lib/core/game-config";
+import {
+	ENEMY_SPAWN,
+	WAVE_CONFIG,
+	WAVE_DEFINITIONS,
+} from "$lib/core/game-config";
 import { createEnemy } from "$lib/modules/enemies/factories";
-
-const SPAWN_SPREAD = 4;
 
 export const SpawnSystem = (deltaTime: number) => {
 	const waveControl = Array.from(world.with("waveControl"))[0];
@@ -23,8 +24,9 @@ export const SpawnSystem = (deltaTime: number) => {
 
 		for (const enemyDef of waveDef.enemies) {
 			for (let i = 0; i < enemyDef.count; i++) {
-				const x = SPAWN_X + Math.random() * SPAWN_SPREAD - SPAWN_SPREAD / 2;
-				const z = SPAWN_Z + Math.random() * SPAWN_SPREAD - SPAWN_SPREAD / 2;
+				const angle = Math.random() * Math.PI * 2;
+				const x = Math.cos(angle) * ENEMY_SPAWN.radius;
+				const z = Math.sin(angle) * ENEMY_SPAWN.radius;
 				spawnPositions.push({ x, z });
 			}
 		}
