@@ -18,4 +18,7 @@ export const UpdateHudSystem = () => {
 	if (waveControl) {
 		hudState.wave = waveControl.waveControl.currentWave;
 	}
+
+	hudState.enemyCount = Array.from(world.with("enemy")).length;
+	hudState.projectileCount = Array.from(world.with("projectile")).length;
 };

@@ -35,13 +35,13 @@
 	}
 
 	GameEngine.on(GameEvents.WAVE_START, (data) => {
-		if (data && "waveNumber" in data) {
+		if (data && typeof data === "object" && "waveNumber" in data) {
 			showForDuration(`Wave ${data.waveNumber} Starting...`);
 		}
 	});
 
 	GameEngine.on(GameEvents.WAVE_COMPLETE, (data) => {
-		if (data && "waveNumber" in data) {
+		if (data && typeof data === "object" && "waveNumber" in data) {
 			showForDuration(`Wave ${data.waveNumber} Complete!`);
 		}
 	});

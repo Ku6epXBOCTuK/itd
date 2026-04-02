@@ -3,6 +3,9 @@ export interface HudState {
 	wave: number;
 	towerHp: number;
 	towerMaxHp: number;
+	fps: number;
+	enemyCount: number;
+	projectileCount: number;
 	settings: {
 		musicVolume: number;
 		sfxVolume: number;
@@ -16,6 +19,9 @@ export const hudState = $state<HudState>({
 	wave: 0,
 	towerHp: 0,
 	towerMaxHp: 0,
+	fps: 0,
+	enemyCount: 0,
+	projectileCount: 0,
 	settings: {
 		musicVolume: 50,
 		sfxVolume: 50,

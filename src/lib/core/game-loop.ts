@@ -14,7 +14,8 @@ import {
 import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
 import { appState, AppState } from "$lib/core/app-state.svelte";
-import { FRAME_MS } from "$lib/core/constants";
+import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
+import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 
 type GameplaySystem = (_deltaTime: number) => void;
 type RenderSystem = () => void;
@@ -40,6 +41,8 @@ const AlwaysSystems: RenderSystem[] = [SyncRenderSystem, UpdateHudSystem];
 
 let isRunning = false;
 let animationFrameId: number | null = null;
+let frameCount = 0;
+let lastFpsUpdate = 0;
 
 function gameLoop(deltaTime: number) {
 	if (appState.current === AppState.PLAYING) {
@@ -69,6 +72,15 @@ function gameLoop(deltaTime: number) {
 
 function loop(_timestamp: number) {
 	if (!isRunning) return;
+
+	const now = performance.now();
+	frameCount++;
+
+	if (now - lastFpsUpdate >= SECOND_MS) {
+		hudState.fps = frameCount;
+		frameCount = 0;
+		lastFpsUpdate = now;
+	}
 
 	gameLoop(FRAME_MS);
 	animationFrameId = requestAnimationFrame(loop);

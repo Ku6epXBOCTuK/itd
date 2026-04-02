@@ -10,6 +10,7 @@
 	import GameOver from "$lib/components/ui/game-over.svelte";
 	import PauseMenu from "$lib/components/ui/pause-menu.svelte";
 	import Hud from "$lib/components/ui/hud.svelte";
+	import DebugPanel from "$lib/components/ui/debug-panel.svelte";
 
 	let canvas: HTMLCanvasElement;
 
@@ -24,14 +25,20 @@
 
 	{#if appState.current === AppState.MENU}
 		<MainMenu />
+		<DebugPanel />
 	{:else if appState.current === AppState.SETTINGS}
 		<Settings />
+		<DebugPanel />
 	{:else if appState.current === AppState.GAME_OVER}
 		<GameOver />
+		<DebugPanel />
 	{:else if appState.current === AppState.PAUSED}
 		<PauseMenu />
-	{:else if appState.current === AppState.PLAYING}
 		<Hud />
+		<DebugPanel />
+	{:else if appState.current === AppState.PLAYING || appState.current === AppState.GAME_OVER_ANIMATING}
+		<Hud />
+		<DebugPanel />
 	{/if}
 </div>
 
