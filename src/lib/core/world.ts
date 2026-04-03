@@ -1,5 +1,6 @@
 import { World } from "miniplex";
 import * as THREE from "three";
+import type { Player } from "$lib/modules/player/schema";
 
 // ============ COMPONENT TYPES ============
 
@@ -50,19 +51,6 @@ export type View = {
 
 export type DirtyStatsTag = {
 	dirtyStats: true;
-};
-
-export type UpgradeComponent = {
-	upgrades: true;
-	towerDamageFlatLevel: number;
-	towerDamagePercentLevel: number;
-};
-
-export type Player = {
-	player: true;
-	gold: number;
-	incomePerSecond: number;
-	upgrades: UpgradeComponent;
 };
 
 export type TowerStats = {

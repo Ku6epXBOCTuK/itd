@@ -4,7 +4,7 @@ import {
 	WAVE_CONFIG,
 	WAVE_DEFINITIONS,
 } from "$lib/core/game-config";
-import { createEnemy } from "$lib/modules/enemies/factories";
+import { createEnemy } from "$lib/modules/enemies/factory";
 
 export const createSpawnSystem = () => {
 	const waveControlQuery = world.with("waveControl");

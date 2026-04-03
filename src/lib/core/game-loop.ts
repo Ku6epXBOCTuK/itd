@@ -1,4 +1,4 @@
-import { createIncomeSystem } from "$lib/modules/economy/systems/income.system";
+import { createIncomeSystem } from "$lib/modules/player/systems/income.system";
 import { createSyncRenderSystem } from "$lib/modules/render/systems/render.system";
 import { createMoveSystem } from "$lib/modules/enemies/systems/move.system";
 import { createAttackSystem } from "$lib/modules/enemies/systems/attack.system";

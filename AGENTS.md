@@ -99,10 +99,17 @@ Props всегда должны быть типизированы через `in
 
 ```
 modules/feature/
-├── feature.components.ts
-├── factories.ts
-└── systems/
-    └── system.name.ts
+├── schema.ts      # типы + компоненты
+├── factory.ts    # фабрика
+└── systems/      # системы
+    └── *.system.ts
+```
+
+### Модули общего назначения
+
+```
+modules/shared/
+└── components/   # общие компоненты (hp-bar и т.д.)
 ```
 
 ### Структура папок (Screaming Architecture)

@@ -7,7 +7,7 @@ import {
 	SHARED_TOWER_BROKEN_MATERIAL,
 	SHARED_PROJECTILE_MATERIAL,
 } from "$lib/core/game-config";
-import { createHpBarSprite } from "$lib/modules/enemies/hp-bar";
+import { createHpBarSprite } from "$lib/modules/shared/components/hp-bar";
 
 const createEnemyMesh = (
 	enemyState: (typeof EnemyState)[keyof typeof EnemyState],

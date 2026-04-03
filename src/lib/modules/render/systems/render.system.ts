@@ -1,6 +1,6 @@
 import { world, type Entity } from "$lib/core/world";
 import * as THREE from "three";
-import { createGround } from "../factories";
+import { createGround } from "../factory";
 import { RENDER_CONFIG } from "$lib/core/game-config";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 import { initGraphics } from "./handlers/init-graphics.handler";

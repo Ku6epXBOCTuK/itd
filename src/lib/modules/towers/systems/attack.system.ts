@@ -1,5 +1,5 @@
 import { world, TowerState } from "$lib/core/world";
-import { createProjectile } from "$lib/modules/projectiles/factories";
+import { createProjectile } from "$lib/modules/projectiles/factory";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createTowerAttackSystem = () => {

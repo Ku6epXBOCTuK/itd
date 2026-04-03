@@ -1,22 +1,13 @@
 import { resetHudState } from "$lib/adapters/ui-state/hud-state.svelte";
 import { resumeGame } from "$lib/core/app-state.svelte";
-import { WaveStatus, world, type Player } from "$lib/core/world";
+import { WaveStatus, world } from "$lib/core/world";
 import { resetAttackSystem } from "$lib/modules/enemies/systems/attack.system";
-import { createTower } from "$lib/modules/towers/factories";
-import { GAME_CONFIG, INITIAL_UPGRADES } from "./game-config";
+import { createTower } from "$lib/modules/towers/factory";
+import { createPlayer } from "$lib/modules/player/factory";
+import { GAME_CONFIG } from "./game-config";
 
 export const createGameState = () => {
-	world.add({
-		player: {
-			player: true,
-			gold: GAME_CONFIG.initialGold,
-			incomePerSecond: GAME_CONFIG.initialIncomePerSecond,
-			upgrades: {
-				upgrades: true,
-				...INITIAL_UPGRADES,
-			},
-		} as Player,
-	});
+	createPlayer();
 
 	world.add({
 		settings: {
