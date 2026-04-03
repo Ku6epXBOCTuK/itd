@@ -79,7 +79,8 @@ export type Tower = {
 	finalStats: TowerStats;
 	attackAnimationDuration: number;
 	towerState: TowerStateType;
-	attackStartTime: number;
+	cooldownTimer: number;
+	animationTimer: number;
 	target?: Entity;
 };
 
@@ -94,8 +95,9 @@ export type Enemy = {
 	attackRange: number;
 	attackCooldown: number;
 	attackDuration: number;
-	attackStartTime: number;
-	deathStartTime: number;
+	attackTimer: number;
+	cooldownTimer: number;
+	deathTimer: number;
 	target: { x: number; y: number; z: number };
 	sprite?: THREE.Sprite;
 };
@@ -123,7 +125,6 @@ export type Projectile = {
 	target: Entity | null;
 	targetPosition: Position | null;
 	lifetime: number;
-	createdAt: number;
 };
 
 export type Settings = {

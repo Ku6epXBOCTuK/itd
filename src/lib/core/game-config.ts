@@ -1,5 +1,68 @@
-import { EnemyState, EnemyVariant, TowerState } from "./world";
 import * as THREE from "three";
+import { EnemyState, EnemyVariant, TowerState } from "./world";
+
+export const TOWER_CONFIG = {
+	hp: 1000,
+	maxHp: 1000,
+	damage: 50,
+	attackRange: 5,
+	attackCooldown: 1000,
+	attackAnimationDuration: 300,
+} as const;
+
+export const UPGRADES = {
+	TOWER_DAMAGE_FLAT: {
+		bonusPerLevel: 20,
+	},
+	TOWER_DAMAGE_PERCENT: {
+		bonusPerLevel: 10,
+	},
+} as const;
+
+export const INITIAL_UPGRADES = {
+	towerDamageFlatLevel: 2,
+	towerDamagePercentLevel: 3,
+} as const;
+
+export const GAME_CONFIG = {
+	deathAnimationDuration: 500,
+	incomeInterval: 1000,
+	targetingInterval: 1000,
+	targetReachedDistance: 0.5,
+	targetingMinDistance: 10,
+	initialGold: 100,
+	initialIncomePerSecond: 10,
+	initialWave: 1,
+} as const;
+
+export const ENEMY_SPAWN = {
+	y: 0.5,
+	radius: 10,
+} as const;
+
+export const WAVE_CONFIG = {
+	delayBetweenSpawns: 500,
+	delayBetweenWaves: 2000,
+	announcementDuration: 2000,
+} as const;
+
+export const WAVE_DEFINITIONS = [
+	{
+		enemies: [{ type: EnemyVariant.BASIC, count: 3 }],
+	},
+	{
+		enemies: [
+			{ type: EnemyVariant.BASIC, count: 5 },
+			{ type: EnemyVariant.FAST, count: 2 },
+		],
+	},
+	{
+		enemies: [
+			{ type: EnemyVariant.TANK, count: 2 },
+			{ type: EnemyVariant.FAST, count: 4 },
+		],
+	},
+] as const;
 
 export const ENEMY_CONFIGS = {
 	[EnemyVariant.BASIC]: {
@@ -31,28 +94,6 @@ export const ENEMY_CONFIGS = {
 	},
 } as const;
 
-export const ENEMY_COLORS = {
-	[EnemyState.MOVING]: 0x00ff00,
-	[EnemyState.ATTACKING]: 0xff4444,
-	[EnemyState.COOLDOWN]: 0xffff00,
-	[EnemyState.HAPPY]: 0x4444ff,
-	[EnemyState.DYING]: 0xff69b4,
-} as const;
-
-export const TOWER_CONFIG = {
-	hp: 1000,
-	maxHp: 1000,
-	damage: 50,
-	attackRange: 3,
-	attackCooldown: 1000,
-	attackAnimationDuration: 300,
-} as const;
-
-export const TOWER_COLORS = {
-	[TowerState.IDLE]: 0x4a4a4a,
-	[TowerState.BROKEN]: 0xff0000,
-} as const;
-
 export const PROJECTILE_CONFIG = {
 	speed: 5,
 	speedHoming: 8,
@@ -61,13 +102,17 @@ export const PROJECTILE_CONFIG = {
 	ballisticHitThreshold: 0.3,
 } as const;
 
-export const UPGRADES = {
-	TOWER_DAMAGE_FLAT: {
-		bonusPerLevel: 20,
-	},
-	TOWER_DAMAGE_PERCENT: {
-		bonusPerLevel: 10,
-	},
+export const ENEMY_COLORS = {
+	[EnemyState.MOVING]: 0x00ff00,
+	[EnemyState.ATTACKING]: 0xff4444,
+	[EnemyState.COOLDOWN]: 0xffff00,
+	[EnemyState.HAPPY]: 0x4444ff,
+	[EnemyState.DYING]: 0xff69b4,
+} as const;
+
+export const TOWER_COLORS = {
+	[TowerState.IDLE]: 0x4a4a4a,
+	[TowerState.BROKEN]: 0xff0000,
 } as const;
 
 export const RENDER_CONFIG = {
@@ -165,43 +210,3 @@ export const SHARED_PROJECTILE_MATERIAL = new THREE.MeshStandardMaterial({
 	emissive: GEOMETRY.projectile.color,
 	emissiveIntensity: GEOMETRY.projectile.emissiveIntensity,
 });
-
-export const GAME_CONFIG = {
-	deathAnimationDuration: 500,
-	incomeInterval: 1000,
-	targetingInterval: 1000,
-	targetReachedDistance: 0.5,
-	targetingMinDistance: 10,
-	initialGold: 100,
-	initialIncomePerSecond: 10,
-	initialWave: 1,
-} as const;
-
-export const ENEMY_SPAWN = {
-	y: 0.5,
-	radius: 10,
-} as const;
-
-export const WAVE_CONFIG = {
-	delayBetweenSpawns: 500,
-	delayBetweenWaves: 2000,
-	announcementDuration: 2000,
-} as const;
-
-export const WAVE_DEFINITIONS = [
-	{
-		enemies: [{ type: EnemyVariant.BASIC, count: 3 }],
-	},
-	{
-		enemies: [
-			{ type: EnemyVariant.BASIC, count: 5 },
-			{ type: EnemyVariant.FAST, count: 2 },
-		],
-	},
-	{
-		enemies: [
-			{ type: EnemyVariant.TANK, count: 2 },
-			{ type: EnemyVariant.FAST, count: 4 },
-		],
-	},
-] as const;

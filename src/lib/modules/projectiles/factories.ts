@@ -21,7 +21,6 @@ export const createProjectile = (
 			target,
 			targetPosition,
 			lifetime,
-			createdAt: Date.now(),
 		},
 		...("homing" in behavior ? { homing: behavior } : {}),
 		...("ballistic" in behavior ? { ballistic: behavior } : {}),

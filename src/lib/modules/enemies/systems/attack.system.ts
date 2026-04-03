@@ -3,17 +3,15 @@ import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
 let gameTriggered = false;
 
-export const resetAttackSystem = () => {
+export function resetAttackSystem() {
 	gameTriggered = false;
-};
+}
 
 export const createAttackSystem = () => {
 	const enemies = world.with("enemy", "position");
 	const towers = world.with("tower");
 
-	return (_dt: number) => {
-		const currentTime = Date.now();
-
+	return (dt: number) => {
 		for (const enemy of enemies) {
 			if (
 				enemy.enemy.enemyState === EnemyState.HAPPY ||
@@ -49,13 +47,13 @@ export const createAttackSystem = () => {
 
 				if (enemy.enemy.enemyState === EnemyState.MOVING) {
 					enemy.enemy.enemyState = EnemyState.ATTACKING;
-					enemy.enemy.attackStartTime = currentTime;
+					enemy.enemy.attackTimer = enemy.enemy.attackDuration;
 				}
 
 				if (enemy.enemy.enemyState === EnemyState.ATTACKING) {
-					const attackElapsed = currentTime - enemy.enemy.attackStartTime;
+					enemy.enemy.attackTimer -= dt;
 
-					if (attackElapsed >= enemy.enemy.attackDuration) {
+					if (enemy.enemy.attackTimer <= 0) {
 						for (const tower of towers) {
 							const towerHp = tower.tower.finalStats.hp;
 
@@ -69,7 +67,7 @@ export const createAttackSystem = () => {
 								const allEnemies = world.with("enemy");
 								for (const e of allEnemies) {
 									e.enemy.enemyState = EnemyState.HAPPY;
-									e.enemy.attackStartTime = 0;
+									e.enemy.cooldownTimer = 0;
 								}
 
 								GameEngine.emit(GameEvents.STOP_GAME);
@@ -78,16 +76,16 @@ export const createAttackSystem = () => {
 						}
 
 						enemy.enemy.enemyState = EnemyState.COOLDOWN;
-						enemy.enemy.attackStartTime = currentTime;
+						enemy.enemy.cooldownTimer = enemy.enemy.attackCooldown;
 					}
 				}
 
 				if (enemy.enemy.enemyState === EnemyState.COOLDOWN) {
-					const cooldownElapsed = currentTime - enemy.enemy.attackStartTime;
+					enemy.enemy.cooldownTimer -= dt;
 
-					if (cooldownElapsed >= enemy.enemy.attackCooldown) {
+					if (enemy.enemy.cooldownTimer <= 0) {
 						enemy.enemy.enemyState = EnemyState.ATTACKING;
-						enemy.enemy.attackStartTime = currentTime;
+						enemy.enemy.attackTimer = enemy.enemy.attackDuration;
 					}
 				}
 			} else {

@@ -6,24 +6,23 @@ export const createTowerAttackSystem = () => {
 	const towers = world.with("tower", "position");
 	const enemies = world.with("enemy", "position");
 
-	return (_dt: number) => {
-		const currentTime = Date.now();
-
+	return (dt: number) => {
 		for (const tower of towers) {
 			const finalStats = tower.tower.finalStats;
 
 			if (tower.tower.towerState === TowerState.COOLDOWN) {
-				const cooldownElapsed = currentTime - tower.tower.attackStartTime;
-				if (cooldownElapsed >= finalStats.attackCooldown) {
+				tower.tower.cooldownTimer -= dt;
+				if (tower.tower.cooldownTimer <= 0) {
 					tower.tower.towerState = TowerState.IDLE;
+					tower.tower.cooldownTimer = 0;
 					tower.tower.target = undefined;
 				}
 				continue;
 			}
 
 			if (tower.tower.towerState === TowerState.FIRING) {
-				const animationElapsed = currentTime - tower.tower.attackStartTime;
-				if (animationElapsed >= tower.tower.attackAnimationDuration) {
+				tower.tower.animationTimer -= dt;
+				if (tower.tower.animationTimer <= 0) {
 					const target = tower.tower.target;
 					if (
 						target &&
@@ -39,7 +38,7 @@ export const createTowerAttackSystem = () => {
 						);
 					}
 					tower.tower.towerState = TowerState.COOLDOWN;
-					tower.tower.attackStartTime = currentTime;
+					tower.tower.cooldownTimer = finalStats.attackCooldown;
 				}
 				continue;
 			}
@@ -64,7 +63,7 @@ export const createTowerAttackSystem = () => {
 			if (targetEnemy) {
 				tower.tower.towerState = TowerState.FIRING;
 				tower.tower.target = targetEnemy;
-				tower.tower.attackStartTime = currentTime;
+				tower.tower.animationTimer = tower.tower.attackAnimationDuration;
 			}
 		}
 	};

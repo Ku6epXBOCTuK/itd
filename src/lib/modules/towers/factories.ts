@@ -5,6 +5,7 @@ import {
 	type DirtyStatsTag,
 	type TowerStats,
 } from "$lib/core/world";
+import { TOWER_CONFIG } from "$lib/core/game-config";
 
 export const createTower = (x: number, z: number) => {
 	const tower = world.add({
@@ -12,16 +13,17 @@ export const createTower = (x: number, z: number) => {
 		tower: {
 			tower: true,
 			baseStats: {
-				hp: 500,
-				maxHp: 500,
-				damage: 25,
-				attackRange: 10,
-				attackCooldown: 1000,
+				hp: TOWER_CONFIG.hp,
+				maxHp: TOWER_CONFIG.maxHp,
+				damage: TOWER_CONFIG.damage,
+				attackRange: TOWER_CONFIG.attackRange,
+				attackCooldown: TOWER_CONFIG.attackCooldown,
 			},
 			finalStats: {} as TowerStats,
-			attackAnimationDuration: 300,
+			attackAnimationDuration: TOWER_CONFIG.attackAnimationDuration,
 			towerState: TowerState.IDLE,
-			attackStartTime: 0,
+			cooldownTimer: 0,
+			animationTimer: 0,
 			target: undefined,
 		},
 		dirtyStats: {

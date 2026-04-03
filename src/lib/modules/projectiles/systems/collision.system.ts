@@ -1,6 +1,6 @@
 import { world, EnemyState } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
-import { PROJECTILE_CONFIG } from "$lib/core/game-config";
+import { PROJECTILE_CONFIG, GAME_CONFIG } from "$lib/core/game-config";
 
 export const createCollisionSystem = () => {
 	const projectiles = world.with("projectile", "position", "view");
@@ -53,7 +53,7 @@ export const createCollisionSystem = () => {
 
 						if (target.enemy.hp <= 0) {
 							target.enemy.enemyState = EnemyState.DYING;
-							target.enemy.deathStartTime = Date.now();
+							target.enemy.deathTimer = GAME_CONFIG.deathAnimationDuration;
 						}
 					}
 

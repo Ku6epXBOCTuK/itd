@@ -3,7 +3,7 @@ import { resumeGame } from "$lib/core/app-state.svelte";
 import { WaveStatus, world, type Player } from "$lib/core/world";
 import { resetAttackSystem } from "$lib/modules/enemies/systems/attack.system";
 import { createTower } from "$lib/modules/towers/factories";
-import { GAME_CONFIG } from "./game-config";
+import { GAME_CONFIG, INITIAL_UPGRADES } from "./game-config";
 
 export const createGameState = () => {
 	world.add({
@@ -13,8 +13,7 @@ export const createGameState = () => {
 			incomePerSecond: GAME_CONFIG.initialIncomePerSecond,
 			upgrades: {
 				upgrades: true,
-				towerDamageFlatLevel: 2,
-				towerDamagePercentLevel: 3,
+				...INITIAL_UPGRADES,
 			},
 		} as Player,
 	});
