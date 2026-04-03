@@ -13,7 +13,10 @@ export const AttackSystem = (_deltaTime: number) => {
 	const towers = world.with("tower");
 
 	for (const enemy of enemies) {
-		if (enemy.enemy.enemyState === EnemyState.HAPPY) {
+		if (
+			enemy.enemy.enemyState === EnemyState.HAPPY ||
+			enemy.enemy.enemyState === EnemyState.DYING
+		) {
 			continue;
 		}
 
