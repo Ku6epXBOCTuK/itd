@@ -9,6 +9,7 @@ import type {
 	EnemyVariantType,
 } from "$lib/modules/enemies/components";
 import type { WaveStatusType } from "$lib/modules/waves/components";
+import type { Upgrades } from "$lib/modules/upgrades/components";
 
 export { TowerState } from "$lib/modules/towers/components";
 export { EnemyState, EnemyVariant } from "$lib/modules/enemies/components";
@@ -30,10 +31,7 @@ export type Entity = {
 
 	gold?: number;
 	incomePerSecond?: number;
-	upgrades?: {
-		towerDamageFlatLevel: number;
-		towerDamagePercentLevel: number;
-	};
+	upgrades?: Upgrades;
 
 	hp?: number;
 	maxHp?: number;
@@ -85,10 +83,6 @@ export type Entity = {
 		spawnTimer: number;
 		remainingEnemies: number;
 		waveDelayTimer: number;
-	};
-
-	dirtyStats?: {
-		dirtyStats: true;
 	};
 };
 

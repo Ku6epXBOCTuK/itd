@@ -26,9 +26,6 @@ export const createTower = (x: number, z: number) => {
 		towerState: TowerState.IDLE,
 		cooldownTimer: 0,
 		animationTimer: 0,
-		dirtyStats: {
-			dirtyStats: true,
-		},
 	});
 
 	return tower;
