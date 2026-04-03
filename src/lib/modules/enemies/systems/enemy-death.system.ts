@@ -1,13 +1,13 @@
 import { world } from "$lib/core/world";
 
 export const createEnemyDeathSystem = () => {
-	const dyingEnemies = world.with("dying", "position", "view");
+	const dyingEnemies = world.with("isDying", "position");
 
 	return (dt: number) => {
 		for (const enemy of dyingEnemies) {
-			enemy.dying.deathTimer -= dt;
+			enemy.deathTimer = (enemy.deathTimer ?? 0) - dt;
 
-			if (enemy.dying.deathTimer <= 0) {
+			if ((enemy.deathTimer ?? 0) <= 0) {
 				world.remove(enemy);
 			}
 		}

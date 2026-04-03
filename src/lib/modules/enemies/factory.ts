@@ -20,23 +20,20 @@ export const createEnemy = (
 
 	const enemy = world.add({
 		position: { x, y: ENEMY_SPAWN.y, z } as Position,
-		enemy: {
-			enemy: true,
-			type: type as EnemyVariantType,
-			enemyState: EnemyState.MOVING,
-			speed: stats.speed,
-			hp: stats.hp,
-			maxHp: stats.maxHp,
-			damage: stats.damage,
-			attackRange: stats.attackRange,
-			attackCooldown: stats.attackCooldown,
-			attackDuration: stats.attackDuration,
-			attackTimer: 0,
-			cooldownTimer: 0,
-			deathTimer: 0,
-			target: { x: 0, y: 1, z: 0 },
-			sprite: undefined,
-		},
+		isEnemy: true,
+		isTargetable: true,
+		enemyVariant: type as EnemyVariantType,
+		enemyState: EnemyState.MOVING,
+		speed: stats.speed,
+		hp: stats.hp,
+		maxHp: stats.maxHp,
+		damage: stats.damage,
+		attackRange: stats.attackRange,
+		attackCooldown: stats.attackCooldown,
+		attackTimer: 0,
+		cooldownTimer: 0,
+		attackDuration: stats.attackDuration,
+		targetPosition: { x: 0, y: 1, z: 0 },
 	});
 
 	return enemy;

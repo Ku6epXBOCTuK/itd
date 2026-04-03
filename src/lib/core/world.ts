@@ -1,15 +1,11 @@
 import { World } from "miniplex";
-import * as THREE from "three";
-import type { Player } from "$lib/modules/player/schema";
-
-// ============ COMPONENT TYPES ============
 
 export const TowerState = {
 	IDLE: "idle",
 	AIMING: "aiming",
 	FIRING: "firing",
 	COOLDOWN: "cooldown",
-	BROKEN: "broken", // Башня разрушена
+	BROKEN: "broken",
 } as const;
 
 export type TowerStateType = (typeof TowerState)[keyof typeof TowerState];
@@ -40,121 +36,91 @@ export const WaveStatus = {
 
 export type WaveStatusType = (typeof WaveStatus)[keyof typeof WaveStatus];
 
-// ============ ENTITY COMPONENTS ============
-
 export type Position = { x: number; y: number; z: number };
-
-export type View = {
-	mesh: THREE.Mesh;
-	originalColor: number;
-};
-
-export type DirtyStatsTag = {
-	dirtyStats: true;
-};
-
-export type TowerStats = {
-	hp: number;
-	maxHp: number;
-	damage: number;
-	attackRange: number;
-	attackCooldown: number;
-};
-
-export type Tower = {
-	tower: true;
-	baseStats: TowerStats;
-	finalStats: TowerStats;
-	attackAnimationDuration: number;
-	towerState: TowerStateType;
-	cooldownTimer: number;
-	animationTimer: number;
-	target?: Entity;
-};
-
-export type Enemy = {
-	enemy: true;
-	type: EnemyVariantType;
-	enemyState: EnemyStateType;
-	speed: number;
-	hp: number;
-	maxHp: number;
-	damage: number;
-	attackRange: number;
-	attackCooldown: number;
-	attackDuration: number;
-	attackTimer: number;
-	cooldownTimer: number;
-	target: { x: number; y: number; z: number };
-	sprite?: THREE.Sprite;
-};
-
-export type Homing = {
-	homing: true;
-	speed: number;
-};
-
-export type Ballistic = {
-	ballistic: true;
-	speed: number;
-};
-
-export type Orbit = {
-	orbit: true;
-	speed: number;
-	radius: number;
-	center: Position;
-};
-
-export type Projectile = {
-	projectile: true;
-	damage: number;
-	target: Entity | null;
-	targetPosition: Position | null;
-	lifetime: number;
-};
-
-export type Settings = {
-	settings: true;
-	showHpBar: boolean;
-};
 
 export type InScene = {
 	inScene: true;
 };
 
-export type WaveControl = {
-	waveControl: true;
-	currentWave: number;
-	status: WaveStatusType;
-	spawnTimer: number;
-	remainingEnemies: number;
-	waveDelayTimer: number;
-};
-
-// ============ UNIFIED ENTITY TYPE ============
-// Все компоненты опциональны, сущности могут иметь любой набор компонентов
 export type Entity = {
 	position?: Position;
-	view?: View;
-	player?: Player;
-	tower?: Tower;
-	enemy?: Enemy;
-	projectile?: Projectile;
-	homing?: Homing;
-	ballistic?: Ballistic;
-	orbit?: Orbit;
-	settings?: Settings;
-	waveControl?: WaveControl;
+	viewId?: string;
 	inScene?: InScene;
-	dying?: {
-		dying: true;
-		deathTimer: number;
+
+	isPlayer?: true;
+	isTower?: true;
+	isEnemy?: true;
+	isProjectile?: true;
+	isTargetable?: true;
+	isDying?: true;
+	isDead?: true;
+
+	gold?: number;
+	incomePerSecond?: number;
+	upgrades?: {
+		towerDamageFlatLevel: number;
+		towerDamagePercentLevel: number;
 	};
+
+	hp?: number;
+	maxHp?: number;
+	damage?: number;
+	speed?: number;
+	attackRange?: number;
+	attackCooldown?: number;
+
+	towerState?: TowerStateType;
+	enemyState?: EnemyStateType;
+	enemyVariant?: EnemyVariantType;
+	projectileType?: "homing" | "ballistic" | "orbit";
+
+	cooldownTimer?: number;
+	attackTimer?: number;
+	attackDuration?: number;
+	animationTimer?: number;
+	attackAnimationDuration?: number;
+
+	baseStats?: {
+		hp: number;
+		maxHp: number;
+		damage: number;
+		attackRange: number;
+		attackCooldown: number;
+	};
+	finalStats?: {
+		hp: number;
+		maxHp: number;
+		damage: number;
+		attackRange: number;
+		attackCooldown: number;
+	};
+
+	target?: Entity;
+	targetPosition?: Position;
+	radius?: number;
+	center?: Position;
+	lifetime?: number;
+
+	experienceValue?: number;
+	deathTimer?: number;
+
+	waveControl?: {
+		waveControl: true;
+		currentWave: number;
+		status: WaveStatusType;
+		spawnTimer: number;
+		remainingEnemies: number;
+		waveDelayTimer: number;
+	};
+
+	settings?: {
+		settings: true;
+		showHpBar: boolean;
+	};
+
 	dirtyStats?: {
 		dirtyStats: true;
 	};
 };
 
-// ============ MINIPLEX WORLD ============
 export const world = new World<Entity>();

@@ -3,67 +3,70 @@ import { createProjectile } from "$lib/modules/projectiles/factory";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createTowerAttackSystem = () => {
-	const towers = world.with("tower", "position");
-	const enemies = world.with("enemy", "position");
+	const towers = world.with("isTower", "position");
+	const enemies = world.with("isEnemy", "position");
 
 	return (dt: number) => {
 		for (const tower of towers) {
-			const finalStats = tower.tower.finalStats;
+			const finalStats = tower.finalStats;
 
-			if (tower.tower.towerState === TowerState.COOLDOWN) {
-				tower.tower.cooldownTimer -= dt;
-				if (tower.tower.cooldownTimer <= 0) {
-					tower.tower.towerState = TowerState.IDLE;
-					tower.tower.cooldownTimer = 0;
-					tower.tower.target = undefined;
+			if (tower.towerState === TowerState.COOLDOWN) {
+				tower.cooldownTimer = (tower.cooldownTimer ?? 0) - dt;
+				if ((tower.cooldownTimer ?? 0) <= 0) {
+					tower.towerState = TowerState.IDLE;
+					tower.cooldownTimer = 0;
+					delete tower.target;
 				}
 				continue;
 			}
 
-			if (tower.tower.towerState === TowerState.FIRING) {
-				tower.tower.animationTimer -= dt;
-				if (tower.tower.animationTimer <= 0) {
-					const target = tower.tower.target;
+			if (tower.towerState === TowerState.FIRING) {
+				tower.animationTimer = (tower.animationTimer ?? 0) - dt;
+				if ((tower.animationTimer ?? 0) <= 0) {
+					const target = tower.target;
 					if (
 						target &&
 						world.has(target) &&
-						target.enemy &&
-						target.enemy.hp > 0
+						target.isEnemy &&
+						(target.hp ?? 0) > 0
 					) {
 						createProjectile(
-							tower.position,
-							finalStats.damage,
-							{ homing: true, speed: PROJECTILE_CONFIG.speedHoming },
+							tower.position!,
+							finalStats?.damage ?? 0,
+							{ type: "homing", speed: PROJECTILE_CONFIG.speedHoming },
 							target,
 						);
 					}
-					tower.tower.towerState = TowerState.COOLDOWN;
-					tower.tower.cooldownTimer = finalStats.attackCooldown;
+					tower.towerState = TowerState.COOLDOWN;
+					tower.cooldownTimer = finalStats?.attackCooldown ?? 0;
 				}
 				continue;
 			}
 
 			let targetEnemy: ReturnType<typeof world.with>[number] | null = null;
-			let minDistance = finalStats.attackRange;
+			let minDistance = finalStats?.attackRange ?? 0;
 
 			for (const enemy of enemies) {
-				if (enemy.enemy.hp <= 0) continue;
+				if ((enemy.hp ?? 0) <= 0) continue;
 
-				const dx = enemy.position.x - tower.position.x;
-				const dy = enemy.position.y - tower.position.y;
-				const dz = enemy.position.z - tower.position.z;
+				const dx = (enemy.position?.x ?? 0) - (tower.position?.x ?? 0);
+				const dy = (enemy.position?.y ?? 0) - (tower.position?.y ?? 0);
+				const dz = (enemy.position?.z ?? 0) - (tower.position?.z ?? 0);
 				const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-				if (distance <= finalStats.attackRange && distance < minDistance) {
+				if (
+					distance <= (finalStats?.attackRange ?? 0) &&
+					distance < minDistance
+				) {
 					minDistance = distance;
 					targetEnemy = enemy;
 				}
 			}
 
 			if (targetEnemy) {
-				tower.tower.towerState = TowerState.FIRING;
-				tower.tower.target = targetEnemy;
-				tower.tower.animationTimer = tower.tower.attackAnimationDuration;
+				tower.towerState = TowerState.FIRING;
+				tower.target = targetEnemy;
+				tower.animationTimer = tower.attackAnimationDuration;
 			}
 		}
 	};

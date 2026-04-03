@@ -1,15 +1,14 @@
 import { world } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 import { PROJECTILE_CONFIG, GAME_CONFIG } from "$lib/core/game-config";
-import type { Dying } from "$lib/modules/enemies/schema";
 
 export const createCollisionSystem = () => {
-	const projectiles = world.with("projectile", "position", "view");
+	const projectiles = world.with("isProjectile", "position");
 
 	return (_dt: number) => {
 		for (const projectile of projectiles) {
-			const target = projectile.projectile.target;
-			const targetPos = projectile.projectile.targetPosition;
+			const target = projectile.target;
+			const targetPos = projectile.targetPosition;
 
 			if (targetPos && !target) {
 				const dx = targetPos.x - projectile.position.x;
@@ -19,7 +18,7 @@ export const createCollisionSystem = () => {
 
 				if (
 					distance < PROJECTILE_CONFIG.ballisticHitThreshold ||
-					projectile.position.y <= 0
+					(projectile.position.y ?? 0) <= 0
 				) {
 					GameEngine.emit(GameEvents.PROJECTILE_MISS, {
 						position: projectile.position,
@@ -35,7 +34,7 @@ export const createCollisionSystem = () => {
 					continue;
 				}
 
-				if (target.enemy && target.enemy.hp <= 0) {
+				if (target.isEnemy && (target.hp ?? 0) <= 0) {
 					world.remove(projectile);
 					continue;
 				}
@@ -46,17 +45,15 @@ export const createCollisionSystem = () => {
 				const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 				if (distance < PROJECTILE_CONFIG.homingHitThreshold) {
-					if (target.enemy) {
-						target.enemy.hp = Math.max(
+					if (target.isEnemy) {
+						target.hp = Math.max(
 							0,
-							target.enemy.hp - projectile.projectile.damage,
+							(target.hp ?? 0) - (projectile.damage ?? 0),
 						);
 
-						if (target.enemy.hp <= 0) {
-							world.addComponent(target, "dying", {
-								dying: true,
-								deathTimer: GAME_CONFIG.deathAnimationDuration,
-							} as Dying);
+						if ((target.hp ?? 0) <= 0) {
+							world.addComponent(target, "isDying", true);
+							target.deathTimer = GAME_CONFIG.deathAnimationDuration;
 						}
 					}
 

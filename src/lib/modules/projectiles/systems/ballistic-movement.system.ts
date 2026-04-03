@@ -3,14 +3,17 @@ import { SECOND_MS } from "$lib/core/constants";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createBallisticMovementSystem = () => {
-	const projectiles = world.with("projectile", "ballistic", "position");
+	const projectiles = world.with("isProjectile", "position");
 
 	return (dt: number) => {
 		for (const projectile of projectiles) {
-			if (!projectile.ballistic || !projectile.projectile.targetPosition)
+			if (
+				projectile.projectileType !== "ballistic" ||
+				!projectile.targetPosition
+			)
 				continue;
 
-			const targetPos = projectile.projectile.targetPosition;
+			const targetPos = projectile.targetPosition;
 
 			const dx = targetPos.x - projectile.position.x;
 			const dy = targetPos.y - projectile.position.y;
@@ -19,7 +22,7 @@ export const createBallisticMovementSystem = () => {
 
 			if (
 				distance < PROJECTILE_CONFIG.ballisticHitThreshold ||
-				projectile.position.y <= 0
+				(projectile.position.y ?? 0) <= 0
 			)
 				continue;
 
@@ -29,7 +32,7 @@ export const createBallisticMovementSystem = () => {
 				z: dz / distance,
 			};
 
-			const moveDistance = projectile.ballistic.speed * (dt / SECOND_MS);
+			const moveDistance = (projectile.speed ?? 0) * (dt / SECOND_MS);
 			projectile.position.x += direction.x * moveDistance;
 			projectile.position.y += direction.y * moveDistance;
 			projectile.position.z += direction.z * moveDistance;

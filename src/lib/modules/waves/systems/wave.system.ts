@@ -4,13 +4,13 @@ import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
 export const createWaveSystem = () => {
 	const waveControlQuery = world.with("waveControl");
-	const enemiesQuery = world.with("enemy");
+	const enemiesQuery = world.with("isEnemy");
 
 	return (dt: number) => {
 		const waveControl = waveControlQuery.first;
 		if (!waveControl) return;
 
-		const aliveEnemies = Array.from(enemiesQuery).filter((e) => !e.dying);
+		const aliveEnemies = Array.from(enemiesQuery).filter((e) => !e.isDying);
 
 		const status = waveControl.waveControl.status;
 

@@ -2,12 +2,7 @@ import { world, type Entity } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround } from "../factory";
 import { RENDER_CONFIG } from "$lib/core/game-config";
-import { initGraphics } from "./handlers/init-graphics.handler";
-import {
-	setSceneRef,
-	addToScene,
-	removeFromScene,
-} from "./handlers/add-to-scene.handler";
+import { ViewBridge } from "./view-bridge";
 import { setCameraRef, syncTransform } from "./handlers/sync-transform.handler";
 
 let canvas: HTMLCanvasElement | null = null;
@@ -19,19 +14,7 @@ export const setCanvas = (c: HTMLCanvasElement) => {
 	canvas = c;
 };
 
-const cleanupEntityResources = (entity: Entity) => {
-	if (entity.view) {
-		entity.view.mesh.removeFromParent();
-	}
-	if (entity.enemy?.sprite) {
-		entity.enemy.sprite.removeFromParent();
-		entity.enemy.sprite.material.dispose();
-	}
-};
-
 export const createSyncRenderSystem = () => {
-	world.onEntityRemoved.subscribe(cleanupEntityResources);
-
 	const resizeObserver = new ResizeObserver((_entries) => {
 		if (!canvas) return;
 		const { width, height } = canvas.getBoundingClientRect();
@@ -49,7 +32,6 @@ export const createSyncRenderSystem = () => {
 
 		scene = new THREE.Scene();
 		scene.background = new THREE.Color(RENDER_CONFIG.colors.background);
-		setSceneRef(scene);
 
 		const { fov, near, far, position } = RENDER_CONFIG.camera;
 		camera = new THREE.PerspectiveCamera(fov, width / height, near, far);
@@ -87,14 +69,44 @@ export const createSyncRenderSystem = () => {
 		scene.add(gridHelper);
 
 		resizeObserver.observe(canvas);
+
+		world.onEntityRemoved.subscribe((entity: Entity) => {
+			ViewBridge.detach(entity);
+		});
 	};
 
 	initRender();
 
 	return (_dt: number) => {
-		initGraphics();
-		addToScene();
+		if (!scene) return;
 		syncTransform();
+
+		const pendingEnemies = world.with("isEnemy", "position");
+		for (const entity of pendingEnemies) {
+			if (!ViewBridge.getObject3D(entity)) {
+				ViewBridge.initEntity(entity, scene!);
+			}
+		}
+
+		const pendingProjectiles = world.with("isProjectile", "position");
+		for (const entity of pendingProjectiles) {
+			if (!ViewBridge.getObject3D(entity)) {
+				ViewBridge.initEntity(entity, scene!);
+			}
+		}
+
+		const pendingTowers = world.with("isTower", "position");
+		for (const entity of pendingTowers) {
+			if (!ViewBridge.getObject3D(entity)) {
+				ViewBridge.initEntity(entity, scene!);
+			}
+		}
+
+		const inScene = world.with("inScene", "position");
+		for (const entity of inScene) {
+			ViewBridge.syncEntity(entity);
+		}
+
 		if (renderer && scene && camera) {
 			renderer.render(scene, camera);
 		}
