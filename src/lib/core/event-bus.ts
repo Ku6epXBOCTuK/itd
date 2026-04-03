@@ -1,7 +1,6 @@
-import type { EnemyVariantType, Position } from "$lib/core/world";
+import type { Position } from "$lib/core/world";
 
 export const GameEvents = {
-	SPAWN_ENEMY: Symbol("spawn-enemy"),
 	START_GAME: Symbol("start-game"),
 	PAUSE_GAME: Symbol("pause-game"),
 	RESUME_GAME: Symbol("resume-game"),
@@ -10,13 +9,11 @@ export const GameEvents = {
 	PROJECTILE_MISS: Symbol("projectile-miss"),
 	WAVE_START: Symbol("wave-start"),
 	WAVE_COMPLETE: Symbol("wave-complete"),
-	CLEAR_ENTITIES: Symbol("clear-entities"),
 } as const;
 
 export type GameEventType = (typeof GameEvents)[keyof typeof GameEvents];
 
 type EventDataMap = {
-	[GameEvents.SPAWN_ENEMY]: { type: EnemyVariantType; x: number; z: number };
 	[GameEvents.START_GAME]: undefined;
 	[GameEvents.PAUSE_GAME]: undefined;
 	[GameEvents.RESUME_GAME]: undefined;
@@ -25,7 +22,6 @@ type EventDataMap = {
 	[GameEvents.PROJECTILE_MISS]: { position: Position };
 	[GameEvents.WAVE_START]: { waveNumber: number };
 	[GameEvents.WAVE_COMPLETE]: { waveNumber: number };
-	[GameEvents.CLEAR_ENTITIES]: undefined;
 };
 
 type EventCallback = (...args: unknown[]) => void;

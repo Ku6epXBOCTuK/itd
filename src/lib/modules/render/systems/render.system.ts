@@ -2,7 +2,6 @@ import { world, type Entity } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround } from "../factory";
 import { RENDER_CONFIG } from "$lib/core/game-config";
-import { GameEngine, GameEvents } from "$lib/core/event-bus";
 import { initGraphics } from "./handlers/init-graphics.handler";
 import {
 	setSceneRef,
@@ -32,17 +31,6 @@ const cleanupEntityResources = (entity: Entity) => {
 
 export const createSyncRenderSystem = () => {
 	world.onEntityRemoved.subscribe(cleanupEntityResources);
-
-	GameEngine.on(GameEvents.CLEAR_ENTITIES, () => {
-		const entities = world.with("view");
-		for (const entity of entities) {
-			if (entity.inScene) {
-				world.removeComponent(entity, "inScene");
-				removeFromScene(entity);
-			}
-			world.remove(entity);
-		}
-	});
 
 	const resizeObserver = new ResizeObserver((_entries) => {
 		if (!canvas) return;

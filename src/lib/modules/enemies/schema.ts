@@ -6,3 +6,8 @@ export {
 	type EnemyStateType,
 	type EnemyVariantType,
 } from "$lib/core/world";
+
+export type Dying = {
+	dying: true;
+	deathTimer: number;
+};

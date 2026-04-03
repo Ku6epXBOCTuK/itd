@@ -1,8 +1,8 @@
 import { AppState, setAppState } from "$lib/core/app-state.svelte";
 import { initializeGameState, resetGameState } from "$lib/core/game-state";
+import { GAME_OVER_ANIMATION_DURATION } from "./constants";
 import { GameEngine, GameEvents } from "./event-bus";
 import { GameLoop } from "./game-loop";
-import { GAME_OVER_ANIMATION_DURATION } from "./constants";
 
 let isGameRunning = false;
 
@@ -62,7 +62,6 @@ export const initGameStateMachine = () => {
 			clearTimeout(gameOverTimeout);
 			gameOverTimeout = null;
 		}
-		GameEngine.emit(GameEvents.CLEAR_ENTITIES);
 		resetGameState();
 		setAppState(AppState.MENU);
 		stopGame();

@@ -36,8 +36,10 @@ export const syncTransform = () => {
 		);
 
 		if (entity.enemy) {
-			entity.view.mesh.material =
-				SHARED_ENEMY_MATERIALS[entity.enemy.enemyState];
+			const materialKey = entity.dying
+				? EnemyState.DYING
+				: entity.enemy.enemyState;
+			entity.view.mesh.material = SHARED_ENEMY_MATERIALS[materialKey];
 
 			if (entity.enemy.sprite) {
 				const hpPercent = entity.enemy.hp / entity.enemy.maxHp;
@@ -49,8 +51,7 @@ export const syncTransform = () => {
 					entity.position.y + 1.0,
 					entity.position.z,
 				);
-				entity.enemy.sprite.visible =
-					entity.enemy.enemyState !== EnemyState.DYING;
+				entity.enemy.sprite.visible = !entity.dying;
 			}
 		}
 

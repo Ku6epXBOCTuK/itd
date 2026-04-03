@@ -1,6 +1,7 @@
-import { world, EnemyState } from "$lib/core/world";
+import { world } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 import { PROJECTILE_CONFIG, GAME_CONFIG } from "$lib/core/game-config";
+import type { Dying } from "$lib/modules/enemies/schema";
 
 export const createCollisionSystem = () => {
 	const projectiles = world.with("projectile", "position", "view");
@@ -52,8 +53,10 @@ export const createCollisionSystem = () => {
 						);
 
 						if (target.enemy.hp <= 0) {
-							target.enemy.enemyState = EnemyState.DYING;
-							target.enemy.deathTimer = GAME_CONFIG.deathAnimationDuration;
+							world.addComponent(target, "dying", {
+								dying: true,
+								deathTimer: GAME_CONFIG.deathAnimationDuration,
+							} as Dying);
 						}
 					}
 

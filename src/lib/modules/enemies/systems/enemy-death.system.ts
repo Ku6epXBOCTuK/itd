@@ -1,18 +1,13 @@
-import { world, EnemyState } from "$lib/core/world";
-import { GAME_CONFIG } from "$lib/core/game-config";
+import { world } from "$lib/core/world";
 
 export const createEnemyDeathSystem = () => {
-	const enemies = world.with("enemy", "position", "view");
+	const dyingEnemies = world.with("dying", "position", "view");
 
 	return (dt: number) => {
-		for (const enemy of enemies) {
-			if (enemy.enemy.enemyState !== EnemyState.DYING) {
-				continue;
-			}
+		for (const enemy of dyingEnemies) {
+			enemy.dying.deathTimer -= dt;
 
-			enemy.enemy.deathTimer -= dt;
-
-			if (enemy.enemy.deathTimer <= 0) {
+			if (enemy.dying.deathTimer <= 0) {
 				world.remove(enemy);
 			}
 		}

@@ -14,18 +14,14 @@ describe("GameEngine", () => {
 
 		it("должен передавать данные в подписчика", () => {
 			const callback = vi.fn();
-			GameEngine.on(GameEvents.SPAWN_ENEMY, callback);
+			GameEngine.on(GameEvents.WAVE_START, callback);
 
-			GameEngine.emit(GameEvents.SPAWN_ENEMY, {
-				type: "basic",
-				x: 5,
-				z: 5,
+			GameEngine.emit(GameEvents.WAVE_START, {
+				waveNumber: 1,
 			});
 
 			expect(callback).toHaveBeenCalledWith({
-				type: "basic",
-				x: 5,
-				z: 5,
+				waveNumber: 1,
 			});
 		});
 

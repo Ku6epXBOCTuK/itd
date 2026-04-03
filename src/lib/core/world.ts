@@ -85,7 +85,6 @@ export type Enemy = {
 	attackDuration: number;
 	attackTimer: number;
 	cooldownTimer: number;
-	deathTimer: number;
 	target: { x: number; y: number; z: number };
 	sprite?: THREE.Sprite;
 };
@@ -148,7 +147,13 @@ export type Entity = {
 	settings?: Settings;
 	waveControl?: WaveControl;
 	inScene?: InScene;
-	dirtyStats?: DirtyStatsTag;
+	dying?: {
+		dying: true;
+		deathTimer: number;
+	};
+	dirtyStats?: {
+		dirtyStats: true;
+	};
 };
 
 // ============ MINIPLEX WORLD ============

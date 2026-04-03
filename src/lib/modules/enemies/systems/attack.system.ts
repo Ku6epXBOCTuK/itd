@@ -8,15 +8,12 @@ export function resetAttackSystem() {
 }
 
 export const createAttackSystem = () => {
-	const enemies = world.with("enemy", "position");
+	const enemies = world.with("enemy", "position").without("dying");
 	const towers = world.with("tower");
 
 	return (dt: number) => {
 		for (const enemy of enemies) {
-			if (
-				enemy.enemy.enemyState === EnemyState.HAPPY ||
-				enemy.enemy.enemyState === EnemyState.DYING
-			) {
+			if (enemy.enemy.enemyState === EnemyState.HAPPY) {
 				continue;
 			}
 

@@ -1,4 +1,4 @@
-import { world, WaveStatus, EnemyState } from "$lib/core/world";
+import { world, WaveStatus } from "$lib/core/world";
 import { WAVE_CONFIG, WAVE_DEFINITIONS } from "$lib/core/game-config";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
@@ -10,9 +10,7 @@ export const createWaveSystem = () => {
 		const waveControl = waveControlQuery.first;
 		if (!waveControl) return;
 
-		const aliveEnemies = Array.from(enemiesQuery).filter(
-			(e) => e.enemy.enemyState !== EnemyState.DYING,
-		);
+		const aliveEnemies = Array.from(enemiesQuery).filter((e) => !e.dying);
 
 		const status = waveControl.waveControl.status;
 
