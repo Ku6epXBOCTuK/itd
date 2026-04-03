@@ -3,7 +3,10 @@ import type {
 	ViewIdType,
 	VisualStatusType,
 } from "$lib/modules/render/components";
-import type { TowerStateType } from "$lib/modules/towers/components";
+import type {
+	TowerStateType,
+	TowerBaseStats,
+} from "$lib/modules/towers/components";
 import type {
 	EnemyStateType,
 	EnemyVariantType,
@@ -17,73 +20,60 @@ export { WaveStatus } from "$lib/modules/waves/components";
 
 export type Position = { x: number; y: number; z: number };
 
-export type Entity = {
-	position?: Position;
-	viewId?: ViewIdType;
+export type Entity = Partial<
+	{
+		position: Position;
+		viewId: ViewIdType;
 
-	isPlayer?: true;
-	isTower?: true;
-	isEnemy?: true;
-	isProjectile?: true;
-	isTargetable?: true;
-	isDying?: true;
-	isDead?: true;
+		isPlayer: true;
+		isTower: true;
+		isEnemy: true;
+		isProjectile: true;
+		isTargetable: true;
+		isDying: true;
+		isDead: true;
 
-	gold?: number;
-	incomePerSecond?: number;
-	upgrades?: Upgrades;
+		gold: number;
+		incomePerSecond: number;
+		upgrades: Upgrades;
 
-	hp?: number;
-	maxHp?: number;
-	damage?: number;
-	speed?: number;
-	attackRange?: number;
-	attackCooldown?: number;
-
-	towerState?: TowerStateType;
-	enemyState?: EnemyStateType;
-	enemyVariant?: EnemyVariantType;
-	visualStatus?: VisualStatusType;
-	projectileType?: "homing" | "ballistic" | "orbit";
-
-	cooldownTimer?: number;
-	attackTimer?: number;
-	attackDuration?: number;
-	animationTimer?: number;
-	attackAnimationDuration?: number;
-
-	baseStats?: {
 		hp: number;
 		maxHp: number;
 		damage: number;
+		speed: number;
 		attackRange: number;
 		attackCooldown: number;
-	};
-	finalStats?: {
-		hp: number;
-		maxHp: number;
-		damage: number;
-		attackRange: number;
-		attackCooldown: number;
-	};
 
-	target?: Entity;
-	targetPosition?: Position;
-	radius?: number;
-	center?: Position;
-	lifetime?: number;
+		towerState: TowerStateType;
+		enemyState: EnemyStateType;
+		enemyVariant: EnemyVariantType;
+		visualStatus: VisualStatusType;
+		projectileType: "homing" | "ballistic" | "orbit";
 
-	experienceValue?: number;
-	deathTimer?: number;
+		cooldownTimer: number;
+		attackTimer: number;
+		attackDuration: number;
+		animationTimer: number;
+		attackAnimationDuration: number;
 
-	waveControl?: {
-		waveControl: true;
-		currentWave: number;
-		status: WaveStatusType;
-		spawnTimer: number;
-		remainingEnemies: number;
-		waveDelayTimer: number;
-	};
-};
+		target: Entity;
+		targetPosition: Position;
+		radius: number;
+		center: Position;
+		lifetime: number;
+
+		experienceValue: number;
+		deathTimer: number;
+
+		waveControl: {
+			waveControl: true;
+			currentWave: number;
+			status: WaveStatusType;
+			spawnTimer: number;
+			remainingEnemies: number;
+			waveDelayTimer: number;
+		};
+	} & TowerBaseStats
+>;
 
 export const world = new World<Entity>();

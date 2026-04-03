@@ -7,3 +7,7 @@ export const TowerState = {
 } as const;
 
 export type TowerStateType = (typeof TowerState)[keyof typeof TowerState];
+
+export type TowerBaseStats = {
+	baseDamage: number;
+};

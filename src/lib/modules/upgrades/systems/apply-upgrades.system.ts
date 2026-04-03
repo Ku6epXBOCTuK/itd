@@ -18,15 +18,9 @@ export const createApplyUpgradesSystem = () => {
 			UPGRADES.TOWER_DAMAGE_PERCENT.bonusPerLevel;
 
 		for (const tower of towers) {
-			const base = tower.baseStats;
-			if (!base) continue;
-			tower.finalStats = {
-				hp: base.hp,
-				maxHp: base.maxHp,
-				damage: (base.damage + flatBonus) * (1 + percentBonus / PERCENT),
-				attackRange: base.attackRange,
-				attackCooldown: base.attackCooldown,
-			};
+			const baseDamage = tower.baseDamage;
+			if (!baseDamage) continue;
+			tower.damage = (baseDamage + flatBonus) * (1 + percentBonus / PERCENT);
 		}
 
 		upgrades.dirty = false;

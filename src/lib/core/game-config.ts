@@ -22,7 +22,7 @@ export const UPGRADES = {
 export const INITIAL_UPGRADES = {
 	towerDamageFlatLevel: 2,
 	towerDamagePercentLevel: 3,
-	dirty: false,
+	dirty: true,
 } as const;
 
 export const GAME_CONFIG = {

@@ -54,13 +54,9 @@ export const createAttackSystem = () => {
 
 					if ((enemy.attackTimer ?? 0) <= 0) {
 						for (const tower of towers) {
-							const towerHp = tower.finalStats?.hp ?? tower.baseStats?.hp ?? 0;
-
+							const towerHp = tower.hp ?? 0;
 							const newHp = Math.max(0, towerHp - (enemy.damage ?? 0));
-							if (!tower.finalStats) {
-								tower.finalStats = { ...tower.baseStats! };
-							}
-							tower.finalStats.hp = newHp;
+							tower.hp = newHp;
 
 							if (newHp <= 0 && !gameTriggered) {
 								gameTriggered = true;

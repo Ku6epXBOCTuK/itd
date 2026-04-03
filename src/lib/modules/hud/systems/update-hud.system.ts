@@ -12,12 +12,8 @@ export const createUpdateHudSystem = () => {
 		}
 
 		for (const tower of towers) {
-			hudState.towerHp = Math.floor(
-				tower.finalStats?.hp ?? tower.baseStats?.hp ?? 0,
-			);
-			hudState.towerMaxHp = Math.floor(
-				tower.finalStats?.maxHp ?? tower.baseStats?.maxHp ?? 0,
-			);
+			hudState.towerHp = Math.floor(tower.hp ?? 0);
+			hudState.towerMaxHp = Math.floor(tower.maxHp ?? 0);
 		}
 
 		const waveControl = waveControlQuery.first;
