@@ -1,114 +1,130 @@
-import { world, type Entity } from "$lib/core/world";
+import type { World } from "miniplex";
 import * as THREE from "three";
-import { createGround } from "../factory";
-import { RENDER_CONFIG } from "$lib/core/game-config";
-import { ViewBridge } from "./view-bridge";
-import { setCameraRef, syncTransform } from "./handlers/sync-transform.handler";
+import type { Entity } from "$lib/core/world";
+import type { ViewIdType } from "$lib/modules/render/components";
+import {
+	SHARED_GEOMETRIES,
+	SHARED_ENEMY_MATERIALS,
+	SHARED_TOWER_MATERIAL,
+	SHARED_TOWER_BROKEN_MATERIAL,
+	SHARED_PROJECTILE_MATERIAL,
+} from "$lib/core/game-config";
+import { TowerState } from "$lib/core/world";
+import { VisualStatus, ViewId } from "$lib/modules/render/components";
+import { setupScene } from "./setup-scene";
 
-let canvas: HTMLCanvasElement | null = null;
-let renderer: THREE.WebGLRenderer | null = null;
-let scene: THREE.Scene | null = null;
-let camera: THREE.PerspectiveCamera | null = null;
-
-export const setCanvas = (c: HTMLCanvasElement) => {
-	canvas = c;
+const VIEW_CONSTRUCTORS: Record<
+	ViewIdType,
+	(entity: Entity) => THREE.Object3D
+> = {
+	[ViewId.ENEMY]: (entity) => {
+		const materialKey = entity.visualStatus ?? VisualStatus.MOVING;
+		return new THREE.Mesh(
+			SHARED_GEOMETRIES.enemy,
+			SHARED_ENEMY_MATERIALS[
+				materialKey as keyof typeof SHARED_ENEMY_MATERIALS
+			] || SHARED_ENEMY_MATERIALS.moving,
+		);
+	},
+	[ViewId.PROJECTILE]: () =>
+		new THREE.Mesh(SHARED_GEOMETRIES.projectile, SHARED_PROJECTILE_MATERIAL),
+	[ViewId.TOWER]: (entity) =>
+		new THREE.Mesh(
+			SHARED_GEOMETRIES.tower,
+			entity.towerState === TowerState.BROKEN
+				? SHARED_TOWER_BROKEN_MATERIAL
+				: SHARED_TOWER_MATERIAL,
+		),
 };
 
-export const createSyncRenderSystem = () => {
-	const resizeObserver = new ResizeObserver((_entries) => {
-		if (!canvas) return;
+function createResizeObserver(
+	canvas: HTMLCanvasElement,
+	renderer: THREE.WebGLRenderer,
+	camera: THREE.PerspectiveCamera,
+) {
+	return new ResizeObserver((_entries) => {
 		const { width, height } = canvas.getBoundingClientRect();
-		if (renderer && camera) {
-			renderer.setSize(width, height);
-			camera.aspect = width / height;
-			camera.updateProjectionMatrix();
-		}
-	});
-
-	const initRender = () => {
-		if (!canvas) return;
-
-		const { width, height } = canvas.getBoundingClientRect();
-
-		scene = new THREE.Scene();
-		scene.background = new THREE.Color(RENDER_CONFIG.colors.background);
-
-		const { fov, near, far, position } = RENDER_CONFIG.camera;
-		camera = new THREE.PerspectiveCamera(fov, width / height, near, far);
-		camera.position.set(position.x, position.y, position.z);
-		camera.lookAt(0, 0, 0);
-		camera.layers.enable(1);
-		setCameraRef(camera);
-
-		renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 		renderer.setSize(width, height);
+		camera.aspect = width / height;
+		camera.updateProjectionMatrix();
+	});
+}
 
-		const ambientLight = new THREE.AmbientLight(
-			RENDER_CONFIG.colors.ambient,
-			RENDER_CONFIG.light.ambientIntensity,
-		);
-		scene.add(ambientLight);
+export function createSyncRenderSystem(
+	world: World<Entity>,
+	canvas: HTMLCanvasElement,
+) {
+	const entityToObject3D = new WeakMap<Entity, THREE.Object3D>();
 
-		const directionalLight = new THREE.DirectionalLight(
-			RENDER_CONFIG.colors.directional,
-			RENDER_CONFIG.light.directionalIntensity,
-		);
-		const { x, y, z } = RENDER_CONFIG.light.directionalPosition;
-		directionalLight.position.set(x, y, z);
-		scene.add(directionalLight);
+	const allWithView = world.with("viewId", "position");
+	const enemiesWithView = world.with("isEnemy", "viewId", "position");
+	const towersWithView = world.with("isTower", "viewId", "position");
 
-		createGround(scene);
+	const setup = setupScene(canvas);
+	const scene = setup.scene;
+	const camera = setup.camera;
+	const renderer = setup.renderer;
+	createResizeObserver(canvas, renderer, camera).observe(canvas);
 
-		const grid = RENDER_CONFIG.grid;
-		const gridHelper = new THREE.GridHelper(
-			grid.size,
-			grid.divisions,
-			grid.colorCenterLine,
-			grid.colorGrid,
-		);
-		scene.add(gridHelper);
+	function attachEntity(entity: Entity) {
+		if (!entity.viewId || !entity.position) return;
 
-		resizeObserver.observe(canvas);
+		const constructor = VIEW_CONSTRUCTORS[entity.viewId];
+		if (!constructor) return;
 
-		world.onEntityRemoved.subscribe((entity: Entity) => {
-			ViewBridge.detach(entity);
-		});
-	};
+		const mesh = constructor(entity);
+		mesh.position.copy(entity.position as THREE.Vector3);
+		if (entity.isTower) mesh.castShadow = true;
+		scene.add(mesh);
+		entityToObject3D.set(entity, mesh);
+	}
 
-	initRender();
+	function detachEntity(entity: Entity) {
+		const mesh = entityToObject3D.get(entity);
+		if (mesh) {
+			mesh.removeFromParent();
+			entityToObject3D.delete(entity);
+		}
+	}
+
+	world.onEntityAdded.subscribe(attachEntity);
+	world.onEntityRemoved.subscribe(detachEntity);
+
+	for (const entity of world.with("viewId", "position")) {
+		if (!entityToObject3D.has(entity)) {
+			attachEntity(entity);
+		}
+	}
 
 	return (_dt: number) => {
-		if (!scene) return;
-		syncTransform();
+		for (const entity of allWithView) {
+			const mesh = entityToObject3D.get(entity);
+			if (!mesh) continue;
 
-		const pendingEnemies = world.with("isEnemy", "position");
-		for (const entity of pendingEnemies) {
-			if (!ViewBridge.getObject3D(entity)) {
-				ViewBridge.initEntity(entity, scene!);
-			}
+			mesh.position.copy(entity.position as THREE.Vector3);
 		}
 
-		const pendingProjectiles = world.with("isProjectile", "position");
-		for (const entity of pendingProjectiles) {
-			if (!ViewBridge.getObject3D(entity)) {
-				ViewBridge.initEntity(entity, scene!);
-			}
+		for (const entity of enemiesWithView) {
+			const mesh = entityToObject3D.get(entity) as THREE.Mesh;
+			if (!mesh) continue;
+
+			const materialKey = entity.visualStatus ?? VisualStatus.MOVING;
+			mesh.material =
+				SHARED_ENEMY_MATERIALS[
+					materialKey as keyof typeof SHARED_ENEMY_MATERIALS
+				] || SHARED_ENEMY_MATERIALS.moving;
 		}
 
-		const pendingTowers = world.with("isTower", "position");
-		for (const entity of pendingTowers) {
-			if (!ViewBridge.getObject3D(entity)) {
-				ViewBridge.initEntity(entity, scene!);
-			}
+		for (const entity of towersWithView) {
+			const mesh = entityToObject3D.get(entity) as THREE.Mesh;
+			if (!mesh) continue;
+
+			mesh.material =
+				entity.towerState === TowerState.BROKEN
+					? SHARED_TOWER_BROKEN_MATERIAL
+					: SHARED_TOWER_MATERIAL;
 		}
 
-		const inScene = world.with("viewId", "position");
-		for (const entity of inScene) {
-			ViewBridge.syncEntity(entity);
-		}
-
-		if (renderer && scene && camera) {
-			renderer.render(scene, camera);
-		}
+		renderer.render(scene, camera);
 	};
-};
+}

@@ -58,6 +58,20 @@ const createSystem = (world: World) => {
 };
 ```
 
+### Фабрики систем
+
+- Все фабрики систем принимают `world` как первый аргумент:
+
+```typescript
+function createSystem(world: World<Entity>) {
+	const query = world.with("component");
+	return (dt: number) => { ... };
+}
+```
+
+- НЕ использовать глобальный `world` внутри систем — всегда передавать через аргумент
+- Canvas и другие внешние ресурсы также передавать аргументами, НЕ через `setCanvas`/модульный scope
+
 ### Enum-подобные типы
 
 ```typescript
@@ -99,10 +113,11 @@ Props всегда должны быть типизированы через `in
 
 ```
 modules/feature/
-├── schema.ts      # типы + компоненты
-├── factory.ts    # фабрика
-└── systems/      # системы
-    └── *.system.ts
+├── components.ts  # типы + компоненты
+├── factory.ts     # фабрика сущностей
+└── systems/       # системы
+    ├── *.system.ts  # фабрики систем (принимают world, возвращают (dt) => void)
+    └── *.ts         # вспомогательные файлы для фабрик/систем (хелперы, константы и т.д.)
 ```
 
 ### Модули общего назначения

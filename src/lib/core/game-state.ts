@@ -10,13 +10,6 @@ export const createGameState = () => {
 	createPlayer();
 
 	world.add({
-		settings: {
-			settings: true,
-			showHpBar: true,
-		},
-	});
-
-	world.add({
 		waveControl: {
 			waveControl: true,
 			currentWave: GAME_CONFIG.initialWave,

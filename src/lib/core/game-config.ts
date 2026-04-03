@@ -159,11 +159,6 @@ export const GEOMETRY = {
 		width: 20,
 		height: 20,
 	},
-	hpBar: {
-		width: 1.0,
-		height: 0.15,
-		depth: 1.0,
-	},
 } as const;
 
 export const SHARED_GEOMETRIES = {

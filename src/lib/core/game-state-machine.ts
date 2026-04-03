@@ -5,12 +5,13 @@ import { GameEngine, GameEvents } from "./event-bus";
 import { GameLoop } from "./game-loop";
 
 let isGameRunning = false;
+let canvasRef: HTMLCanvasElement | null = null;
 
 function startGame() {
-	if (isGameRunning) return;
+	if (isGameRunning || !canvasRef) return;
 
 	initializeGameState();
-	GameLoop.start();
+	GameLoop.start(canvasRef);
 	isGameRunning = true;
 }
 
@@ -21,7 +22,8 @@ function stopGame() {
 	isGameRunning = false;
 }
 
-export const initGameStateMachine = () => {
+export const initGameStateMachine = (canvas: HTMLCanvasElement) => {
+	canvasRef = canvas;
 	let gameOverTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	GameEngine.on(GameEvents.START_GAME, () => {

@@ -16,6 +16,7 @@ import { createApplyUpgradesSystem } from "$lib/modules/upgrades/systems/apply-u
 import { createEnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
 import { appState, AppState } from "$lib/core/app-state.svelte";
 import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
+import { world } from "$lib/core/world";
 
 type System = (deltaTime: number) => void;
 
@@ -93,10 +94,10 @@ function loop(_timestamp: number) {
 }
 
 export const GameLoop = {
-	start() {
+	start(canvas: HTMLCanvasElement) {
 		if (isRunning) return;
 
-		FrameSystems.unshift(createSyncRenderSystem());
+		FrameSystems.unshift(createSyncRenderSystem(world, canvas));
 
 		isRunning = true;
 		animationFrameId = requestAnimationFrame(loop);

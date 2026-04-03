@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import { appState, AppState } from "$lib/core/app-state.svelte";
-	import { initGameStateMachine } from "$lib/core/game-state-machine.svelte";
-	import { setCanvas } from "$lib/modules/render/systems/render.system";
+	import { initGameStateMachine } from "$lib/core/game-state-machine";
 	import MainMenu from "$lib/components/main-menu.svelte";
 	import Settings from "$lib/components/settings.svelte";
 	import GameOver from "$lib/components/game-over.svelte";
@@ -13,8 +12,7 @@
 	let canvas: HTMLCanvasElement;
 
 	onMount(() => {
-		setCanvas(canvas);
-		initGameStateMachine();
+		initGameStateMachine(canvas);
 	});
 </script>
 

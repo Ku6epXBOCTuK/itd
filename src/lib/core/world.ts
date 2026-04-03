@@ -87,11 +87,6 @@ export type Entity = {
 		waveDelayTimer: number;
 	};
 
-	settings?: {
-		settings: true;
-		showHpBar: boolean;
-	};
-
 	dirtyStats?: {
 		dirtyStats: true;
 	};
