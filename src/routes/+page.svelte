@@ -23,21 +23,18 @@
 
 	{#if appState.current === AppState.MENU}
 		<MainMenu />
-		<DebugPanel />
 	{:else if appState.current === AppState.SETTINGS}
 		<Settings />
-		<DebugPanel />
 	{:else if appState.current === AppState.GAME_OVER}
 		<GameOver />
-		<DebugPanel />
 	{:else if appState.current === AppState.PAUSED}
 		<PauseMenu />
 		<Hud />
-		<DebugPanel />
 	{:else if appState.current === AppState.PLAYING || appState.current === AppState.GAME_OVER_ANIMATING}
 		<Hud />
-		<DebugPanel />
 	{/if}
+
+	<DebugPanel />
 </div>
 
 <style>
