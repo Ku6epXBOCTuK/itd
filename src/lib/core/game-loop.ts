@@ -1,45 +1,47 @@
-import { IncomeSystem } from "$lib/modules/economy/systems/income.system";
+import { createIncomeSystem } from "$lib/modules/economy/systems/income.system";
 import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
-import { MoveSystem } from "$lib/modules/enemies/systems/move.system";
-import { AttackSystem } from "$lib/modules/enemies/systems/attack.system";
-import { TowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
-import { TargetingSystem } from "$lib/modules/projectiles/systems/targeting.system";
-import { HomingMovementSystem } from "$lib/modules/projectiles/systems/homing-movement.system";
-import { BallisticMovementSystem } from "$lib/modules/projectiles/systems/ballistic-movement.system";
-import { CollisionSystem } from "$lib/modules/projectiles/systems/collision.system";
-import {
-	WaveSystem,
-	SpawnSystem,
-} from "$lib/modules/waves/systems/respawn.system";
-import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
-import { FpsSystem } from "$lib/modules/debug/systems/fps.system";
-import { UpdateDebugSystem } from "$lib/modules/debug/systems/update-debug.system";
-import { ApplyUpgradesSystem } from "$lib/modules/upgrades/systems/apply-upgrades.system";
-import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
+import { createMoveSystem } from "$lib/modules/enemies/systems/move.system";
+import { createAttackSystem } from "$lib/modules/enemies/systems/attack.system";
+import { createTowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
+import { createTargetingSystem } from "$lib/modules/projectiles/systems/targeting.system";
+import { createHomingMovementSystem } from "$lib/modules/projectiles/systems/homing-movement.system";
+import { createBallisticMovementSystem } from "$lib/modules/projectiles/systems/ballistic-movement.system";
+import { createCollisionSystem } from "$lib/modules/projectiles/systems/collision.system";
+import { createWaveSystem } from "$lib/modules/waves/systems/wave.system";
+import { createSpawnSystem } from "$lib/modules/waves/systems/spawn.system";
+import { createUpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
+import { createFpsSystem } from "$lib/modules/debug/systems/fps.system";
+import { createUpdateDebugSystem } from "$lib/modules/debug/systems/update-debug.system";
+import { createApplyUpgradesSystem } from "$lib/modules/upgrades/systems/apply-upgrades.system";
+import { createEnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
 import { appState, AppState } from "$lib/core/app-state.svelte";
 import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
 
 type System = (deltaTime: number) => void;
 
-const ActiveSystems: System[] = [AttackSystem, WaveSystem, SpawnSystem];
+const ActiveSystems: System[] = [
+	createAttackSystem(),
+	createWaveSystem(),
+	createSpawnSystem(),
+];
 const GameSystems: System[] = [
-	MoveSystem,
-	TowerAttackSystem,
-	EnemyDeathSystem,
-	ApplyUpgradesSystem,
+	createMoveSystem(),
+	createTowerAttackSystem(),
+	createEnemyDeathSystem(),
+	createApplyUpgradesSystem(),
 ];
 const ProjectileSystems: System[] = [
-	TargetingSystem,
-	HomingMovementSystem,
-	BallisticMovementSystem,
-	CollisionSystem,
+	createTargetingSystem(),
+	createHomingMovementSystem(),
+	createBallisticMovementSystem(),
+	createCollisionSystem(),
 ];
-const SecondTickSystems: System[] = [IncomeSystem];
+const SecondTickSystems: System[] = [createIncomeSystem()];
 const FrameSystems: System[] = [
 	SyncRenderSystem,
-	UpdateHudSystem,
-	FpsSystem,
-	UpdateDebugSystem,
+	createUpdateHudSystem(),
+	createFpsSystem(),
+	createUpdateDebugSystem(),
 ];
 
 let isRunning = false;

@@ -1,6 +1,5 @@
 import { AppState, setAppState } from "$lib/core/app-state.svelte";
 import { initializeGameState, resetGameState } from "$lib/core/game-state";
-import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import {
 	disposeRenderer,
 	initRender,
@@ -23,7 +22,6 @@ function startGame() {
 	initializeGameState();
 
 	SyncRenderSystem();
-	UpdateHudSystem();
 
 	GameLoop.start();
 	isGameRunning = true;
