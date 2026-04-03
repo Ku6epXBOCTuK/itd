@@ -2,7 +2,7 @@ import { world } from "$lib/core/world";
 import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 
 export const createUpdateHudSystem = () => {
-	const players = world.with("isPlayer");
+	const players = world.with("gold");
 	const towers = world.with("isTower");
 	const waveControlQuery = world.with("waveControl");
 

@@ -1,21 +1,21 @@
-import { World } from "miniplex";
+import type {
+	EnemyStateType,
+	EnemyVariantType,
+} from "$lib/modules/enemies/components";
 import type {
 	ViewIdType,
 	VisualStatusType,
 } from "$lib/modules/render/components";
 import type {
-	TowerStateType,
 	TowerBaseStats,
+	TowerStateType,
 } from "$lib/modules/towers/components";
-import type {
-	EnemyStateType,
-	EnemyVariantType,
-} from "$lib/modules/enemies/components";
-import type { WaveStatusType } from "$lib/modules/waves/components";
 import type { Upgrades } from "$lib/modules/upgrades/components";
+import type { WaveControl } from "$lib/modules/waves/components";
+import { World } from "miniplex";
 
-export { TowerState } from "$lib/modules/towers/components";
 export { EnemyState, EnemyVariant } from "$lib/modules/enemies/components";
+export { TowerState } from "$lib/modules/towers/components";
 export { WaveStatus } from "$lib/modules/waves/components";
 
 export type Position = { x: number; y: number; z: number };
@@ -25,7 +25,6 @@ export type Entity = Partial<
 		position: Position;
 		viewId: ViewIdType;
 
-		isPlayer: true;
 		isTower: true;
 		isEnemy: true;
 		isProjectile: true;
@@ -65,14 +64,7 @@ export type Entity = Partial<
 		experienceValue: number;
 		deathTimer: number;
 
-		waveControl: {
-			waveControl: true;
-			currentWave: number;
-			status: WaveStatusType;
-			spawnTimer: number;
-			remainingEnemies: number;
-			waveDelayTimer: number;
-		};
+		waveControl: WaveControl;
 	} & TowerBaseStats
 >;
 

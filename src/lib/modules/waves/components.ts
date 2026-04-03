@@ -5,3 +5,12 @@ export const WaveStatus = {
 } as const;
 
 export type WaveStatusType = (typeof WaveStatus)[keyof typeof WaveStatus];
+
+export type WaveControl = {
+	waveControl: true;
+	currentWave: number;
+	status: WaveStatusType;
+	spawnTimer: number;
+	remainingEnemies: number;
+	waveDelayTimer: number;
+};
