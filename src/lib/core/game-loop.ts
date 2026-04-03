@@ -14,6 +14,7 @@ import {
 import { UpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import { FpsSystem } from "$lib/modules/debug/systems/fps.system";
 import { UpdateDebugSystem } from "$lib/modules/debug/systems/update-debug.system";
+import { ApplyUpgradesSystem } from "$lib/modules/upgrades/systems/apply-upgrades.system";
 import { EnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
 import { appState, AppState } from "$lib/core/app-state.svelte";
 import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
@@ -21,7 +22,12 @@ import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
 type System = (deltaTime: number) => void;
 
 const ActiveSystems: System[] = [AttackSystem, WaveSystem, SpawnSystem];
-const GameSystems: System[] = [MoveSystem, TowerAttackSystem, EnemyDeathSystem];
+const GameSystems: System[] = [
+	MoveSystem,
+	TowerAttackSystem,
+	EnemyDeathSystem,
+	ApplyUpgradesSystem,
+];
 const ProjectileSystems: System[] = [
 	TargetingSystem,
 	HomingMovementSystem,

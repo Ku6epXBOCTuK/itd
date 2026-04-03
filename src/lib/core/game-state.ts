@@ -11,6 +11,11 @@ export const createGameState = () => {
 			player: true,
 			gold: 100,
 			incomePerSecond: 10,
+			upgrades: {
+				upgrades: true,
+				towerDamageFlatLevel: 2,
+				towerDamagePercentLevel: 3,
+			},
 		} as Player,
 	});
 

@@ -58,6 +58,15 @@ export const PROJECTILE_CONFIG = {
 	lifetime: 5000,
 } as const;
 
+export const UPGRADES = {
+	TOWER_DAMAGE_FLAT: {
+		bonusPerLevel: 20,
+	},
+	TOWER_DAMAGE_PERCENT: {
+		bonusPerLevel: 10,
+	},
+} as const;
+
 export const RENDER_CONFIG = {
 	camera: {
 		fov: 75,

@@ -48,19 +48,35 @@ export type View = {
 	originalColor: number;
 };
 
+export type DirtyStatsTag = {
+	dirtyStats: true;
+};
+
+export type UpgradeComponent = {
+	upgrades: true;
+	towerDamageFlatLevel: number;
+	towerDamagePercentLevel: number;
+};
+
 export type Player = {
 	player: true;
 	gold: number;
 	incomePerSecond: number;
+	upgrades: UpgradeComponent;
 };
 
-export type Tower = {
-	tower: true;
+export type TowerStats = {
 	hp: number;
 	maxHp: number;
 	damage: number;
 	attackRange: number;
 	attackCooldown: number;
+};
+
+export type Tower = {
+	tower: true;
+	baseStats: TowerStats;
+	finalStats: TowerStats;
 	attackAnimationDuration: number;
 	towerState: TowerStateType;
 	attackStartTime: number;
@@ -143,6 +159,7 @@ export type Entity = {
 	settings?: Settings;
 	waveControl?: WaveControl;
 	inScene?: InScene;
+	dirtyStats?: DirtyStatsTag;
 };
 
 // ============ MINIPLEX WORLD ============

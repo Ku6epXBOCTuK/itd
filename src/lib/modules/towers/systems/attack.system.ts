@@ -7,9 +7,11 @@ export const TowerAttackSystem = (_deltaTime: number) => {
 	const enemies = world.with("enemy", "position");
 
 	for (const tower of towers) {
+		const finalStats = tower.tower.finalStats;
+
 		if (tower.tower.towerState === TowerState.COOLDOWN) {
 			const cooldownElapsed = currentTime - tower.tower.attackStartTime;
-			if (cooldownElapsed >= tower.tower.attackCooldown) {
+			if (cooldownElapsed >= finalStats.attackCooldown) {
 				tower.tower.towerState = TowerState.IDLE;
 				tower.tower.target = undefined;
 			}
@@ -28,7 +30,7 @@ export const TowerAttackSystem = (_deltaTime: number) => {
 				) {
 					createProjectile(
 						tower.position,
-						tower.tower.damage,
+						finalStats.damage,
 						{ homing: true, speed: 8 },
 						target,
 					);
@@ -40,7 +42,7 @@ export const TowerAttackSystem = (_deltaTime: number) => {
 		}
 
 		let targetEnemy: ReturnType<typeof world.with>[number] | null = null;
-		let minDistance = tower.tower.attackRange;
+		let minDistance = finalStats.attackRange;
 
 		for (const enemy of enemies) {
 			if (enemy.enemy.hp <= 0) continue;
@@ -50,7 +52,7 @@ export const TowerAttackSystem = (_deltaTime: number) => {
 			const dz = enemy.position.z - tower.position.z;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance <= tower.tower.attackRange && distance < minDistance) {
+			if (distance <= finalStats.attackRange && distance < minDistance) {
 				minDistance = distance;
 				targetEnemy = enemy;
 			}

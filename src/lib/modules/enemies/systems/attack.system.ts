@@ -52,10 +52,10 @@ export const AttackSystem = (_deltaTime: number) => {
 
 				if (attackElapsed >= enemy.enemy.attackDuration) {
 					for (const tower of towers) {
-						const towerHp = tower.tower.hp;
+						const towerHp = tower.tower.finalStats.hp;
 
 						const newHp = Math.max(0, towerHp - enemy.enemy.damage);
-						tower.tower.hp = newHp;
+						tower.tower.finalStats.hp = newHp;
 
 						if (newHp <= 0 && !gameTriggered) {
 							gameTriggered = true;
