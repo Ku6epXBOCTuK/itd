@@ -6,54 +6,45 @@ import {
 	SHARED_TOWER_BROKEN_MATERIAL,
 	SHARED_PROJECTILE_MATERIAL,
 } from "$lib/core/game-config";
-import { createHpBarSprite } from "$lib/modules/shared/components/hp-bar";
-import { world, type Entity, EnemyState, TowerState } from "$lib/core/world";
+import { TowerState, type Entity } from "$lib/core/world";
+import {
+	ViewId,
+	VisualStatus,
+	type ViewIdType,
+} from "$lib/modules/render/components";
 
 const entityToObject3D = new WeakMap<Entity, THREE.Object3D>();
-const entityToSprite = new WeakMap<Entity, THREE.Sprite>();
+
+const VIEW_CONSTRUCTORS: Record<
+	ViewIdType,
+	(entity: Entity) => THREE.Object3D
+> = {
+	[ViewId.ENEMY]: (entity) => {
+		const materialKey = entity.visualStatus ?? VisualStatus.MOVING;
+		return new THREE.Mesh(
+			SHARED_GEOMETRIES.enemy,
+			SHARED_ENEMY_MATERIALS[
+				materialKey as keyof typeof SHARED_ENEMY_MATERIALS
+			] || SHARED_ENEMY_MATERIALS.moving,
+		);
+	},
+	[ViewId.PROJECTILE]: () =>
+		new THREE.Mesh(SHARED_GEOMETRIES.projectile, SHARED_PROJECTILE_MATERIAL),
+	[ViewId.TOWER]: (entity) =>
+		new THREE.Mesh(
+			SHARED_GEOMETRIES.tower,
+			entity.towerState === TowerState.BROKEN
+				? SHARED_TOWER_BROKEN_MATERIAL
+				: SHARED_TOWER_MATERIAL,
+		),
+};
 
 export const ViewBridge = {
-	createEnemyMesh(state: string) {
-		const mesh = new THREE.Mesh(
-			SHARED_GEOMETRIES.enemy,
-			SHARED_ENEMY_MATERIALS[state as keyof typeof SHARED_ENEMY_MATERIALS] ||
-				SHARED_ENEMY_MATERIALS[EnemyState.MOVING],
-		);
-		mesh.castShadow = true;
-		return mesh;
-	},
-
-	createProjectileMesh() {
-		const mesh = new THREE.Mesh(
-			SHARED_GEOMETRIES.projectile,
-			SHARED_PROJECTILE_MATERIAL,
-		);
-		mesh.castShadow = true;
-		return mesh;
-	},
-
-	createTowerMesh(isBroken: boolean) {
-		return new THREE.Mesh(
-			SHARED_GEOMETRIES.tower,
-			isBroken ? SHARED_TOWER_BROKEN_MATERIAL : SHARED_TOWER_MATERIAL,
-		);
-	},
-
-	attach(entity: Entity, object: THREE.Object3D) {
-		entityToObject3D.set(entity, object);
-	},
-
 	detach(entity: Entity) {
 		const object = entityToObject3D.get(entity);
 		if (object) {
 			object.removeFromParent();
 			entityToObject3D.delete(entity);
-		}
-		const sprite = entityToSprite.get(entity);
-		if (sprite) {
-			sprite.removeFromParent();
-			sprite.material.dispose();
-			entityToSprite.delete(entity);
 		}
 	},
 
@@ -61,60 +52,18 @@ export const ViewBridge = {
 		return entityToObject3D.get(entity);
 	},
 
-	getSprite(entity: Entity) {
-		return entityToSprite.get(entity);
-	},
-
-	setSprite(entity: Entity, sprite: THREE.Sprite) {
-		entityToSprite.set(entity, sprite);
-	},
-
 	initEntity(entity: Entity, scene: THREE.Scene) {
-		if (!entity.position) return;
+		if (!entity.position || !entity.viewId) return;
+		if (entityToObject3D.has(entity)) return;
 
-		if (entity.isEnemy && !entityToObject3D.has(entity)) {
-			const mesh = this.createEnemyMesh(entity.enemyState ?? EnemyState.MOVING);
-			mesh.position.set(
-				entity.position.x,
-				entity.position.y,
-				entity.position.z,
-			);
-			scene.add(mesh);
-			entityToObject3D.set(entity, mesh);
+		const constructor = VIEW_CONSTRUCTORS[entity.viewId];
+		if (!constructor) return;
 
-			const sprite = createHpBarSprite();
-			sprite.position.set(
-				entity.position.x,
-				entity.position.y + 1.0,
-				entity.position.z,
-			);
-			scene.add(sprite);
-			entityToSprite.set(entity, sprite);
-		}
-
-		if (entity.isProjectile && !entityToObject3D.has(entity)) {
-			const mesh = this.createProjectileMesh();
-			mesh.position.set(
-				entity.position.x,
-				entity.position.y,
-				entity.position.z,
-			);
-			scene.add(mesh);
-			entityToObject3D.set(entity, mesh);
-		}
-
-		if (entity.isTower && !entityToObject3D.has(entity)) {
-			const isBroken = entity.towerState === TowerState.BROKEN;
-			const mesh = this.createTowerMesh(isBroken);
-			mesh.position.set(
-				entity.position.x,
-				entity.position.y,
-				entity.position.z,
-			);
-			mesh.castShadow = true;
-			scene.add(mesh);
-			entityToObject3D.set(entity, mesh);
-		}
+		const mesh = constructor(entity);
+		mesh.position.set(entity.position.x, entity.position.y, entity.position.z);
+		if (entity.isTower) mesh.castShadow = true;
+		scene.add(mesh);
+		entityToObject3D.set(entity, mesh);
 	},
 
 	syncEntity(entity: Entity) {
@@ -132,25 +81,11 @@ export const ViewBridge = {
 		if (entity.isEnemy) {
 			const mesh = entityToObject3D.get(entity) as THREE.Mesh;
 			if (mesh) {
-				const materialKey = entity.isDying
-					? EnemyState.DYING
-					: (entity.enemyState ?? EnemyState.MOVING);
-				mesh.material = SHARED_ENEMY_MATERIALS[materialKey];
-			}
-
-			const sprite = entityToSprite.get(entity);
-			if (sprite) {
-				sprite.position.set(
-					entity.position.x,
-					entity.position.y + 1.0,
-					entity.position.z,
-				);
-				sprite.visible = !entity.isDying;
-
-				const hpPercent = (entity.hp ?? 0) / (entity.maxHp ?? 1);
-				(
-					sprite.material as unknown as THREE.ShaderMaterial
-				).uniforms.uHpPercent.value = hpPercent;
+				const materialKey = entity.visualStatus ?? VisualStatus.MOVING;
+				mesh.material =
+					SHARED_ENEMY_MATERIALS[
+						materialKey as keyof typeof SHARED_ENEMY_MATERIALS
+					] || SHARED_ENEMY_MATERIALS.moving;
 			}
 		}
 

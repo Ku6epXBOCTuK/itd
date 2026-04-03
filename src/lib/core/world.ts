@@ -1,51 +1,24 @@
 import { World } from "miniplex";
+import type {
+	ViewIdType,
+	VisualStatusType,
+} from "$lib/modules/render/components";
+import type { TowerStateType } from "$lib/modules/towers/components";
+import type {
+	EnemyStateType,
+	EnemyVariantType,
+} from "$lib/modules/enemies/components";
+import type { WaveStatusType } from "$lib/modules/waves/components";
 
-export const TowerState = {
-	IDLE: "idle",
-	AIMING: "aiming",
-	FIRING: "firing",
-	COOLDOWN: "cooldown",
-	BROKEN: "broken",
-} as const;
-
-export type TowerStateType = (typeof TowerState)[keyof typeof TowerState];
-
-export const EnemyState = {
-	MOVING: "moving",
-	ATTACKING: "attacking",
-	COOLDOWN: "cooldown",
-	HAPPY: "happy",
-	DYING: "dying",
-} as const;
-
-export type EnemyStateType = (typeof EnemyState)[keyof typeof EnemyState];
-
-export const EnemyVariant = {
-	BASIC: "basic",
-	FAST: "fast",
-	TANK: "tank",
-} as const;
-
-export type EnemyVariantType = (typeof EnemyVariant)[keyof typeof EnemyVariant];
-
-export const WaveStatus = {
-	PREPARING: "preparing",
-	SPAWNING: "spawning",
-	WAITING: "waiting",
-} as const;
-
-export type WaveStatusType = (typeof WaveStatus)[keyof typeof WaveStatus];
+export { TowerState } from "$lib/modules/towers/components";
+export { EnemyState, EnemyVariant } from "$lib/modules/enemies/components";
+export { WaveStatus } from "$lib/modules/waves/components";
 
 export type Position = { x: number; y: number; z: number };
 
-export type InScene = {
-	inScene: true;
-};
-
 export type Entity = {
 	position?: Position;
-	viewId?: string;
-	inScene?: InScene;
+	viewId?: ViewIdType;
 
 	isPlayer?: true;
 	isTower?: true;
@@ -72,6 +45,7 @@ export type Entity = {
 	towerState?: TowerStateType;
 	enemyState?: EnemyStateType;
 	enemyVariant?: EnemyVariantType;
+	visualStatus?: VisualStatusType;
 	projectileType?: "homing" | "ballistic" | "orbit";
 
 	cooldownTimer?: number;

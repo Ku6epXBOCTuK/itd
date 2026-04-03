@@ -102,7 +102,7 @@ export const createSyncRenderSystem = () => {
 			}
 		}
 
-		const inScene = world.with("inScene", "position");
+		const inScene = world.with("viewId", "position");
 		for (const entity of inScene) {
 			ViewBridge.syncEntity(entity);
 		}

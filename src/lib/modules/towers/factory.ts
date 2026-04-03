@@ -1,9 +1,11 @@
 import { TowerState, world, type Position } from "$lib/core/world";
 import { TOWER_CONFIG } from "$lib/core/game-config";
+import { ViewId } from "$lib/modules/render/components";
 
 export const createTower = (x: number, z: number) => {
 	const tower = world.add({
 		position: { x, y: 1, z } as Position,
+		viewId: ViewId.TOWER,
 		isTower: true,
 		isTargetable: true,
 		baseStats: {

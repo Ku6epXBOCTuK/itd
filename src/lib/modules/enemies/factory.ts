@@ -3,9 +3,10 @@ import {
 	EnemyVariant,
 	world,
 	type Position,
-	type EnemyVariantType,
 } from "$lib/core/world";
+import type { EnemyVariantType } from "$lib/modules/enemies/components";
 import { ENEMY_CONFIGS, ENEMY_SPAWN } from "$lib/core/game-config";
+import { ViewId, VisualStatus } from "$lib/modules/render/components";
 
 export { EnemyVariant };
 
@@ -20,6 +21,8 @@ export const createEnemy = (
 
 	const enemy = world.add({
 		position: { x, y: ENEMY_SPAWN.y, z } as Position,
+		viewId: ViewId.ENEMY,
+		visualStatus: VisualStatus.MOVING,
 		isEnemy: true,
 		isTargetable: true,
 		enemyVariant: type as EnemyVariantType,

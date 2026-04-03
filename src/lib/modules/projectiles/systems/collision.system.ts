@@ -1,6 +1,7 @@
 import { world } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 import { PROJECTILE_CONFIG, GAME_CONFIG } from "$lib/core/game-config";
+import { VisualStatus } from "$lib/modules/render/components";
 
 export const createCollisionSystem = () => {
 	const projectiles = world.with("isProjectile", "position");
@@ -53,6 +54,7 @@ export const createCollisionSystem = () => {
 
 						if ((target.hp ?? 0) <= 0) {
 							world.addComponent(target, "isDying", true);
+							target.visualStatus = VisualStatus.DYING;
 							target.deathTimer = GAME_CONFIG.deathAnimationDuration;
 						}
 					}

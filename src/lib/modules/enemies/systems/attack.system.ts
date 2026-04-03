@@ -1,5 +1,6 @@
 import { world, EnemyState, TowerState } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
+import { VisualStatus } from "$lib/modules/render/components";
 
 let gameTriggered = false;
 
@@ -44,6 +45,7 @@ export const createAttackSystem = () => {
 
 				if (enemy.enemyState === EnemyState.MOVING) {
 					enemy.enemyState = EnemyState.ATTACKING;
+					enemy.visualStatus = VisualStatus.ATTACKING;
 					enemy.attackTimer = enemy.attackDuration;
 				}
 
@@ -67,6 +69,7 @@ export const createAttackSystem = () => {
 								const allEnemies = world.with("isEnemy");
 								for (const e of allEnemies) {
 									e.enemyState = EnemyState.HAPPY;
+									e.visualStatus = VisualStatus.HAPPY;
 									e.cooldownTimer = 0;
 								}
 
@@ -76,6 +79,7 @@ export const createAttackSystem = () => {
 						}
 
 						enemy.enemyState = EnemyState.COOLDOWN;
+						enemy.visualStatus = VisualStatus.COOLDOWN;
 						enemy.cooldownTimer = enemy.attackCooldown;
 					}
 				}
@@ -85,11 +89,13 @@ export const createAttackSystem = () => {
 
 					if ((enemy.cooldownTimer ?? 0) <= 0) {
 						enemy.enemyState = EnemyState.ATTACKING;
+						enemy.visualStatus = VisualStatus.ATTACKING;
 						enemy.attackTimer = enemy.attackDuration;
 					}
 				}
 			} else {
 				enemy.enemyState = EnemyState.MOVING;
+				enemy.visualStatus = VisualStatus.MOVING;
 			}
 		}
 	};

@@ -1,4 +1,5 @@
 import { world, type Position, type Entity } from "$lib/core/world";
+import { ViewId } from "$lib/modules/render/components";
 
 export const createProjectile = (
 	startPos: Position,
@@ -15,6 +16,7 @@ export const createProjectile = (
 ) => {
 	const projectile = world.add({
 		position: { x: startPos.x, y: startPos.y, z: startPos.z },
+		viewId: ViewId.PROJECTILE,
 		isProjectile: true,
 		damage,
 		target,
