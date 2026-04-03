@@ -1,16 +1,16 @@
-import { world, WaveStatus, type Player } from "$lib/core/world";
+import { resetHudState } from "$lib/adapters/ui-state/hud-state.svelte";
 import { resumeGame } from "$lib/core/app-state.svelte";
-import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
-import { createTower } from "$lib/modules/towers/factories";
-import { clearGameEntities } from "$lib/modules/render/systems/sync-render.system";
+import { WaveStatus, world, type Player } from "$lib/core/world";
 import { resetAttackSystem } from "$lib/modules/enemies/systems/attack.system";
+import { createTower } from "$lib/modules/towers/factories";
+import { GAME_CONFIG } from "./game-config";
 
 export const createGameState = () => {
 	world.add({
 		player: {
 			player: true,
-			gold: 100,
-			incomePerSecond: 10,
+			gold: GAME_CONFIG.initialGold,
+			incomePerSecond: GAME_CONFIG.initialIncomePerSecond,
 			upgrades: {
 				upgrades: true,
 				towerDamageFlatLevel: 2,
@@ -29,7 +29,7 @@ export const createGameState = () => {
 	world.add({
 		waveControl: {
 			waveControl: true,
-			currentWave: 1,
+			currentWave: GAME_CONFIG.initialWave,
 			status: WaveStatus.PREPARING,
 			spawnTimer: 0,
 			remainingEnemies: 0,
@@ -39,15 +39,11 @@ export const createGameState = () => {
 };
 
 export const resetGameState = () => {
-	clearGameEntities();
 	resetAttackSystem();
 
 	world.clear();
 
-	hudState.gold = 0;
-	hudState.wave = 0;
-	hudState.towerHp = 0;
-	hudState.towerMaxHp = 0;
+	resetHudState();
 
 	resumeGame();
 };

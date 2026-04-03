@@ -23,3 +23,10 @@ export const hudState = $state<HudState>({
 		sfxEnabled: true,
 	},
 });
+
+export function resetHudState() {
+	hudState.gold = 0;
+	hudState.wave = 0;
+	hudState.towerHp = 0;
+	hudState.towerMaxHp = 0;
+}

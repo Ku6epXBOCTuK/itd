@@ -1,7 +1,6 @@
 import { world, EnemyState } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
-
-const HIT_THRESHOLD = 0.3;
+import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createCollisionSystem = () => {
 	const projectiles = world.with("projectile", "position", "view");
@@ -17,7 +16,10 @@ export const createCollisionSystem = () => {
 				const dz = targetPos.z - projectile.position.z;
 				const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-				if (distance < HIT_THRESHOLD || projectile.position.y <= 0) {
+				if (
+					distance < PROJECTILE_CONFIG.ballisticHitThreshold ||
+					projectile.position.y <= 0
+				) {
 					GameEngine.emit(GameEvents.PROJECTILE_MISS, {
 						position: projectile.position,
 					});
@@ -42,7 +44,7 @@ export const createCollisionSystem = () => {
 				const dz = target.position.z - projectile.position.z;
 				const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-				if (distance < HIT_THRESHOLD) {
+				if (distance < PROJECTILE_CONFIG.homingHitThreshold) {
 					if (target.enemy) {
 						target.enemy.hp = Math.max(
 							0,

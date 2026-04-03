@@ -1,5 +1,5 @@
 import { createIncomeSystem } from "$lib/modules/economy/systems/income.system";
-import { SyncRenderSystem } from "$lib/modules/render/systems/sync-render.system";
+import { createSyncRenderSystem } from "$lib/modules/render/systems/render.system";
 import { createMoveSystem } from "$lib/modules/enemies/systems/move.system";
 import { createAttackSystem } from "$lib/modules/enemies/systems/attack.system";
 import { createTowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
@@ -38,7 +38,6 @@ const ProjectileSystems: System[] = [
 ];
 const SecondTickSystems: System[] = [createIncomeSystem()];
 const FrameSystems: System[] = [
-	SyncRenderSystem,
 	createUpdateHudSystem(),
 	createFpsSystem(),
 	createUpdateDebugSystem(),
@@ -96,6 +95,9 @@ function loop(_timestamp: number) {
 export const GameLoop = {
 	start() {
 		if (isRunning) return;
+
+		FrameSystems.unshift(createSyncRenderSystem());
+
 		isRunning = true;
 		animationFrameId = requestAnimationFrame(loop);
 	},

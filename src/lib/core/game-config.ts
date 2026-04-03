@@ -55,7 +55,10 @@ export const TOWER_COLORS = {
 
 export const PROJECTILE_CONFIG = {
 	speed: 5,
+	speedHoming: 8,
 	lifetime: 5000,
+	homingHitThreshold: 0.3,
+	ballisticHitThreshold: 0.3,
 } as const;
 
 export const UPGRADES = {
@@ -169,6 +172,9 @@ export const GAME_CONFIG = {
 	targetingInterval: 1000,
 	targetReachedDistance: 0.5,
 	targetingMinDistance: 10,
+	initialGold: 100,
+	initialIncomePerSecond: 10,
+	initialWave: 1,
 } as const;
 
 export const ENEMY_SPAWN = {

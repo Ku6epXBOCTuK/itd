@@ -1,5 +1,6 @@
 import { world, TowerState } from "$lib/core/world";
 import { createProjectile } from "$lib/modules/projectiles/factories";
+import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createTowerAttackSystem = () => {
 	const towers = world.with("tower", "position");
@@ -33,7 +34,7 @@ export const createTowerAttackSystem = () => {
 						createProjectile(
 							tower.position,
 							finalStats.damage,
-							{ homing: true, speed: 8 },
+							{ homing: true, speed: PROJECTILE_CONFIG.speedHoming },
 							target,
 						);
 					}

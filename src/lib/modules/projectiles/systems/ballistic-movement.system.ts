@@ -1,7 +1,6 @@
 import { world } from "$lib/core/world";
 import { SECOND_MS } from "$lib/core/constants";
-
-const HIT_THRESHOLD = 0.3;
+import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createBallisticMovementSystem = () => {
 	const projectiles = world.with("projectile", "ballistic", "position");
@@ -18,7 +17,11 @@ export const createBallisticMovementSystem = () => {
 			const dz = targetPos.z - projectile.position.z;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance < HIT_THRESHOLD || projectile.position.y <= 0) continue;
+			if (
+				distance < PROJECTILE_CONFIG.ballisticHitThreshold ||
+				projectile.position.y <= 0
+			)
+				continue;
 
 			const direction = {
 				x: dx / distance,

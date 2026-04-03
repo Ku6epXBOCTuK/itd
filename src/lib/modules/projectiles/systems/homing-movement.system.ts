@@ -1,7 +1,6 @@
 import { world } from "$lib/core/world";
 import { SECOND_MS } from "$lib/core/constants";
-
-const HIT_THRESHOLD = 0.3;
+import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createHomingMovementSystem = () => {
 	const projectiles = world.with("projectile", "homing", "position");
@@ -18,7 +17,7 @@ export const createHomingMovementSystem = () => {
 			const dz = target.position.z - projectile.position.z;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance < HIT_THRESHOLD) continue;
+			if (distance < PROJECTILE_CONFIG.homingHitThreshold) continue;
 
 			const direction = {
 				x: dx / distance,

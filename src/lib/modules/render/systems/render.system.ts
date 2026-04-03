@@ -2,6 +2,7 @@ import { world, type Entity } from "$lib/core/world";
 import * as THREE from "three";
 import { createGround } from "../factories";
 import { RENDER_CONFIG } from "$lib/core/game-config";
+import { GameEngine, GameEvents } from "$lib/core/event-bus";
 import { initGraphics } from "./handlers/init-graphics.handler";
 import {
 	setSceneRef,
@@ -10,9 +11,14 @@ import {
 } from "./handlers/add-to-scene.handler";
 import { setCameraRef, syncTransform } from "./handlers/sync-transform.handler";
 
+let canvas: HTMLCanvasElement | null = null;
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
 let camera: THREE.PerspectiveCamera | null = null;
+
+export const setCanvas = (c: HTMLCanvasElement) => {
+	canvas = c;
+};
 
 const cleanupEntityResources = (entity: Entity) => {
 	if (entity.view) {
@@ -24,14 +30,35 @@ const cleanupEntityResources = (entity: Entity) => {
 	}
 };
 
-world.onEntityRemoved.subscribe(cleanupEntityResources);
+export const createSyncRenderSystem = () => {
+	world.onEntityRemoved.subscribe(cleanupEntityResources);
 
-export const initRender = (
-	canvas: HTMLCanvasElement,
-	width: number,
-	height: number,
-) => {
-	if (!scene) {
+	GameEngine.on(GameEvents.CLEAR_ENTITIES, () => {
+		const entities = world.with("view");
+		for (const entity of entities) {
+			if (entity.inScene) {
+				world.removeComponent(entity, "inScene");
+				removeFromScene(entity);
+			}
+			world.remove(entity);
+		}
+	});
+
+	const resizeObserver = new ResizeObserver((_entries) => {
+		if (!canvas) return;
+		const { width, height } = canvas.getBoundingClientRect();
+		if (renderer && camera) {
+			renderer.setSize(width, height);
+			camera.aspect = width / height;
+			camera.updateProjectionMatrix();
+		}
+	});
+
+	const initRender = () => {
+		if (!canvas) return;
+
+		const { width, height } = canvas.getBoundingClientRect();
+
 		scene = new THREE.Scene();
 		scene.background = new THREE.Color(RENDER_CONFIG.colors.background);
 		setSceneRef(scene);
@@ -70,48 +97,18 @@ export const initRender = (
 			grid.colorGrid,
 		);
 		scene.add(gridHelper);
-	}
 
-	if (renderer && camera) {
-		renderer.setSize(width, height);
-		camera.aspect = width / height;
-		camera.updateProjectionMatrix();
-	}
-};
+		resizeObserver.observe(canvas);
+	};
 
-export const SyncRenderSystem = () => {
-	initGraphics();
-	addToScene();
-	syncTransform();
+	initRender();
 
-	if (renderer && scene && camera) {
-		renderer.render(scene, camera);
-	}
-};
-
-export const resizeRenderer = (width: number, height: number) => {
-	if (!renderer || !camera) return;
-	camera.aspect = width / height;
-	camera.updateProjectionMatrix();
-	renderer.setSize(width, height);
-};
-
-export const disposeRenderer = () => {
-	if (renderer) {
-		renderer.dispose();
-		renderer = null;
-		scene = null;
-		camera = null;
-	}
-};
-
-export const clearGameEntities = () => {
-	const entities = world.with("view");
-	for (const entity of entities) {
-		if (entity.inScene) {
-			world.removeComponent(entity, "inScene");
-			removeFromScene(entity);
+	return (_dt: number) => {
+		initGraphics();
+		addToScene();
+		syncTransform();
+		if (renderer && scene && camera) {
+			renderer.render(scene, camera);
 		}
-		world.remove(entity);
-	}
+	};
 };
