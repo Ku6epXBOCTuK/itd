@@ -27,7 +27,7 @@ export default defineConfig({
 		},
 		coverage: {
 			provider: "istanbul",
-			enabled: true,
+			enabled: false,
 			include: ["src/**/*.{js,ts,svelte}"],
 			exclude: [
 				"src/**/*.d.ts",

@@ -5,17 +5,17 @@ import {
 	setAppState,
 } from "../src/lib/core/app-state.svelte";
 import { GameEngine, GameEvents } from "../src/lib/core/event-bus";
-import { initGameStateMachine } from "../src/lib/core/game-state-machine.svelte";
+import { initGameStateMachine } from "../src/lib/core/game-state-machine";
+
+vi.mock("../src/lib/core/game-loop", () => ({
+	createGameLoop: vi.fn(() => ({
+		start: vi.fn(),
+		stop: vi.fn(),
+		isRunning: () => false,
+	})),
+}));
 
 const WAIT_MS = 10000;
-
-class MockResizeObserver {
-	observe = vi.fn();
-	unobserve = vi.fn();
-	disconnect = vi.fn();
-	constructor() {}
-}
-global.ResizeObserver = MockResizeObserver;
 
 describe("AppState Flow", () => {
 	let cleanup: (() => void) | undefined;

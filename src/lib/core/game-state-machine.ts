@@ -2,40 +2,36 @@ import { AppState, setAppState } from "$lib/core/app-state.svelte";
 import { initializeGameState, resetGameState } from "$lib/core/game-state";
 import { GAME_OVER_ANIMATION_DURATION } from "./constants";
 import { GameEngine, GameEvents } from "./event-bus";
-import { GameLoop } from "./game-loop";
+import { createGameLoop } from "./game-loop";
+import { world } from "./world";
 
-let isGameRunning = false;
-let canvasRef: HTMLCanvasElement | null = null;
+const gameLoop = createGameLoop(world);
 
-function startGame() {
-	if (isGameRunning || !canvasRef) return;
+export function startGameLoop(canvas: HTMLCanvasElement) {
+	if (gameLoop.isRunning()) return;
 
 	initializeGameState();
-	GameLoop.start(canvasRef);
-	isGameRunning = true;
+	gameLoop.start(canvas);
 }
 
-function stopGame() {
-	if (!isGameRunning) return;
+export function stopGameLoop() {
+	if (!gameLoop.isRunning()) return;
 
-	GameLoop.stop();
-	isGameRunning = false;
+	gameLoop.stop();
 }
 
-export const initGameStateMachine = (canvas: HTMLCanvasElement) => {
-	canvasRef = canvas;
+export const initGameStateMachine = () => {
 	let gameOverTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	GameEngine.on(GameEvents.START_GAME, () => {
-		if (isGameRunning) {
-			stopGame();
+		if (gameLoop.isRunning()) {
+			stopGameLoop();
 		}
 		if (gameOverTimeout) {
 			clearTimeout(gameOverTimeout);
 			gameOverTimeout = null;
 		}
 		resetGameState();
-		startGame();
 		setAppState(AppState.PLAYING);
 	});
 
@@ -66,7 +62,7 @@ export const initGameStateMachine = (canvas: HTMLCanvasElement) => {
 		}
 		resetGameState();
 		setAppState(AppState.MENU);
-		stopGame();
+		stopGameLoop();
 	});
 
 	return () => {
