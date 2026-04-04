@@ -1,9 +1,10 @@
-import { world } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
 import { SECOND_MS } from "$lib/core/constants";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 import { ProjectileVariant } from "$lib/modules/projectiles/components";
 
-export const createBallisticMovementSystem = () => {
+export function createBallisticMovementSystem(world: World<Entity>) {
 	const projectiles = world.with("projectileTag", "position");
 
 	return (dt: number) => {
@@ -39,4 +40,4 @@ export const createBallisticMovementSystem = () => {
 			projectile.position.z += direction.z * moveDistance;
 		}
 	};
-};
+}

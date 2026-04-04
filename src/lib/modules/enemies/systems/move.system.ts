@@ -1,7 +1,9 @@
-import { world, EnemyState } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
+import { EnemyState } from "$lib/core/world";
 import { SECOND_MS } from "$lib/core/constants";
 
-export const createMoveSystem = () => {
+export function createMoveSystem(world: World<Entity>) {
 	const enemies = world.with("enemyTag", "position").without("dyingTag");
 
 	return (dt: number) => {
@@ -34,4 +36,4 @@ export const createMoveSystem = () => {
 			}
 		}
 	};
-};
+}

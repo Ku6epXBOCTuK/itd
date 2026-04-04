@@ -1,8 +1,10 @@
-import { world, TowerState } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
+import { TowerState } from "$lib/core/world";
 import { createProjectile } from "$lib/modules/projectiles/factory";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
-export const createTowerAttackSystem = () => {
+export function createTowerAttackSystem(world: World<Entity>) {
 	const towers = world.with("towerTag", "position");
 	const enemies = world.with("enemyTag", "position");
 
@@ -69,4 +71,4 @@ export const createTowerAttackSystem = () => {
 			}
 		}
 	};
-};
+}

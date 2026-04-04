@@ -1,6 +1,7 @@
-import { world } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
 
-export const createIncomeSystem = () => {
+export function createIncomeSystem(world: World<Entity>) {
 	const players = world.with("gold", "incomePerSecond");
 
 	return (_dt: number) => {
@@ -8,4 +9,4 @@ export const createIncomeSystem = () => {
 			player.gold += player.incomePerSecond;
 		}
 	};
-};
+}

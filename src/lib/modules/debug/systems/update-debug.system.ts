@@ -1,7 +1,8 @@
-import { world } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
 import { debugState } from "$lib/adapters/ui-state/debug-state.svelte";
 
-export const createUpdateDebugSystem = () => {
+export function createUpdateDebugSystem(world: World<Entity>) {
 	const enemiesQuery = world.with("enemyTag");
 	const projectilesQuery = world.with("projectileTag");
 
@@ -9,4 +10,4 @@ export const createUpdateDebugSystem = () => {
 		debugState.enemyCount = enemiesQuery.size;
 		debugState.projectileCount = projectilesQuery.size;
 	};
-};
+}

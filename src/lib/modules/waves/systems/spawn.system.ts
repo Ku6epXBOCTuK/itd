@@ -1,4 +1,6 @@
-import { world, WaveStatus } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
+import { WaveStatus } from "$lib/core/world";
 import {
 	ENEMY_SPAWN,
 	WAVE_CONFIG,
@@ -6,7 +8,7 @@ import {
 } from "$lib/core/game-config";
 import { createEnemy } from "$lib/modules/enemies/factory";
 
-export const createSpawnSystem = () => {
+export function createSpawnSystem(world: World<Entity>) {
 	const waveControlQuery = world.with("waveControl");
 
 	return (dt: number) => {
@@ -51,4 +53,4 @@ export const createSpawnSystem = () => {
 			}
 		}
 	};
-};
+}

@@ -1,7 +1,8 @@
-import { world } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
 import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 
-export const createUpdateHudSystem = () => {
+export function createUpdateHudSystem(world: World<Entity>) {
 	const players = world.with("gold");
 	const towers = world.with("towerTag");
 	const waveControlQuery = world.with("waveControl");
@@ -21,4 +22,4 @@ export const createUpdateHudSystem = () => {
 			hudState.wave = waveControl.waveControl.currentWave;
 		}
 	};
-};
+}

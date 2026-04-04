@@ -1,8 +1,10 @@
-import { world, WaveStatus } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
+import { WaveStatus } from "$lib/core/world";
 import { WAVE_CONFIG, WAVE_DEFINITIONS } from "$lib/core/game-config";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
-export const createWaveSystem = () => {
+export function createWaveSystem(world: World<Entity>) {
 	const waveControlQuery = world.with("waveControl");
 	const enemiesQuery = world.with("enemyTag");
 
@@ -50,4 +52,4 @@ export const createWaveSystem = () => {
 			}
 		}
 	};
-};
+}

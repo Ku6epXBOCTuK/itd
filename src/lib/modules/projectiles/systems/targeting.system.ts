@@ -1,8 +1,9 @@
-import { world } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
 import { GAME_CONFIG } from "$lib/core/game-config";
 import { ProjectileVariant } from "$lib/modules/projectiles/components";
 
-export const createTargetingSystem = () => {
+export function createTargetingSystem(world: World<Entity>) {
 	const homingProjectiles = world.with("projectileTag", "position");
 
 	return (_dt: number) => {
@@ -38,4 +39,4 @@ export const createTargetingSystem = () => {
 			}
 		}
 	};
-};
+}

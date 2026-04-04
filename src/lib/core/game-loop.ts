@@ -23,27 +23,27 @@ type System = (deltaTime: number) => void;
 
 export function createGameLoop(world: World<Entity>) {
 	const activeSystems: System[] = [
-		createAttackSystem(),
-		createWaveSystem(),
-		createSpawnSystem(),
+		createAttackSystem(world),
+		createWaveSystem(world),
+		createSpawnSystem(world),
 	];
 	const gameSystems: System[] = [
-		createMoveSystem(),
-		createTowerAttackSystem(),
-		createEnemyDeathSystem(),
-		createApplyUpgradesSystem(),
+		createMoveSystem(world),
+		createTowerAttackSystem(world),
+		createEnemyDeathSystem(world),
+		createApplyUpgradesSystem(world),
 	];
 	const projectileSystems: System[] = [
-		createTargetingSystem(),
-		createHomingMovementSystem(),
-		createBallisticMovementSystem(),
-		createCollisionSystem(),
+		createTargetingSystem(world),
+		createHomingMovementSystem(world),
+		createBallisticMovementSystem(world),
+		createCollisionSystem(world),
 	];
-	const secondTickSystems: System[] = [createIncomeSystem()];
+	const secondTickSystems: System[] = [createIncomeSystem(world)];
 	const frameSystems: System[] = [
-		createUpdateHudSystem(),
-		createFpsSystem(),
-		createUpdateDebugSystem(),
+		createUpdateHudSystem(world),
+		createFpsSystem(world),
+		createUpdateDebugSystem(world),
 	];
 
 	let isRunning = false;

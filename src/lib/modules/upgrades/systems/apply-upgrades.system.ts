@@ -1,8 +1,9 @@
-import { world } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
 import { UPGRADES } from "$lib/core/game-config";
 import { PERCENT } from "$lib/core/constants";
 
-export const createApplyUpgradesSystem = () => {
+export function createApplyUpgradesSystem(world: World<Entity>) {
 	const upgradesQuery = world.with("upgrades");
 	const towers = world.with("towerTag");
 
@@ -25,4 +26,4 @@ export const createApplyUpgradesSystem = () => {
 
 		upgrades.dirty = false;
 	};
-};
+}

@@ -1,7 +1,8 @@
-import { world } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
 import { VisualStatus } from "$lib/modules/render/components";
 
-export const createEnemyDeathSystem = () => {
+export function createEnemyDeathSystem(world: World<Entity>) {
 	const dyingEnemies = world.with("dyingTag", "position");
 
 	return (dt: number) => {
@@ -14,4 +15,4 @@ export const createEnemyDeathSystem = () => {
 			}
 		}
 	};
-};
+}

@@ -1,4 +1,6 @@
-import { world, EnemyState, TowerState } from "$lib/core/world";
+import type { World } from "miniplex";
+import type { Entity } from "$lib/core/world";
+import { EnemyState, TowerState } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 import { VisualStatus } from "$lib/modules/render/components";
 
@@ -8,7 +10,7 @@ export function resetAttackSystem() {
 	gameTriggered = false;
 }
 
-export const createAttackSystem = () => {
+export function createAttackSystem(world: World<Entity>) {
 	const enemies = world.with("enemyTag", "position").without("dyingTag");
 	const towers = world.with("towerTag");
 
@@ -95,4 +97,4 @@ export const createAttackSystem = () => {
 			}
 		}
 	};
-};
+}
