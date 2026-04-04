@@ -1,6 +1,7 @@
 import { world } from "$lib/core/world";
 import { SECOND_MS } from "$lib/core/constants";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
+import { ProjectileVariant } from "$lib/modules/projectiles/components";
 
 export const createBallisticMovementSystem = () => {
 	const projectiles = world.with("projectileTag", "position");
@@ -8,7 +9,7 @@ export const createBallisticMovementSystem = () => {
 	return (dt: number) => {
 		for (const projectile of projectiles) {
 			if (
-				projectile.projectileType !== "ballistic" ||
+				projectile.projectileVariant !== ProjectileVariant.BALLISTIC ||
 				!projectile.targetPosition
 			)
 				continue;

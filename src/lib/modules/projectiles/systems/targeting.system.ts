@@ -1,12 +1,13 @@
 import { world } from "$lib/core/world";
 import { GAME_CONFIG } from "$lib/core/game-config";
+import { ProjectileVariant } from "$lib/modules/projectiles/components";
 
 export const createTargetingSystem = () => {
 	const homingProjectiles = world.with("projectileTag", "position");
 
 	return (_dt: number) => {
 		for (const projectile of homingProjectiles) {
-			if (projectile.projectileType !== "homing") continue;
+			if (projectile.projectileVariant !== ProjectileVariant.HOMING) continue;
 
 			const needsNewTarget =
 				!projectile.target ||

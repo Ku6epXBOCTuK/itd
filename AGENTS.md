@@ -81,9 +81,20 @@ export const EnemyState = {
 	ATTACKING: "attacking",
 } as const;
 
+export type EnemyStateType = (typeof EnemyState)[keyof typeof EnemyState];
+
 // НЕПРАВИЛЬНО
 export type EnemyState = "moving" | "attacking";
 ```
+
+- Сразу после `const object` определяй тип через `typeof`
+- Суффикс типа: `*Type` (например, `EnemyStateType`, `TowerStateType`)
+
+### Именование variant-компонентов
+
+- Если нужно определить тип/вариант сущности — используй суффикс `*Variant`: `enemyVariant`, `projectileVariant`
+- НЕ используй `*Type` для типов сущностей — это создаёт `EnemyTypeType`, `ProjectileTypeType`
+- `*Type` допустимо только для типов состояний: `TowerStateType`, `EnemyStateType`, `WaveStatusType`
 
 ### Именование компонентов-тегов
 

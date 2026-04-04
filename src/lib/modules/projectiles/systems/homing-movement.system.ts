@@ -1,13 +1,17 @@
 import { world } from "$lib/core/world";
 import { SECOND_MS } from "$lib/core/constants";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
+import { ProjectileVariant } from "$lib/modules/projectiles/components";
 
 export const createHomingMovementSystem = () => {
 	const projectiles = world.with("projectileTag", "position");
 
 	return (dt: number) => {
 		for (const projectile of projectiles) {
-			if (projectile.projectileType !== "homing" || !projectile.target)
+			if (
+				projectile.projectileVariant !== ProjectileVariant.HOMING ||
+				!projectile.target
+			)
 				continue;
 
 			const target = projectile.target;

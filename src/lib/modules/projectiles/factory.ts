@@ -1,11 +1,15 @@
 import { world, type Position, type Entity } from "$lib/core/world";
 import { ViewId } from "$lib/modules/render/components";
+import {
+	ProjectileVariant,
+	type ProjectileVariantType,
+} from "$lib/modules/projectiles/components";
 
 export const createProjectile = (
 	startPos: Position,
 	damage: number,
 	behavior: {
-		type: "homing" | "ballistic" | "orbit";
+		type: ProjectileVariantType;
 		speed: number;
 		radius?: number;
 		center?: Position;
@@ -22,7 +26,7 @@ export const createProjectile = (
 		target,
 		targetPosition,
 		lifetime,
-		projectileType: behavior.type,
+		projectileVariant: behavior.type,
 		speed: behavior.speed,
 		radius: behavior.radius,
 		center: behavior.center,

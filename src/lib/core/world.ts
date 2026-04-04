@@ -2,6 +2,7 @@ import type {
 	EnemyStateType,
 	EnemyVariantType,
 } from "$lib/modules/enemies/components";
+import type { ProjectileVariantType } from "$lib/modules/projectiles/components";
 import type {
 	ViewIdType,
 	VisualStatusType,
@@ -15,6 +16,7 @@ import type { WaveControl } from "$lib/modules/waves/components";
 import { World } from "miniplex";
 
 export { EnemyState, EnemyVariant } from "$lib/modules/enemies/components";
+export { ProjectileVariant } from "$lib/modules/projectiles/components";
 export { TowerState } from "$lib/modules/towers/components";
 export { WaveStatus } from "$lib/modules/waves/components";
 
@@ -47,7 +49,7 @@ export type Entity = Partial<
 		enemyState: EnemyStateType;
 		enemyVariant: EnemyVariantType;
 		visualStatus: VisualStatusType;
-		projectileType: "homing" | "ballistic" | "orbit";
+		projectileVariant: ProjectileVariantType;
 
 		cooldownTimer: number;
 		attackTimer: number;
