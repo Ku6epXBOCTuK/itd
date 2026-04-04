@@ -2,7 +2,7 @@ import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
 import { SECOND_MS } from "$lib/core/constants";
 
-export function createMoveSystem(world: World<Entity>) {
+export function createMovementSystem(world: World<Entity>) {
 	const movable = world.with("position", "velocity");
 
 	return (dt: number) => {

@@ -36,7 +36,7 @@
 	{:else if appState.current === AppState.PAUSED}
 		<PauseMenu />
 		<Hud />
-	{:else if appState.current === AppState.PLAYING || appState.current === AppState.GAME_OVER_ANIMATING}
+	{:else if appState.current === AppState.PLAYING}
 		<Hud />
 	{/if}
 

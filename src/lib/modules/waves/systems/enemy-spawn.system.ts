@@ -8,7 +8,7 @@ import {
 } from "$lib/core/game-config";
 import { createEnemy } from "$lib/modules/enemies/factory";
 
-export function createSpawnSystem(world: World<Entity>) {
+export function createEnemySpawnSystem(world: World<Entity>) {
 	const waveControlQuery = world.with("waveControl");
 
 	return (dt: number) => {

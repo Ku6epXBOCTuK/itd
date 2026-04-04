@@ -13,6 +13,7 @@ import type {
 } from "$lib/modules/towers/components";
 import type { Upgrades } from "$lib/modules/upgrades/components";
 import type { WaveControl } from "$lib/modules/waves/components";
+import type { GameOverTimer } from "$lib/modules/game-over/components";
 import { World } from "miniplex";
 
 export { EnemyState, EnemyVariant } from "$lib/modules/enemies/components";
@@ -71,6 +72,7 @@ export type Entity = Partial<
 		deathTimer: number;
 
 		waveControl: WaveControl;
+		gameOverTimer: GameOverTimer;
 	} & TowerBaseStats
 >;
 

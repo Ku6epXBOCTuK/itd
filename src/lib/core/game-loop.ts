@@ -2,77 +2,67 @@ import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
 import { createIncomeSystem } from "$lib/modules/player/systems/income.system";
 import { createSyncRenderSystem } from "$lib/modules/render/systems/render.system";
-import { createMoveSystem } from "$lib/modules/physics/systems/move.system";
+import { createMovementSystem } from "$lib/modules/physics/systems/movement.system";
 import { createFrictionSystem } from "$lib/modules/physics/systems/friction.system";
 import { createEnemyAISystem } from "$lib/modules/enemies/systems/enemy-ai.system";
-import { createAttackSystem } from "$lib/modules/enemies/systems/attack.system";
+import { createEnemyAttackSystem } from "$lib/modules/enemies/systems/enemy-attack.system";
 import { createTowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
 import { createTargetingSystem } from "$lib/modules/projectiles/systems/targeting.system";
 import { createHomingMovementSystem } from "$lib/modules/projectiles/systems/homing-movement.system";
 import { createBallisticMovementSystem } from "$lib/modules/projectiles/systems/ballistic-movement.system";
 import { createCollisionSystem } from "$lib/modules/projectiles/systems/collision.system";
 import { createWaveSystem } from "$lib/modules/waves/systems/wave.system";
-import { createSpawnSystem } from "$lib/modules/waves/systems/spawn.system";
+import { createEnemySpawnSystem } from "$lib/modules/waves/systems/enemy-spawn.system";
 import { createUpdateHudSystem } from "$lib/modules/hud/systems/update-hud.system";
 import { createFpsSystem } from "$lib/modules/debug/systems/fps.system";
 import { createUpdateDebugSystem } from "$lib/modules/debug/systems/update-debug.system";
 import { createApplyUpgradesSystem } from "$lib/modules/upgrades/systems/apply-upgrades.system";
 import { createEnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
-import { appState, AppState } from "$lib/core/app-state.svelte";
+import { createGameOverTimerSystem } from "$lib/modules/game-over/systems/game-over-timer.system";
 import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
 
 type System = (deltaTime: number) => void;
+type SystemFactory = (world: World<Entity>) => System;
+
+const SYSTEM_FACTORIES: SystemFactory[] = [
+	createWaveSystem,
+	createEnemySpawnSystem,
+	createEnemyAISystem,
+	createEnemyAttackSystem,
+	createMovementSystem,
+	createFrictionSystem,
+	createTowerAttackSystem,
+	createTargetingSystem,
+	createHomingMovementSystem,
+	createBallisticMovementSystem,
+	createCollisionSystem,
+	createEnemyDeathSystem,
+	createApplyUpgradesSystem,
+	createGameOverTimerSystem,
+];
+
+const SECOND_TICK_FACTORIES: SystemFactory[] = [createIncomeSystem];
+
+const FRAME_SYSTEM_FACTORIES: SystemFactory[] = [
+	createUpdateHudSystem,
+	createFpsSystem,
+	createUpdateDebugSystem,
+];
 
 export function createGameLoop(world: World<Entity>) {
-	const activeSystems: System[] = [
-		createAttackSystem(world),
-		createWaveSystem(world),
-		createSpawnSystem(world),
-	];
-	const gameSystems: System[] = [
-		createEnemyAISystem(world),
-		createMoveSystem(world),
-		createFrictionSystem(world),
-		createTowerAttackSystem(world),
-		createEnemyDeathSystem(world),
-		createApplyUpgradesSystem(world),
-	];
-	const projectileSystems: System[] = [
-		createTargetingSystem(world),
-		createHomingMovementSystem(world),
-		createBallisticMovementSystem(world),
-		createCollisionSystem(world),
-	];
-	const secondTickSystems: System[] = [createIncomeSystem(world)];
-	const frameSystems: System[] = [
-		createUpdateHudSystem(world),
-		createFpsSystem(world),
-		createUpdateDebugSystem(world),
-	];
+	const systems = SYSTEM_FACTORIES.map((factory) => factory(world));
+	const secondTickSystems = SECOND_TICK_FACTORIES.map((factory) =>
+		factory(world),
+	);
+	const frameSystems = FRAME_SYSTEM_FACTORIES.map((factory) => factory(world));
 
 	let isRunning = false;
 	let animationFrameId: number | null = null;
 	let secondTickTimer = 0;
 
 	function gameLoop(deltaTime: number) {
-		if (appState.current === AppState.PLAYING) {
-			for (const system of activeSystems) {
-				system(deltaTime);
-			}
-
-			for (const system of gameSystems) {
-				system(deltaTime);
-			}
-
-			for (const system of projectileSystems) {
-				system(deltaTime);
-			}
-		}
-
-		if (appState.current === AppState.GAME_OVER_ANIMATING) {
-			for (const system of projectileSystems) {
-				system(deltaTime);
-			}
+		for (const system of systems) {
+			system(deltaTime);
 		}
 
 		secondTickTimer += deltaTime;

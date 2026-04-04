@@ -3,7 +3,6 @@ export const AppState = {
 	SETTINGS: "settings",
 	PLAYING: "playing",
 	PAUSED: "paused",
-	GAME_OVER_ANIMATING: "game_over_animating",
 	GAME_OVER: "game_over",
 } as const;
 

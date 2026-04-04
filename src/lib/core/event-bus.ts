@@ -4,7 +4,7 @@ export const GameEvents = {
 	START_GAME: Symbol("start-game"),
 	PAUSE_GAME: Symbol("pause-game"),
 	RESUME_GAME: Symbol("resume-game"),
-	STOP_GAME: Symbol("stop-game"),
+	GAME_OVER: Symbol("game-over"),
 	TO_MENU: Symbol("to-menu"),
 	PROJECTILE_MISS: Symbol("projectile-miss"),
 	WAVE_START: Symbol("wave-start"),
@@ -17,7 +17,7 @@ type EventDataMap = {
 	[GameEvents.START_GAME]: undefined;
 	[GameEvents.PAUSE_GAME]: undefined;
 	[GameEvents.RESUME_GAME]: undefined;
-	[GameEvents.STOP_GAME]: undefined;
+	[GameEvents.GAME_OVER]: undefined;
 	[GameEvents.TO_MENU]: undefined;
 	[GameEvents.PROJECTILE_MISS]: { position: Position };
 	[GameEvents.WAVE_START]: { waveNumber: number };

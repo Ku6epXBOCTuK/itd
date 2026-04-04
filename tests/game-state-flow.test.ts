@@ -15,25 +15,12 @@ vi.mock("../src/lib/core/game-loop", () => ({
 	})),
 }));
 
-const WAIT_MS = 10000;
-
 describe("AppState Flow", () => {
-	let cleanup: (() => void) | undefined;
-
 	beforeEach(() => {
 		setAppState(AppState.MENU);
 	});
 
-	afterEach(() => {
-		cleanup?.();
-		cleanup = undefined;
-	});
-
 	describe("GameEngine события", () => {
-		beforeEach(() => {
-			cleanup = initGameStateMachine();
-		});
-
 		it("должен переключать в PLAYING при START_GAME", () => {
 			setAppState(AppState.MENU);
 			GameEngine.emit(GameEvents.START_GAME);
@@ -52,45 +39,16 @@ describe("AppState Flow", () => {
 			expect(appState.current).toBe(AppState.PLAYING);
 		});
 
-		it("должен переключать в GAME_OVER_ANIMATING при STOP_GAME", () => {
+		it("должен переключать в GAME_OVER при GAME_OVER событии", () => {
 			setAppState(AppState.PLAYING);
-			GameEngine.emit(GameEvents.STOP_GAME);
-			expect(appState.current).toBe(AppState.GAME_OVER_ANIMATING);
-		});
-
-		it("должен переключать в GAME_OVER через 3 секунды", async () => {
-			vi.useFakeTimers();
-			setAppState(AppState.PLAYING);
-
-			GameEngine.emit(GameEvents.STOP_GAME);
-			expect(appState.current).toBe(AppState.GAME_OVER_ANIMATING);
-
-			await vi.advanceTimersByTimeAsync(WAIT_MS);
+			GameEngine.emit(GameEvents.GAME_OVER);
 			expect(appState.current).toBe(AppState.GAME_OVER);
-
-			vi.useRealTimers();
 		});
 
 		it("должен переключать в MENU при TO_MENU", () => {
 			setAppState(AppState.PLAYING);
 			GameEngine.emit(GameEvents.TO_MENU);
 			expect(appState.current).toBe(AppState.MENU);
-		});
-
-		it("должен отменять таймер GAME_OVER при TO_MENU", async () => {
-			vi.useFakeTimers();
-			setAppState(AppState.PLAYING);
-
-			GameEngine.emit(GameEvents.STOP_GAME);
-			expect(appState.current).toBe(AppState.GAME_OVER_ANIMATING);
-
-			GameEngine.emit(GameEvents.TO_MENU);
-			expect(appState.current).toBe(AppState.MENU);
-
-			await vi.advanceTimersByTimeAsync(WAIT_MS);
-			expect(appState.current).toBe(AppState.MENU);
-
-			vi.useRealTimers();
 		});
 	});
 });
