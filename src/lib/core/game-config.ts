@@ -29,7 +29,7 @@ export const GAME_CONFIG = {
 	deathAnimationDuration: 500,
 	incomeInterval: 1000,
 	targetingInterval: 1000,
-	targetReachedDistance: 0.5,
+	targetReachedDistance: 0.01,
 	targetingMinDistance: 10,
 	initialGold: 100,
 	initialIncomePerSecond: 10,
@@ -68,6 +68,7 @@ export const WAVE_DEFINITIONS = [
 export const ENEMY_CONFIGS = {
 	[EnemyVariant.BASIC]: {
 		speed: 2,
+		friction: 0.9,
 		hp: 100,
 		maxHp: 100,
 		damage: 10,
@@ -77,6 +78,7 @@ export const ENEMY_CONFIGS = {
 	},
 	[EnemyVariant.FAST]: {
 		speed: 4,
+		friction: 0.85,
 		hp: 50,
 		maxHp: 50,
 		damage: 50,
@@ -86,6 +88,7 @@ export const ENEMY_CONFIGS = {
 	},
 	[EnemyVariant.TANK]: {
 		speed: 1,
+		friction: 0.95,
 		hp: 200,
 		maxHp: 200,
 		damage: 200,

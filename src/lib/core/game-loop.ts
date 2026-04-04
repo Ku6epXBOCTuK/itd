@@ -2,7 +2,9 @@ import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
 import { createIncomeSystem } from "$lib/modules/player/systems/income.system";
 import { createSyncRenderSystem } from "$lib/modules/render/systems/render.system";
-import { createMoveSystem } from "$lib/modules/enemies/systems/move.system";
+import { createMoveSystem } from "$lib/modules/physics/systems/move.system";
+import { createFrictionSystem } from "$lib/modules/physics/systems/friction.system";
+import { createEnemyAISystem } from "$lib/modules/enemies/systems/enemy-ai.system";
 import { createAttackSystem } from "$lib/modules/enemies/systems/attack.system";
 import { createTowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
 import { createTargetingSystem } from "$lib/modules/projectiles/systems/targeting.system";
@@ -28,7 +30,9 @@ export function createGameLoop(world: World<Entity>) {
 		createSpawnSystem(world),
 	];
 	const gameSystems: System[] = [
+		createEnemyAISystem(world),
 		createMoveSystem(world),
+		createFrictionSystem(world),
 		createTowerAttackSystem(world),
 		createEnemyDeathSystem(world),
 		createApplyUpgradesSystem(world),

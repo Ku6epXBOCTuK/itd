@@ -20,11 +20,15 @@ export { ProjectileVariant } from "$lib/modules/projectiles/components";
 export { TowerState } from "$lib/modules/towers/components";
 export { WaveStatus } from "$lib/modules/waves/components";
 
-export type Position = { x: number; y: number; z: number };
+export type Vector3 = { x: number; y: number; z: number };
+export type Position = Vector3;
 
 export type Entity = Partial<
 	{
-		position: Position;
+		position: Vector3;
+		velocity: Vector3;
+		maxSpeed: number;
+		friction: number;
 		viewId: ViewIdType;
 
 		towerTag: true;
@@ -58,9 +62,9 @@ export type Entity = Partial<
 		attackAnimationDuration: number;
 
 		target: Entity;
-		targetPosition: Position;
+		targetPosition: Vector3;
 		radius: number;
-		center: Position;
+		center: Vector3;
 		lifetime: number;
 
 		experienceValue: number;
