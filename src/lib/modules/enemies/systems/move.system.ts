@@ -2,7 +2,7 @@ import { world, EnemyState } from "$lib/core/world";
 import { SECOND_MS } from "$lib/core/constants";
 
 export const createMoveSystem = () => {
-	const enemies = world.with("isEnemy", "position").without("isDying");
+	const enemies = world.with("enemyTag", "position").without("dyingTag");
 
 	return (dt: number) => {
 		for (const enemy of enemies) {

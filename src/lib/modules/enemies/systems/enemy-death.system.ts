@@ -2,7 +2,7 @@ import { world } from "$lib/core/world";
 import { VisualStatus } from "$lib/modules/render/components";
 
 export const createEnemyDeathSystem = () => {
-	const dyingEnemies = world.with("isDying", "position");
+	const dyingEnemies = world.with("dyingTag", "position");
 
 	return (dt: number) => {
 		for (const enemy of dyingEnemies) {

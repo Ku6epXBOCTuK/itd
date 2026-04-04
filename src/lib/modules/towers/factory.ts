@@ -6,8 +6,8 @@ export const createTower = (x: number, z: number) => {
 	const tower = world.add({
 		position: { x, y: 1, z } as Position,
 		viewId: ViewId.TOWER,
-		isTower: true,
-		isTargetable: true,
+		towerTag: true,
+		targetableTag: true,
 		baseDamage: TOWER_CONFIG.damage,
 		damage: TOWER_CONFIG.damage,
 		hp: TOWER_CONFIG.hp,

@@ -57,8 +57,8 @@ export function createSyncRenderSystem(
 	const entityToObject3D = new WeakMap<Entity, THREE.Object3D>();
 
 	const allWithView = world.with("viewId", "position");
-	const enemiesWithView = world.with("isEnemy", "viewId", "position");
-	const towersWithView = world.with("isTower", "viewId", "position");
+	const enemiesWithView = world.with("enemyTag", "viewId", "position");
+	const towersWithView = world.with("towerTag", "viewId", "position");
 
 	const setup = setupScene(canvas);
 	const scene = setup.scene;
@@ -74,7 +74,7 @@ export function createSyncRenderSystem(
 
 		const mesh = constructor(entity);
 		mesh.position.copy(entity.position as THREE.Vector3);
-		if (entity.isTower) mesh.castShadow = true;
+		if (entity.towerTag) mesh.castShadow = true;
 		scene.add(mesh);
 		entityToObject3D.set(entity, mesh);
 	}

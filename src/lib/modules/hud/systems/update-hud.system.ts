@@ -3,7 +3,7 @@ import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 
 export const createUpdateHudSystem = () => {
 	const players = world.with("gold");
-	const towers = world.with("isTower");
+	const towers = world.with("towerTag");
 	const waveControlQuery = world.with("waveControl");
 
 	return (_dt: number) => {

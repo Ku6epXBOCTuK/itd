@@ -4,7 +4,7 @@ import { PROJECTILE_CONFIG, GAME_CONFIG } from "$lib/core/game-config";
 import { VisualStatus } from "$lib/modules/render/components";
 
 export const createCollisionSystem = () => {
-	const projectiles = world.with("isProjectile", "position");
+	const projectiles = world.with("projectileTag", "position");
 
 	return (_dt: number) => {
 		for (const projectile of projectiles) {
@@ -35,7 +35,7 @@ export const createCollisionSystem = () => {
 					continue;
 				}
 
-				if (target.isEnemy && (target.hp ?? 0) <= 0) {
+				if (target.enemyTag && (target.hp ?? 0) <= 0) {
 					world.remove(projectile);
 					continue;
 				}
@@ -46,14 +46,14 @@ export const createCollisionSystem = () => {
 				const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 				if (distance < PROJECTILE_CONFIG.homingHitThreshold) {
-					if (target.isEnemy) {
+					if (target.enemyTag) {
 						target.hp = Math.max(
 							0,
 							(target.hp ?? 0) - (projectile.damage ?? 0),
 						);
 
 						if ((target.hp ?? 0) <= 0) {
-							world.addComponent(target, "isDying", true);
+							world.addComponent(target, "dyingTag", true);
 							target.visualStatus = VisualStatus.DYING;
 							target.deathTimer = GAME_CONFIG.deathAnimationDuration;
 						}

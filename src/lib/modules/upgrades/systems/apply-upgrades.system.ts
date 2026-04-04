@@ -4,7 +4,7 @@ import { PERCENT } from "$lib/core/constants";
 
 export const createApplyUpgradesSystem = () => {
 	const upgradesQuery = world.with("upgrades");
-	const towers = world.with("isTower");
+	const towers = world.with("towerTag");
 
 	return (_dt: number) => {
 		const upgradesEntity = upgradesQuery.first;

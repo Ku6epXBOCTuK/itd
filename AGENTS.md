@@ -85,6 +85,12 @@ export const EnemyState = {
 export type EnemyState = "moving" | "attacking";
 ```
 
+### Именование компонентов-тегов
+
+- Компоненты-теги (маркеры сущностей) именуются как `*Tag`: `enemyTag`, `towerTag`, `projectileTag`, `dyingTag`, `targetableTag`, `deadTag`
+- НЕ использовать префикс `is`: `isEnemy`, `isTower` — запрещено
+- Значение всегда `true`: `enemyTag: true`
+
 ### Импорты
 
 - Все импорты в начале файла

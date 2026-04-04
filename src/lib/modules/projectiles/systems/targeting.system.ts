@@ -2,7 +2,7 @@ import { world } from "$lib/core/world";
 import { GAME_CONFIG } from "$lib/core/game-config";
 
 export const createTargetingSystem = () => {
-	const homingProjectiles = world.with("isProjectile", "position");
+	const homingProjectiles = world.with("projectileTag", "position");
 
 	return (_dt: number) => {
 		for (const projectile of homingProjectiles) {
@@ -11,11 +11,11 @@ export const createTargetingSystem = () => {
 			const needsNewTarget =
 				!projectile.target ||
 				!world.has(projectile.target) ||
-				!projectile.target.isEnemy ||
+				!projectile.target.enemyTag ||
 				(projectile.target.hp ?? 0) <= 0;
 
 			if (needsNewTarget) {
-				const enemies = world.with("isEnemy", "position");
+				const enemies = world.with("enemyTag", "position");
 				let nearest: ReturnType<typeof world.with>[number] | null = null;
 				let minDistance: number = GAME_CONFIG.targetingMinDistance;
 

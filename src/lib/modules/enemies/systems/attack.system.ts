@@ -9,8 +9,8 @@ export function resetAttackSystem() {
 }
 
 export const createAttackSystem = () => {
-	const enemies = world.with("isEnemy", "position").without("isDying");
-	const towers = world.with("isTower");
+	const enemies = world.with("enemyTag", "position").without("dyingTag");
+	const towers = world.with("towerTag");
 
 	return (dt: number) => {
 		for (const enemy of enemies) {
@@ -62,7 +62,7 @@ export const createAttackSystem = () => {
 								gameTriggered = true;
 								tower.towerState = TowerState.BROKEN;
 
-								const allEnemies = world.with("isEnemy");
+								const allEnemies = world.with("enemyTag");
 								for (const e of allEnemies) {
 									e.enemyState = EnemyState.HAPPY;
 									e.visualStatus = VisualStatus.HAPPY;

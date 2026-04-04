@@ -17,7 +17,7 @@ export const createProjectile = (
 	const projectile = world.add({
 		position: { x: startPos.x, y: startPos.y, z: startPos.z },
 		viewId: ViewId.PROJECTILE,
-		isProjectile: true,
+		projectileTag: true,
 		damage,
 		target,
 		targetPosition,

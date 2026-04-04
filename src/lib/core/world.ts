@@ -25,12 +25,12 @@ export type Entity = Partial<
 		position: Position;
 		viewId: ViewIdType;
 
-		isTower: true;
-		isEnemy: true;
-		isProjectile: true;
-		isTargetable: true;
-		isDying: true;
-		isDead: true;
+		towerTag: true;
+		enemyTag: true;
+		projectileTag: true;
+		targetableTag: true;
+		dyingTag: true;
+		deadTag: true;
 
 		gold: number;
 		incomePerSecond: number;

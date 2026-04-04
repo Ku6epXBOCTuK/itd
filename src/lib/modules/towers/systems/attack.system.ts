@@ -3,8 +3,8 @@ import { createProjectile } from "$lib/modules/projectiles/factory";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createTowerAttackSystem = () => {
-	const towers = world.with("isTower", "position");
-	const enemies = world.with("isEnemy", "position");
+	const towers = world.with("towerTag", "position");
+	const enemies = world.with("enemyTag", "position");
 
 	return (dt: number) => {
 		for (const tower of towers) {
@@ -29,7 +29,7 @@ export const createTowerAttackSystem = () => {
 					if (
 						target &&
 						world.has(target) &&
-						target.isEnemy &&
+						target.enemyTag &&
 						(target.hp ?? 0) > 0
 					) {
 						createProjectile(

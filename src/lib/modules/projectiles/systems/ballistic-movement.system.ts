@@ -3,7 +3,7 @@ import { SECOND_MS } from "$lib/core/constants";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export const createBallisticMovementSystem = () => {
-	const projectiles = world.with("isProjectile", "position");
+	const projectiles = world.with("projectileTag", "position");
 
 	return (dt: number) => {
 		for (const projectile of projectiles) {
