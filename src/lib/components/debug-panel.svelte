@@ -6,6 +6,7 @@
 	<div class="debug-item">FPS: {debugState.fps}</div>
 	<div class="debug-item">Enemies: {debugState.enemyCount}</div>
 	<div class="debug-item">Projectiles: {debugState.projectileCount}</div>
+	<div class="debug-item">Tower Damage: {debugState.towerDamage}</div>
 </div>
 
 <style>

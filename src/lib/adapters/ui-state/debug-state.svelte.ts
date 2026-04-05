@@ -5,6 +5,7 @@ export interface DebugState {
 	fpsHistory: number[];
 	enemyCount: number;
 	projectileCount: number;
+	towerDamage: number;
 }
 
 export const debugState = $state<DebugState>({
@@ -12,4 +13,5 @@ export const debugState = $state<DebugState>({
 	fpsHistory: new Array(FPS_HISTORY_SIZE).fill(0),
 	enemyCount: 0,
 	projectileCount: 0,
+	towerDamage: 0,
 });
