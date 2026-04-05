@@ -8,7 +8,11 @@ import type {
 	ViewIdType,
 	VisualStatusType,
 } from "$lib/modules/render/components";
-import type { AttackState } from "$lib/modules/shared/components";
+import type {
+	AttackStats,
+	ActiveAttack,
+	ExecuteAttack,
+} from "$lib/modules/shared/components";
 import type {
 	TowerBaseStats,
 	TowerStateType,
@@ -20,7 +24,11 @@ import { World } from "miniplex";
 export { EnemyState, EnemyVariant } from "$lib/modules/enemies/components";
 export { ProjectileVariant } from "$lib/modules/projectiles/components";
 export { AttackPhase, AttackVariant } from "$lib/modules/shared/components";
-export type { AttackState } from "$lib/modules/shared/components";
+export type {
+	AttackStats,
+	ActiveAttack,
+	ExecuteAttack,
+} from "$lib/modules/shared/components";
 export { TowerState } from "$lib/modules/towers/components";
 export { WaveStatus } from "$lib/modules/waves/components";
 
@@ -55,7 +63,10 @@ export type Entity = Partial<
 		towerState: TowerStateType;
 		enemyState: EnemyStateType;
 		enemyVariant: EnemyVariantType;
-		attackState: AttackState;
+		attackStats: AttackStats;
+		activeAttack: ActiveAttack;
+		attackCooldownTimer: number;
+		executeAttack: ExecuteAttack;
 		visualStatus: VisualStatusType;
 		projectileVariant: ProjectileVariantType;
 

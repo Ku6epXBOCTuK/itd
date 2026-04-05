@@ -1,4 +1,5 @@
 import { VisualStatus } from "$lib/modules/render/components";
+import { AttackVariant } from "$lib/modules/shared/components";
 import * as THREE from "three";
 import { EnemyVariant, TowerState } from "./world";
 
@@ -7,9 +8,12 @@ export const TOWER_CONFIG = {
 	maxHp: 1000,
 	damage: 50,
 	attackRange: 5,
-	attackCooldown: 1000,
-	windupDuration: 150,
-	recoveryDuration: 150,
+	attackStats: {
+		type: AttackVariant.PROJECTILE,
+		windupDuration: 150,
+		recoveryDuration: 150,
+		cooldownDuration: 1000,
+	},
 } as const;
 
 export const UPGRADES = {
@@ -75,9 +79,12 @@ export const ENEMY_CONFIGS = {
 		maxHp: 100,
 		damage: 10,
 		attackRange: 1.5,
-		attackCooldown: 1000,
-		windupDuration: 150,
-		recoveryDuration: 150,
+		attackStats: {
+			type: AttackVariant.MELEE,
+			windupDuration: 150,
+			recoveryDuration: 150,
+			cooldownDuration: 1000,
+		},
 	},
 	[EnemyVariant.FAST]: {
 		speed: 4,
@@ -86,9 +93,12 @@ export const ENEMY_CONFIGS = {
 		maxHp: 50,
 		damage: 50,
 		attackRange: 1.5,
-		attackCooldown: 500,
-		windupDuration: 100,
-		recoveryDuration: 100,
+		attackStats: {
+			type: AttackVariant.MELEE,
+			windupDuration: 100,
+			recoveryDuration: 100,
+			cooldownDuration: 500,
+		},
 	},
 	[EnemyVariant.TANK]: {
 		speed: 1,
@@ -97,9 +107,12 @@ export const ENEMY_CONFIGS = {
 		maxHp: 200,
 		damage: 200,
 		attackRange: 1.5,
-		attackCooldown: 2000,
-		windupDuration: 250,
-		recoveryDuration: 250,
+		attackStats: {
+			type: AttackVariant.MELEE,
+			windupDuration: 250,
+			recoveryDuration: 250,
+			cooldownDuration: 2000,
+		},
 	},
 } as const;
 

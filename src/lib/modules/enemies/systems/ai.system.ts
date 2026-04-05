@@ -1,11 +1,19 @@
 import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
 import { EnemyState } from "$lib/modules/enemies/components";
+import { AttackPhase } from "$lib/modules/shared/components";
 import { GAME_CONFIG } from "$lib/core/game-config";
 
 export function createEnemyAISystem(world: World<Entity>) {
 	const enemies = world
-		.with("enemyTag", "position", "targetPosition", "maxSpeed")
+		.with(
+			"enemyTag",
+			"position",
+			"targetPosition",
+			"maxSpeed",
+			"attackStats",
+			"attackRange",
+		)
 		.without("dyingTag");
 
 	return (_dt: number) => {
@@ -23,6 +31,15 @@ export function createEnemyAISystem(world: World<Entity>) {
 					y: (dy / distance) * enemy.maxSpeed,
 					z: (dz / distance) * enemy.maxSpeed,
 				};
+			}
+
+			if (distance <= enemy.attackRange) {
+				if (!enemy.activeAttack && !enemy.attackCooldownTimer) {
+					world.addComponent(enemy, "activeAttack", {
+						attackPhase: AttackPhase.WINDUP,
+						timer: enemy.attackStats!.windupDuration,
+					});
+				}
 			}
 		}
 	};

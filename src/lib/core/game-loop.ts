@@ -5,8 +5,11 @@ import { createSyncRenderSystem } from "$lib/modules/render/systems/render.syste
 import { createMovementSystem } from "$lib/modules/physics/systems/movement.system";
 import { createFrictionSystem } from "$lib/modules/physics/systems/friction.system";
 import { createEnemyAISystem } from "$lib/modules/enemies/systems/ai.system";
-import { createEnemyAttackSystem } from "$lib/modules/enemies/systems/attack.system";
-import { createTowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
+import { createTowerAISystem } from "$lib/modules/towers/systems/ai.system";
+import { createAttackSystem } from "$lib/modules/shared/systems/attack.system";
+import { createAttackCooldownSystem } from "$lib/modules/shared/systems/attack-cooldown.system";
+import { createMeleeAttackSystem } from "$lib/modules/enemies/systems/melee-attack.system";
+import { createProjectileAttackSystem } from "$lib/modules/towers/systems/projectile-attack.system";
 import { createTargetingSystem } from "$lib/modules/projectiles/systems/targeting.system";
 import { createHomingMovementSystem } from "$lib/modules/projectiles/systems/homing-movement.system";
 import { createBallisticMovementSystem } from "$lib/modules/projectiles/systems/ballistic-movement.system";
@@ -22,6 +25,7 @@ import { createEnemyDeathSystem } from "$lib/modules/enemies/systems/death.syste
 import { createAnimationStateSystem } from "$lib/modules/enemies/systems/animation-state.system";
 import { createTowerDeathSystem } from "$lib/modules/towers/systems/tower-death.system";
 import { createGameOverTimerSystem } from "$lib/modules/game-over/systems/game-over-timer.system";
+import { createCleanupSystem } from "$lib/modules/shared/systems/cleanup.system";
 import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
 
 type System = (deltaTime: number) => void;
@@ -31,10 +35,13 @@ const SYSTEM_FACTORIES: SystemFactory[] = [
 	createWaveSystem,
 	createEnemySpawnSystem,
 	createEnemyAISystem,
-	createEnemyAttackSystem,
+	createTowerAISystem,
+	createAttackSystem,
+	createAttackCooldownSystem,
+	createMeleeAttackSystem,
+	createProjectileAttackSystem,
 	createMovementSystem,
 	createFrictionSystem,
-	createTowerAttackSystem,
 	createTowerDeathSystem,
 	createTargetingSystem,
 	createHomingMovementSystem,
@@ -45,6 +52,7 @@ const SYSTEM_FACTORIES: SystemFactory[] = [
 	createApplyUpgradesSystem,
 	createAnimationStateSystem,
 	createGameOverTimerSystem,
+	createCleanupSystem,
 ];
 
 const SECOND_TICK_FACTORIES: SystemFactory[] = [createIncomeSystem];
