@@ -15,6 +15,7 @@ export function createEnemyAISystem(world: World<Entity>) {
 			"attackRange",
 		)
 		.without("dyingTag");
+	const towers = world.with("towerTag");
 
 	return (_dt: number) => {
 		for (const enemy of enemies) {
@@ -35,10 +36,14 @@ export function createEnemyAISystem(world: World<Entity>) {
 
 			if (distance <= enemy.attackRange) {
 				if (!enemy.activeAttack && !enemy.attackCooldownTimer) {
-					world.addComponent(enemy, "activeAttack", {
-						attackPhase: AttackPhase.WINDUP,
-						timer: enemy.attackStats!.windupDuration,
-					});
+					const tower = towers.first;
+					if (tower) {
+						enemy.target = tower;
+						world.addComponent(enemy, "activeAttack", {
+							attackPhase: AttackPhase.WINDUP,
+							timer: enemy.attackStats.windupDuration,
+						});
+					}
 				}
 			}
 		}

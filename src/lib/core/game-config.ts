@@ -9,7 +9,7 @@ export const TOWER_CONFIG = {
 	damage: 50,
 	attackRange: 5,
 	attackStats: {
-		type: AttackVariant.PROJECTILE,
+		type: AttackVariant.PROJECTILE_HOMING,
 		windupDuration: 150,
 		recoveryDuration: 150,
 		cooldownDuration: 1000,

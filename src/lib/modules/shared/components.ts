@@ -1,3 +1,5 @@
+import type { Entity } from "$lib/core/world";
+
 export const AttackPhase = {
 	ACTIVE: "active",
 	WINDUP: "windup",
@@ -8,7 +10,8 @@ export type AttackPhaseType = (typeof AttackPhase)[keyof typeof AttackPhase];
 
 export const AttackVariant = {
 	MELEE: "melee",
-	PROJECTILE: "projectile",
+	PROJECTILE_HOMING: "projectile_homing",
+	PROJECTILE_BALLISTIC: "projectile_ballistic",
 } as const;
 
 export type AttackVariantType =
@@ -29,4 +32,5 @@ export type ActiveAttack = {
 export type ExecuteAttack = {
 	attackVariant: AttackVariantType;
 	damage: number;
+	target: Entity;
 };
