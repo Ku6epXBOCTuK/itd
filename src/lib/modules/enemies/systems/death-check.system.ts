@@ -1,7 +1,6 @@
 import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
 import { GAME_CONFIG } from "$lib/core/game-config";
-import { VisualStatus } from "$lib/modules/render/components";
 
 export function createDeathCheckSystem(world: World<Entity>) {
 	const enemies = world.with("enemyTag", "hp").without("dyingTag");
@@ -15,7 +14,6 @@ export function createDeathCheckSystem(world: World<Entity>) {
 					"deathTimer",
 					GAME_CONFIG.deathAnimationDuration,
 				);
-				enemy.visualStatus = VisualStatus.DYING;
 			}
 		}
 	};

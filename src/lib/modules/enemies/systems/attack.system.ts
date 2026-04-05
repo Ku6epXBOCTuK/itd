@@ -1,10 +1,18 @@
 import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
-import { EnemyState } from "$lib/core/world";
+import { EnemyState, AttackPhase } from "$lib/core/world";
+import { ATTACK_WINDUP_RATIO } from "$lib/core/constants";
 
 export function createEnemyAttackSystem(world: World<Entity>) {
 	const enemies = world
-		.with("enemyTag", "position", "targetPosition", "attackRange", "damage")
+		.with(
+			"enemyTag",
+			"position",
+			"targetPosition",
+			"attackRange",
+			"damage",
+			"attackPhase",
+		)
 		.without("dyingTag");
 	const towers = world.with("towerTag", "hp");
 
@@ -30,26 +38,23 @@ export function createEnemyAttackSystem(world: World<Entity>) {
 				continue;
 			}
 
-			if (enemy.enemyState === EnemyState.ATTACKING) {
-				enemy.attackTimer = (enemy.attackTimer ?? 0) - dt;
+			enemy.attackTimer = (enemy.attackTimer ?? 0) - dt;
 
-				if (enemy.attackTimer <= 0) {
+			if (enemy.attackTimer <= 0) {
+				if (enemy.attackPhase === AttackPhase.WINDUP) {
 					const tower = towers.first;
 					if (tower) {
 						tower.hp = Math.max(0, tower.hp - enemy.damage);
 					}
 
-					enemy.enemyState = EnemyState.COOLDOWN;
-					enemy.cooldownTimer = enemy.attackCooldown;
-				}
-			}
-
-			if (enemy.enemyState === EnemyState.COOLDOWN) {
-				enemy.cooldownTimer = (enemy.cooldownTimer ?? 0) - dt;
-
-				if (enemy.cooldownTimer <= 0) {
-					enemy.enemyState = EnemyState.ATTACKING;
-					enemy.attackTimer = enemy.attackDuration;
+					enemy.attackPhase = AttackPhase.RECOVER;
+					enemy.attackTimer = (enemy.attackDuration ?? 0) * ATTACK_WINDUP_RATIO;
+				} else if (enemy.attackPhase === AttackPhase.RECOVER) {
+					enemy.attackPhase = AttackPhase.COOLDOWN;
+					enemy.attackTimer = enemy.attackCooldown;
+				} else if (enemy.attackPhase === AttackPhase.COOLDOWN) {
+					enemy.attackPhase = AttackPhase.WINDUP;
+					enemy.attackTimer = (enemy.attackDuration ?? 0) * ATTACK_WINDUP_RATIO;
 				}
 			}
 		}
