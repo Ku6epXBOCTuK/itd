@@ -1,7 +1,6 @@
 import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
 import { AttackPhase } from "$lib/core/world";
-import { ATTACK_WINDUP_RATIO } from "$lib/core/constants";
 import { createProjectile } from "$lib/modules/projectiles/factory";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
@@ -11,8 +10,7 @@ export function createTowerAttackSystem(world: World<Entity>) {
 		"position",
 		"damage",
 		"attackRange",
-		"attackCooldown",
-		"attackPhase",
+		"attackState",
 	);
 	const enemies = world.with("enemyTag", "position", "hp");
 
@@ -22,16 +20,15 @@ export function createTowerAttackSystem(world: World<Entity>) {
 
 		const damage = tower.damage;
 		const attackRange = tower.attackRange;
-		const attackCooldown = tower.attackCooldown;
-		const attackDuration = tower.attackDuration ?? 0;
+		const attackState = tower.attackState!;
 
-		tower.attackTimer = (tower.attackTimer ?? 0) - dt;
+		attackState.timer -= dt;
 
-		if (tower.attackTimer <= 0) {
-			if (tower.attackPhase === AttackPhase.WINDUP) {
-				tower.attackPhase = AttackPhase.RECOVER;
-				tower.attackTimer = attackDuration * ATTACK_WINDUP_RATIO;
-			} else if (tower.attackPhase === AttackPhase.RECOVER) {
+		if (attackState.timer <= 0) {
+			if (attackState.attackPhase === AttackPhase.WINDUP) {
+				attackState.attackPhase = AttackPhase.RECOVER;
+				attackState.timer = attackState.recoveryDuration;
+			} else if (attackState.attackPhase === AttackPhase.RECOVER) {
 				const target = tower.target;
 				if (
 					target &&
@@ -46,9 +43,9 @@ export function createTowerAttackSystem(world: World<Entity>) {
 						target,
 					);
 				}
-				tower.attackPhase = AttackPhase.COOLDOWN;
-				tower.attackTimer = attackCooldown;
-			} else if (tower.attackPhase === AttackPhase.COOLDOWN) {
+				attackState.attackPhase = AttackPhase.COOLDOWN;
+				attackState.timer = attackState.cooldownDuration;
+			} else if (attackState.attackPhase === AttackPhase.COOLDOWN) {
 				let targetEnemy: Entity | undefined = undefined;
 				let minDistance = attackRange;
 
@@ -67,12 +64,12 @@ export function createTowerAttackSystem(world: World<Entity>) {
 				}
 
 				if (targetEnemy) {
-					tower.attackPhase = AttackPhase.WINDUP;
+					attackState.attackPhase = AttackPhase.WINDUP;
 					tower.target = targetEnemy;
-					tower.attackTimer = attackDuration * ATTACK_WINDUP_RATIO;
+					attackState.timer = attackState.windupDuration;
 				} else {
-					tower.attackPhase = AttackPhase.COOLDOWN;
-					tower.attackTimer = 0;
+					attackState.attackPhase = AttackPhase.COOLDOWN;
+					attackState.timer = 0;
 				}
 			}
 		}

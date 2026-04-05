@@ -2,8 +2,10 @@ import {
 	EnemyState,
 	EnemyVariant,
 	AttackPhase,
+	AttackVariant,
 	world,
 	type Vector3,
+	type AttackState,
 } from "$lib/core/world";
 import type { EnemyVariantType } from "$lib/modules/enemies/components";
 import { ENEMY_CONFIGS, ENEMY_SPAWN } from "$lib/core/game-config";
@@ -20,6 +22,15 @@ export const createEnemy = (
 ) => {
 	const stats = ENEMY_CONFIGS[type] as EnemyStats;
 
+	const enemyState: AttackState = {
+		attackPhase: AttackPhase.WINDUP,
+		timer: 0,
+		type: AttackVariant.MELEE,
+		windupDuration: stats.windupDuration,
+		recoveryDuration: stats.recoveryDuration,
+		cooldownDuration: stats.attackCooldown,
+	};
+
 	const enemy = world.add({
 		position: { x, y: ENEMY_SPAWN.y, z } as Vector3,
 		viewId: ViewId.ENEMY,
@@ -28,7 +39,7 @@ export const createEnemy = (
 		targetableTag: true,
 		enemyVariant: type as EnemyVariantType,
 		enemyState: EnemyState.MOVING,
-		attackPhase: AttackPhase.WINDUP,
+		attackState: enemyState,
 		maxSpeed: stats.speed,
 		friction: stats.friction,
 		velocity: { x: 0, y: 0, z: 0 },
@@ -36,9 +47,6 @@ export const createEnemy = (
 		maxHp: stats.maxHp,
 		damage: stats.damage,
 		attackRange: stats.attackRange,
-		attackCooldown: stats.attackCooldown,
-		attackTimer: 0,
-		attackDuration: stats.attackDuration,
 		targetPosition: { x: 0, y: 1, z: 0 },
 	});
 

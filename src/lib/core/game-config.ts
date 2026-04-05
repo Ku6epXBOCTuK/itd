@@ -8,7 +8,8 @@ export const TOWER_CONFIG = {
 	damage: 50,
 	attackRange: 5,
 	attackCooldown: 1000,
-	attackDuration: 300,
+	windupDuration: 150,
+	recoveryDuration: 150,
 } as const;
 
 export const UPGRADES = {
@@ -75,7 +76,8 @@ export const ENEMY_CONFIGS = {
 		damage: 10,
 		attackRange: 1.5,
 		attackCooldown: 1000,
-		attackDuration: 300,
+		windupDuration: 150,
+		recoveryDuration: 150,
 	},
 	[EnemyVariant.FAST]: {
 		speed: 4,
@@ -85,7 +87,8 @@ export const ENEMY_CONFIGS = {
 		damage: 50,
 		attackRange: 1.5,
 		attackCooldown: 500,
-		attackDuration: 200,
+		windupDuration: 100,
+		recoveryDuration: 100,
 	},
 	[EnemyVariant.TANK]: {
 		speed: 1,
@@ -95,7 +98,8 @@ export const ENEMY_CONFIGS = {
 		damage: 200,
 		attackRange: 1.5,
 		attackCooldown: 2000,
-		attackDuration: 500,
+		windupDuration: 250,
+		recoveryDuration: 250,
 	},
 } as const;
 
