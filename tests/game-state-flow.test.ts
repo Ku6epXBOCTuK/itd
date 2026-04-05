@@ -1,11 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	appState,
 	AppState,
 	setAppState,
 } from "../src/lib/core/app-state.svelte";
 import { GameEngine, GameEvents } from "../src/lib/core/event-bus";
-import { initGameStateMachine } from "../src/lib/core/game-state-machine";
 
 vi.mock("../src/lib/core/game-loop", () => ({
 	createGameLoop: vi.fn(() => ({

@@ -57,8 +57,18 @@ export function createSyncRenderSystem(
 	const entityToObject3D = new WeakMap<Entity, THREE.Object3D>();
 
 	const allWithView = world.with("viewId", "position");
-	const enemiesWithView = world.with("enemyTag", "viewId", "position");
-	const towerWithView = world.with("towerTag", "viewId", "position");
+	const enemiesWithView = world.with(
+		"enemyTag",
+		"viewId",
+		"position",
+		"visualStatus",
+	);
+	const towerWithView = world.with(
+		"towerTag",
+		"viewId",
+		"position",
+		"visualStatus",
+	);
 
 	const setup = setupScene(canvas);
 	const scene = setup.scene;
@@ -108,7 +118,7 @@ export function createSyncRenderSystem(
 			const mesh = entityToObject3D.get(entity) as THREE.Mesh;
 			if (!mesh) continue;
 
-			const materialKey = entity.visualStatus ?? VisualStatus.MOVING;
+			const materialKey = entity.visualStatus;
 			mesh.material =
 				SHARED_ENEMY_MATERIALS[
 					materialKey as keyof typeof SHARED_ENEMY_MATERIALS
@@ -122,7 +132,7 @@ export function createSyncRenderSystem(
 				if (towerEntity.towerState === TowerState.BROKEN) {
 					mesh.material = SHARED_TOWER_BROKEN_MATERIAL;
 				} else {
-					const materialKey = towerEntity.visualStatus ?? VisualStatus.IDLE;
+					const materialKey = towerEntity.visualStatus;
 					mesh.material =
 						SHARED_TOWER_MATERIALS[
 							materialKey as keyof typeof SHARED_TOWER_MATERIALS

@@ -1,6 +1,6 @@
 import { EnemyState, EnemyVariant, world, type Vector3 } from "$lib/core/world";
 import type { EnemyVariantType } from "$lib/modules/enemies/components";
-import { ENEMY_CONFIGS, ENEMY_SPAWN } from "$lib/core/game-config";
+import { ENEMY_CONFIGS, ENEMY_SPAWN, GAME_CONFIG } from "$lib/core/game-config";
 import { ViewId, VisualStatus } from "$lib/modules/render/components";
 
 export { EnemyVariant };
@@ -24,7 +24,7 @@ export const createEnemy = (
 		enemyState: EnemyState.MOVING,
 		attackStats: stats.attackStats,
 		maxSpeed: stats.speed,
-		friction: stats.friction,
+		friction: GAME_CONFIG.baseFriction * stats.frictionModifier,
 		velocity: { x: 0, y: 0, z: 0 },
 		hp: stats.hp,
 		maxHp: stats.maxHp,

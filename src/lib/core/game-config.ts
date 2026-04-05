@@ -40,6 +40,8 @@ export const GAME_CONFIG = {
 	initialGold: 100,
 	initialIncomePerSecond: 10,
 	initialWave: 1,
+	baseFriction: 10,
+	aliveFrictionModifier: 4.0,
 } as const;
 
 export const ENEMY_SPAWN = {
@@ -74,7 +76,7 @@ export const WAVE_DEFINITIONS = [
 export const ENEMY_CONFIGS = {
 	[EnemyVariant.BASIC]: {
 		speed: 2,
-		friction: 0.9,
+		frictionModifier: 1,
 		hp: 100,
 		maxHp: 100,
 		damage: 10,
@@ -88,7 +90,7 @@ export const ENEMY_CONFIGS = {
 	},
 	[EnemyVariant.FAST]: {
 		speed: 4,
-		friction: 0.85,
+		frictionModifier: 0.5,
 		hp: 50,
 		maxHp: 50,
 		damage: 50,
@@ -102,7 +104,7 @@ export const ENEMY_CONFIGS = {
 	},
 	[EnemyVariant.TANK]: {
 		speed: 1,
-		friction: 0.95,
+		frictionModifier: 2,
 		hp: 200,
 		maxHp: 200,
 		damage: 200,

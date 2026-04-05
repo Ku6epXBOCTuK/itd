@@ -1,9 +1,6 @@
 import { world, type Position, type Entity } from "$lib/core/world";
 import { ViewId } from "$lib/modules/render/components";
-import {
-	ProjectileVariant,
-	type ProjectileVariantType,
-} from "$lib/modules/projectiles/components";
+import { type ProjectileVariantType } from "$lib/modules/projectiles/components";
 
 export const createProjectile = (
 	startPos: Position,

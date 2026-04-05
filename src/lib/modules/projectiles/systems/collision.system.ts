@@ -1,8 +1,7 @@
 import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
-import { PROJECTILE_CONFIG, GAME_CONFIG } from "$lib/core/game-config";
-import { VisualStatus } from "$lib/modules/render/components";
+import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export function createCollisionSystem(world: World<Entity>) {
 	const projectiles = world.with("projectileTag", "position", "damage");
