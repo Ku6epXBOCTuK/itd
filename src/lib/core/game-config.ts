@@ -7,7 +7,7 @@ export const TOWER_CONFIG = {
 	damage: 50,
 	attackRange: 5,
 	attackCooldown: 1000,
-	attackAnimationDuration: 300,
+	attackDuration: 300,
 } as const;
 
 export const UPGRADES = {

@@ -1,6 +1,7 @@
 import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
-import { TowerState } from "$lib/core/world";
+import { AttackPhase } from "$lib/core/world";
+import { ATTACK_WINDUP_RATIO } from "$lib/core/constants";
 import { createProjectile } from "$lib/modules/projectiles/factory";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
@@ -11,6 +12,7 @@ export function createTowerAttackSystem(world: World<Entity>) {
 		"damage",
 		"attackRange",
 		"attackCooldown",
+		"attackPhase",
 	);
 	const enemies = world.with("enemyTag", "position", "hp");
 
@@ -21,20 +23,15 @@ export function createTowerAttackSystem(world: World<Entity>) {
 		const damage = tower.damage;
 		const attackRange = tower.attackRange;
 		const attackCooldown = tower.attackCooldown;
+		const attackDuration = tower.attackDuration ?? 0;
 
-		if (tower.towerState === TowerState.COOLDOWN) {
-			tower.cooldownTimer = (tower.cooldownTimer ?? 0) - dt;
-			if (tower.cooldownTimer <= 0) {
-				tower.towerState = TowerState.IDLE;
-				tower.cooldownTimer = 0;
-				delete tower.target;
-			}
-			return;
-		}
+		tower.attackTimer = (tower.attackTimer ?? 0) - dt;
 
-		if (tower.towerState === TowerState.FIRING) {
-			tower.animationTimer = (tower.animationTimer ?? 0) - dt;
-			if (tower.animationTimer <= 0) {
+		if (tower.attackTimer <= 0) {
+			if (tower.attackPhase === AttackPhase.WINDUP) {
+				tower.attackPhase = AttackPhase.RECOVER;
+				tower.attackTimer = attackDuration * ATTACK_WINDUP_RATIO;
+			} else if (tower.attackPhase === AttackPhase.RECOVER) {
 				const target = tower.target;
 				if (
 					target &&
@@ -49,33 +46,35 @@ export function createTowerAttackSystem(world: World<Entity>) {
 						target,
 					);
 				}
-				tower.towerState = TowerState.COOLDOWN;
-				tower.cooldownTimer = attackCooldown;
+				tower.attackPhase = AttackPhase.COOLDOWN;
+				tower.attackTimer = attackCooldown;
+			} else if (tower.attackPhase === AttackPhase.COOLDOWN) {
+				let targetEnemy: Entity | undefined = undefined;
+				let minDistance = attackRange;
+
+				for (const enemy of enemies) {
+					if (enemy.hp <= 0) continue;
+
+					const dx = (enemy.position?.x ?? 0) - (tower.position?.x ?? 0);
+					const dy = (enemy.position?.y ?? 0) - (tower.position?.y ?? 0);
+					const dz = (enemy.position?.z ?? 0) - (tower.position?.z ?? 0);
+					const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+					if (distance <= attackRange && distance < minDistance) {
+						minDistance = distance;
+						targetEnemy = enemy;
+					}
+				}
+
+				if (targetEnemy) {
+					tower.attackPhase = AttackPhase.WINDUP;
+					tower.target = targetEnemy;
+					tower.attackTimer = attackDuration * ATTACK_WINDUP_RATIO;
+				} else {
+					tower.attackPhase = AttackPhase.COOLDOWN;
+					tower.attackTimer = 0;
+				}
 			}
-			return;
-		}
-
-		let targetEnemy: Entity | null = null;
-		let minDistance = attackRange;
-
-		for (const enemy of enemies) {
-			if (enemy.hp <= 0) continue;
-
-			const dx = (enemy.position?.x ?? 0) - (tower.position?.x ?? 0);
-			const dy = (enemy.position?.y ?? 0) - (tower.position?.y ?? 0);
-			const dz = (enemy.position?.z ?? 0) - (tower.position?.z ?? 0);
-			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-			if (distance <= attackRange && distance < minDistance) {
-				minDistance = distance;
-				targetEnemy = enemy;
-			}
-		}
-
-		if (targetEnemy) {
-			tower.towerState = TowerState.FIRING;
-			tower.target = targetEnemy;
-			tower.animationTimer = tower.attackAnimationDuration;
 		}
 	};
 }

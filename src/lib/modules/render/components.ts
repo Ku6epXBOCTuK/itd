@@ -9,6 +9,7 @@ export const ViewId = {
 export type ViewIdType = (typeof ViewId)[keyof typeof ViewId];
 
 export const VisualStatus = {
+	IDLE: "idle",
 	MOVING: "moving",
 	ATTACKING: "attacking",
 	COOLDOWN: "cooldown",

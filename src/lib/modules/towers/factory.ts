@@ -1,12 +1,13 @@
-import { TowerState, world, type Position } from "$lib/core/world";
+import { TowerState, AttackPhase, world, type Position } from "$lib/core/world";
 import { TOWER_CONFIG } from "$lib/core/game-config";
-import { ViewId } from "$lib/modules/render/components";
+import { ViewId, VisualStatus } from "$lib/modules/render/components";
 
 // Одна башня в игре
 export const createTower = (x: number, z: number) => {
 	const tower = world.add({
 		position: { x, y: 1, z } as Position,
 		viewId: ViewId.TOWER,
+		visualStatus: VisualStatus.IDLE,
 		towerTag: true,
 		targetableTag: true,
 		baseDamage: TOWER_CONFIG.damage,
@@ -15,10 +16,10 @@ export const createTower = (x: number, z: number) => {
 		maxHp: TOWER_CONFIG.maxHp,
 		attackRange: TOWER_CONFIG.attackRange,
 		attackCooldown: TOWER_CONFIG.attackCooldown,
-		attackAnimationDuration: TOWER_CONFIG.attackAnimationDuration,
+		attackDuration: TOWER_CONFIG.attackDuration,
 		towerState: TowerState.IDLE,
-		cooldownTimer: 0,
-		animationTimer: 0,
+		attackPhase: AttackPhase.COOLDOWN,
+		attackTimer: 0,
 	});
 
 	return tower;

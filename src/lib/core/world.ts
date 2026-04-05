@@ -1,28 +1,25 @@
 import type {
 	EnemyStateType,
 	EnemyVariantType,
-	AttackPhaseType,
 } from "$lib/modules/enemies/components";
+import type { GameOverTimer } from "$lib/modules/game-over/components";
 import type { ProjectileVariantType } from "$lib/modules/projectiles/components";
 import type {
 	ViewIdType,
 	VisualStatusType,
 } from "$lib/modules/render/components";
+import type { AttackPhaseType } from "$lib/modules/shared/components";
 import type {
 	TowerBaseStats,
 	TowerStateType,
 } from "$lib/modules/towers/components";
 import type { Upgrades } from "$lib/modules/upgrades/components";
 import type { WaveControl } from "$lib/modules/waves/components";
-import type { GameOverTimer } from "$lib/modules/game-over/components";
 import { World } from "miniplex";
 
-export {
-	EnemyState,
-	EnemyVariant,
-	AttackPhase,
-} from "$lib/modules/enemies/components";
+export { EnemyState, EnemyVariant } from "$lib/modules/enemies/components";
 export { ProjectileVariant } from "$lib/modules/projectiles/components";
+export { AttackPhase } from "$lib/modules/shared/components";
 export { TowerState } from "$lib/modules/towers/components";
 export { WaveStatus } from "$lib/modules/waves/components";
 
@@ -65,8 +62,6 @@ export type Entity = Partial<
 		cooldownTimer: number;
 		attackTimer: number;
 		attackDuration: number;
-		animationTimer: number;
-		attackAnimationDuration: number;
 
 		target: Entity;
 		targetPosition: Vector3;

@@ -10,6 +10,7 @@ export function createAnimationStateSystem(world: World<Entity>) {
 		"attackPhase",
 		"enemyState",
 	);
+	const towers = world.with("towerTag", "attackPhase");
 
 	return () => {
 		for (const enemy of enemies) {
@@ -26,6 +27,20 @@ export function createAnimationStateSystem(world: World<Entity>) {
 				enemy.visualStatus = VisualStatus.COOLDOWN;
 			} else {
 				enemy.visualStatus = VisualStatus.MOVING;
+			}
+		}
+
+		const tower = towers.first;
+		if (tower) {
+			if (
+				tower.attackPhase === AttackPhase.WINDUP ||
+				tower.attackPhase === AttackPhase.RECOVER
+			) {
+				tower.visualStatus = VisualStatus.ATTACKING;
+			} else if (tower.attackPhase === AttackPhase.COOLDOWN) {
+				tower.visualStatus = VisualStatus.COOLDOWN;
+			} else {
+				tower.visualStatus = VisualStatus.IDLE;
 			}
 		}
 	};
