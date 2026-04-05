@@ -1,16 +1,16 @@
+import {
+	SHARED_ENEMY_MATERIALS,
+	SHARED_GEOMETRIES,
+	SHARED_PROJECTILE_MATERIAL,
+	SHARED_TOWER_BROKEN_MATERIAL,
+	SHARED_TOWER_MATERIALS,
+} from "$lib/core/game-config";
+import type { Entity } from "$lib/core/world";
+import { TowerState } from "$lib/core/world";
+import type { ViewIdType } from "$lib/modules/render/components";
+import { ViewId, VisualStatus } from "$lib/modules/render/components";
 import type { World } from "miniplex";
 import * as THREE from "three";
-import type { Entity } from "$lib/core/world";
-import type { ViewIdType } from "$lib/modules/render/components";
-import {
-	SHARED_GEOMETRIES,
-	SHARED_ENEMY_MATERIALS,
-	SHARED_TOWER_MATERIAL,
-	SHARED_TOWER_BROKEN_MATERIAL,
-	SHARED_PROJECTILE_MATERIAL,
-} from "$lib/core/game-config";
-import { TowerState } from "$lib/core/world";
-import { VisualStatus, ViewId } from "$lib/modules/render/components";
 import { setupScene } from "./setup-scene";
 
 const VIEW_CONSTRUCTORS: Record<
@@ -33,7 +33,7 @@ const VIEW_CONSTRUCTORS: Record<
 			SHARED_GEOMETRIES.tower,
 			entity.towerState === TowerState.BROKEN
 				? SHARED_TOWER_BROKEN_MATERIAL
-				: SHARED_TOWER_MATERIAL,
+				: SHARED_TOWER_MATERIALS[VisualStatus.IDLE],
 		),
 };
 
@@ -58,7 +58,7 @@ export function createSyncRenderSystem(
 
 	const allWithView = world.with("viewId", "position");
 	const enemiesWithView = world.with("enemyTag", "viewId", "position");
-	const towerWithView = world.with("towerTag", "viewId", "position").first;
+	const towerWithView = world.with("towerTag", "viewId", "position");
 
 	const setup = setupScene(canvas);
 	const scene = setup.scene;
@@ -115,14 +115,19 @@ export function createSyncRenderSystem(
 				] || SHARED_ENEMY_MATERIALS.moving;
 		}
 
-		const towerEntity = towerWithView;
+		const towerEntity = towerWithView.first;
 		if (towerEntity) {
 			const mesh = entityToObject3D.get(towerEntity) as THREE.Mesh;
 			if (mesh) {
-				mesh.material =
-					towerEntity.towerState === TowerState.BROKEN
-						? SHARED_TOWER_BROKEN_MATERIAL
-						: SHARED_TOWER_MATERIAL;
+				if (towerEntity.towerState === TowerState.BROKEN) {
+					mesh.material = SHARED_TOWER_BROKEN_MATERIAL;
+				} else {
+					const materialKey = towerEntity.visualStatus ?? VisualStatus.IDLE;
+					mesh.material =
+						SHARED_TOWER_MATERIALS[
+							materialKey as keyof typeof SHARED_TOWER_MATERIALS
+						] || SHARED_TOWER_MATERIALS[VisualStatus.IDLE];
+				}
 			}
 		}
 

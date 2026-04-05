@@ -4,12 +4,7 @@ import { AttackPhase, EnemyState } from "$lib/core/world";
 import { VisualStatus } from "$lib/modules/render/components";
 
 export function createAnimationStateSystem(world: World<Entity>) {
-	const enemies = world.with(
-		"enemyTag",
-		"dyingTag",
-		"attackPhase",
-		"enemyState",
-	);
+	const enemies = world.with("enemyTag", "attackPhase", "enemyState");
 	const towers = world.with("towerTag", "attackPhase");
 
 	return () => {

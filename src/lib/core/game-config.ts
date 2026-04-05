@@ -1,5 +1,6 @@
+import { VisualStatus } from "$lib/modules/render/components";
 import * as THREE from "three";
-import { EnemyState, EnemyVariant, TowerState } from "./world";
+import { EnemyVariant, TowerState } from "./world";
 
 export const TOWER_CONFIG = {
 	hp: 1000,
@@ -107,11 +108,12 @@ export const PROJECTILE_CONFIG = {
 } as const;
 
 export const ENEMY_COLORS = {
-	[EnemyState.MOVING]: 0x00ff00,
-	[EnemyState.ATTACKING]: 0xff4444,
-	[EnemyState.COOLDOWN]: 0xffff00,
-	[EnemyState.HAPPY]: 0x4444ff,
-	[EnemyState.DYING]: 0xff69b4,
+	[VisualStatus.IDLE]: 0xffffff,
+	[VisualStatus.MOVING]: 0x00ff00,
+	[VisualStatus.ATTACKING]: 0xff4444,
+	[VisualStatus.COOLDOWN]: 0xffff00,
+	[VisualStatus.HAPPY]: 0x4444ff,
+	[VisualStatus.DYING]: 0xff69b4,
 } as const;
 
 export const TOWER_COLORS = {
@@ -180,26 +182,38 @@ export const SHARED_GEOMETRIES = {
 } as const;
 
 export const SHARED_ENEMY_MATERIALS = {
-	[EnemyState.MOVING]: new THREE.MeshStandardMaterial({
-		color: ENEMY_COLORS[EnemyState.MOVING],
+	[VisualStatus.IDLE]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[VisualStatus.IDLE],
 	}),
-	[EnemyState.ATTACKING]: new THREE.MeshStandardMaterial({
-		color: ENEMY_COLORS[EnemyState.ATTACKING],
+	[VisualStatus.MOVING]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[VisualStatus.MOVING],
 	}),
-	[EnemyState.COOLDOWN]: new THREE.MeshStandardMaterial({
-		color: ENEMY_COLORS[EnemyState.COOLDOWN],
+	[VisualStatus.ATTACKING]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[VisualStatus.ATTACKING],
 	}),
-	[EnemyState.HAPPY]: new THREE.MeshStandardMaterial({
-		color: ENEMY_COLORS[EnemyState.HAPPY],
+	[VisualStatus.COOLDOWN]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[VisualStatus.COOLDOWN],
 	}),
-	[EnemyState.DYING]: new THREE.MeshStandardMaterial({
-		color: ENEMY_COLORS[EnemyState.DYING],
+	[VisualStatus.HAPPY]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[VisualStatus.HAPPY],
+	}),
+	[VisualStatus.DYING]: new THREE.MeshStandardMaterial({
+		color: ENEMY_COLORS[VisualStatus.DYING],
 	}),
 } as const;
 
-export const SHARED_TOWER_MATERIAL = new THREE.MeshStandardMaterial({
-	color: TOWER_COLORS[TowerState.IDLE],
-});
+export const SHARED_TOWER_MATERIALS = {
+	[VisualStatus.IDLE]: new THREE.MeshStandardMaterial({
+		color: TOWER_COLORS[TowerState.IDLE],
+	}),
+	[VisualStatus.ATTACKING]: new THREE.MeshStandardMaterial({
+		color: 0xffaa00,
+	}),
+	[VisualStatus.COOLDOWN]: new THREE.MeshStandardMaterial({
+		color: 0x666666,
+	}),
+} as const;
+
 export const SHARED_TOWER_BROKEN_MATERIAL = new THREE.MeshStandardMaterial({
 	color: TOWER_COLORS[TowerState.BROKEN],
 });
