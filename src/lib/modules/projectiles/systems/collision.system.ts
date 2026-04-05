@@ -52,8 +52,12 @@ export function createCollisionSystem(world: World<Entity>) {
 
 						if (target.hp <= 0) {
 							world.addComponent(target, "dyingTag", true);
+							world.addComponent(
+								target,
+								"deathTimer",
+								GAME_CONFIG.deathAnimationDuration,
+							);
 							target.visualStatus = VisualStatus.DYING;
-							target.deathTimer = GAME_CONFIG.deathAnimationDuration;
 						}
 					}
 
