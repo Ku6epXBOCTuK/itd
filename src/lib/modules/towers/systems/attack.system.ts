@@ -5,20 +5,26 @@ import { createProjectile } from "$lib/modules/projectiles/factory";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
 export function createTowerAttackSystem(world: World<Entity>) {
-	const towersQuery = world.with("towerTag", "position");
-	const enemies = world.with("enemyTag", "position");
+	const towersQuery = world.with(
+		"towerTag",
+		"position",
+		"damage",
+		"attackRange",
+		"attackCooldown",
+	);
+	const enemies = world.with("enemyTag", "position", "hp");
 
 	return (dt: number) => {
 		const tower = towersQuery.first;
 		if (!tower) return;
 
-		const damage = tower.damage ?? 0;
-		const attackRange = tower.attackRange ?? 0;
-		const attackCooldown = tower.attackCooldown ?? 0;
+		const damage = tower.damage;
+		const attackRange = tower.attackRange;
+		const attackCooldown = tower.attackCooldown;
 
 		if (tower.towerState === TowerState.COOLDOWN) {
 			tower.cooldownTimer = (tower.cooldownTimer ?? 0) - dt;
-			if ((tower.cooldownTimer ?? 0) <= 0) {
+			if (tower.cooldownTimer <= 0) {
 				tower.towerState = TowerState.IDLE;
 				tower.cooldownTimer = 0;
 				delete tower.target;
@@ -28,7 +34,7 @@ export function createTowerAttackSystem(world: World<Entity>) {
 
 		if (tower.towerState === TowerState.FIRING) {
 			tower.animationTimer = (tower.animationTimer ?? 0) - dt;
-			if ((tower.animationTimer ?? 0) <= 0) {
+			if (tower.animationTimer <= 0) {
 				const target = tower.target;
 				if (
 					target &&
@@ -53,7 +59,7 @@ export function createTowerAttackSystem(world: World<Entity>) {
 		let minDistance = attackRange;
 
 		for (const enemy of enemies) {
-			if ((enemy.hp ?? 0) <= 0) continue;
+			if (enemy.hp <= 0) continue;
 
 			const dx = (enemy.position?.x ?? 0) - (tower.position?.x ?? 0);
 			const dy = (enemy.position?.y ?? 0) - (tower.position?.y ?? 0);

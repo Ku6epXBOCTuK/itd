@@ -5,7 +5,7 @@ import { PROJECTILE_CONFIG, GAME_CONFIG } from "$lib/core/game-config";
 import { VisualStatus } from "$lib/modules/render/components";
 
 export function createCollisionSystem(world: World<Entity>) {
-	const projectiles = world.with("projectileTag", "position");
+	const projectiles = world.with("projectileTag", "position", "damage");
 
 	return (_dt: number) => {
 		for (const projectile of projectiles) {
@@ -20,7 +20,7 @@ export function createCollisionSystem(world: World<Entity>) {
 
 				if (
 					distance < PROJECTILE_CONFIG.ballisticHitThreshold ||
-					(projectile.position.y ?? 0) <= 0
+					projectile.position.y <= 0
 				) {
 					GameEngine.emit(GameEvents.PROJECTILE_MISS, {
 						position: projectile.position,
@@ -48,12 +48,9 @@ export function createCollisionSystem(world: World<Entity>) {
 
 				if (distance < PROJECTILE_CONFIG.homingHitThreshold) {
 					if (target.enemyTag) {
-						target.hp = Math.max(
-							0,
-							(target.hp ?? 0) - (projectile.damage ?? 0),
-						);
+						target.hp = Math.max(0, (target.hp ?? 0) - projectile.damage);
 
-						if ((target.hp ?? 0) <= 0) {
+						if (target.hp <= 0) {
 							world.addComponent(target, "dyingTag", true);
 							target.visualStatus = VisualStatus.DYING;
 							target.deathTimer = GAME_CONFIG.deathAnimationDuration;

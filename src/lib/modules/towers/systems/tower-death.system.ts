@@ -5,7 +5,7 @@ import { GAME_OVER_ANIMATION_DURATION } from "$lib/core/constants";
 import { VisualStatus } from "$lib/modules/render/components";
 
 export function createTowerDeathSystem(world: World<Entity>) {
-	const towers = world.with("towerTag");
+	const towers = world.with("towerTag", "hp", "towerState");
 	const existingTimer = world.with("gameOverTimer");
 
 	return () => {
@@ -14,7 +14,7 @@ export function createTowerDeathSystem(world: World<Entity>) {
 		const tower = towers.first;
 		if (!tower) return;
 
-		if ((tower.hp ?? 0) <= 0 && tower.towerState !== TowerState.BROKEN) {
+		if (tower.hp <= 0 && tower.towerState !== TowerState.BROKEN) {
 			tower.towerState = TowerState.BROKEN;
 
 			world.add({

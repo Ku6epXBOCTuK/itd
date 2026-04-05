@@ -4,9 +4,9 @@ import { EnemyState } from "$lib/core/world";
 
 export function createEnemyAttackSystem(world: World<Entity>) {
 	const enemies = world
-		.with("enemyTag", "position", "targetPosition", "attackRange")
+		.with("enemyTag", "position", "targetPosition", "attackRange", "damage")
 		.without("dyingTag");
-	const towers = world.with("towerTag");
+	const towers = world.with("towerTag", "hp");
 
 	return (dt: number) => {
 		for (const enemy of enemies) {
@@ -26,17 +26,17 @@ export function createEnemyAttackSystem(world: World<Entity>) {
 			const dz = tz - ez;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance > (enemy.attackRange ?? 0)) {
+			if (distance > enemy.attackRange) {
 				continue;
 			}
 
 			if (enemy.enemyState === EnemyState.ATTACKING) {
 				enemy.attackTimer = (enemy.attackTimer ?? 0) - dt;
 
-				if ((enemy.attackTimer ?? 0) <= 0) {
+				if (enemy.attackTimer <= 0) {
 					const tower = towers.first;
 					if (tower) {
-						tower.hp = Math.max(0, (tower.hp ?? 0) - (enemy.damage ?? 0));
+						tower.hp = Math.max(0, tower.hp - enemy.damage);
 					}
 
 					enemy.enemyState = EnemyState.COOLDOWN;
@@ -47,7 +47,7 @@ export function createEnemyAttackSystem(world: World<Entity>) {
 			if (enemy.enemyState === EnemyState.COOLDOWN) {
 				enemy.cooldownTimer = (enemy.cooldownTimer ?? 0) - dt;
 
-				if ((enemy.cooldownTimer ?? 0) <= 0) {
+				if (enemy.cooldownTimer <= 0) {
 					enemy.enemyState = EnemyState.ATTACKING;
 					enemy.attackTimer = enemy.attackDuration;
 				}

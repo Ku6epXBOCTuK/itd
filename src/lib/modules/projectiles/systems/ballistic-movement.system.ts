@@ -5,7 +5,7 @@ import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 import { ProjectileVariant } from "$lib/modules/projectiles/components";
 
 export function createBallisticMovementSystem(world: World<Entity>) {
-	const projectiles = world.with("projectileTag", "position");
+	const projectiles = world.with("projectileTag", "position", "speed");
 
 	return (dt: number) => {
 		for (const projectile of projectiles) {
@@ -24,7 +24,7 @@ export function createBallisticMovementSystem(world: World<Entity>) {
 
 			if (
 				distance < PROJECTILE_CONFIG.ballisticHitThreshold ||
-				(projectile.position.y ?? 0) <= 0
+				projectile.position.y <= 0
 			)
 				continue;
 
@@ -34,7 +34,7 @@ export function createBallisticMovementSystem(world: World<Entity>) {
 				z: dz / distance,
 			};
 
-			const moveDistance = (projectile.speed ?? 0) * (dt / SECOND_MS);
+			const moveDistance = projectile.speed * (dt / SECOND_MS);
 			projectile.position.x += direction.x * moveDistance;
 			projectile.position.y += direction.y * moveDistance;
 			projectile.position.z += direction.z * moveDistance;

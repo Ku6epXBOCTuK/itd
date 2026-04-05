@@ -19,9 +19,9 @@ export function createEnemyAISystem(world: World<Entity>) {
 
 			if (distance > GAME_CONFIG.targetReachedDistance) {
 				enemy.velocity = {
-					x: (dx / distance) * (enemy.maxSpeed ?? 0),
-					y: (dy / distance) * (enemy.maxSpeed ?? 0),
-					z: (dz / distance) * (enemy.maxSpeed ?? 0),
+					x: (dx / distance) * enemy.maxSpeed,
+					y: (dy / distance) * enemy.maxSpeed,
+					z: (dz / distance) * enemy.maxSpeed,
 				};
 			}
 		}

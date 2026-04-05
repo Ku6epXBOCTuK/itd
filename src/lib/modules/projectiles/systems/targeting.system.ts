@@ -17,12 +17,12 @@ export function createTargetingSystem(world: World<Entity>) {
 				(projectile.target.hp ?? 0) <= 0;
 
 			if (needsNewTarget) {
-				const enemies = world.with("enemyTag", "position");
-				let nearest: ReturnType<typeof world.with>[number] | null = null;
+				const enemies = world.with("enemyTag", "position", "hp");
+				let nearest: Entity | undefined = undefined;
 				let minDistance: number = GAME_CONFIG.targetingMinDistance;
 
 				for (const enemy of enemies) {
-					if ((enemy.hp ?? 0) <= 0) continue;
+					if (enemy.hp <= 0) continue;
 
 					const dx = (enemy.position?.x ?? 0) - (projectile.position?.x ?? 0);
 					const dy = (enemy.position?.y ?? 0) - (projectile.position?.y ?? 0);
@@ -35,7 +35,7 @@ export function createTargetingSystem(world: World<Entity>) {
 					}
 				}
 
-				projectile.target = nearest ?? undefined;
+				projectile.target = nearest;
 			}
 		}
 	};

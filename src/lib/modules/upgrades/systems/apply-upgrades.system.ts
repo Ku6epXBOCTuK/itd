@@ -5,7 +5,7 @@ import { PERCENT } from "$lib/core/constants";
 
 export function createApplyUpgradesSystem(world: World<Entity>) {
 	const upgradesQuery = world.with("upgrades");
-	const towersQuery = world.with("towerTag");
+	const towersQuery = world.with("towerTag", "baseDamage");
 
 	return (_dt: number) => {
 		const upgradesEntity = upgradesQuery.first;
@@ -20,10 +20,8 @@ export function createApplyUpgradesSystem(world: World<Entity>) {
 
 		const tower = towersQuery.first;
 		if (tower) {
-			const baseDamage = tower.baseDamage;
-			if (baseDamage) {
-				tower.damage = (baseDamage + flatBonus) * (1 + percentBonus / PERCENT);
-			}
+			tower.damage =
+				(tower.baseDamage + flatBonus) * (1 + percentBonus / PERCENT);
 		}
 
 		upgrades.dirty = false;
