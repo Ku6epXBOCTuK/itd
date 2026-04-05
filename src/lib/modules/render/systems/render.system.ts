@@ -58,7 +58,7 @@ export function createSyncRenderSystem(
 
 	const allWithView = world.with("viewId", "position");
 	const enemiesWithView = world.with("enemyTag", "viewId", "position");
-	const towersWithView = world.with("towerTag", "viewId", "position");
+	const towerWithView = world.with("towerTag", "viewId", "position").first;
 
 	const setup = setupScene(canvas);
 	const scene = setup.scene;
@@ -115,14 +115,15 @@ export function createSyncRenderSystem(
 				] || SHARED_ENEMY_MATERIALS.moving;
 		}
 
-		for (const entity of towersWithView) {
-			const mesh = entityToObject3D.get(entity) as THREE.Mesh;
-			if (!mesh) continue;
-
-			mesh.material =
-				entity.towerState === TowerState.BROKEN
-					? SHARED_TOWER_BROKEN_MATERIAL
-					: SHARED_TOWER_MATERIAL;
+		const towerEntity = towerWithView;
+		if (towerEntity) {
+			const mesh = entityToObject3D.get(towerEntity) as THREE.Mesh;
+			if (mesh) {
+				mesh.material =
+					towerEntity.towerState === TowerState.BROKEN
+						? SHARED_TOWER_BROKEN_MATERIAL
+						: SHARED_TOWER_MATERIAL;
+			}
 		}
 
 		renderer.render(scene, camera);

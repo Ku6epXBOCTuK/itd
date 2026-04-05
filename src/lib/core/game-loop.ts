@@ -18,6 +18,7 @@ import { createFpsSystem } from "$lib/modules/debug/systems/fps.system";
 import { createUpdateDebugSystem } from "$lib/modules/debug/systems/update-debug.system";
 import { createApplyUpgradesSystem } from "$lib/modules/upgrades/systems/apply-upgrades.system";
 import { createEnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
+import { createTowerDeathSystem } from "$lib/modules/towers/systems/tower-death.system";
 import { createGameOverTimerSystem } from "$lib/modules/game-over/systems/game-over-timer.system";
 import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
 
@@ -32,6 +33,7 @@ const SYSTEM_FACTORIES: SystemFactory[] = [
 	createMovementSystem,
 	createFrictionSystem,
 	createTowerAttackSystem,
+	createTowerDeathSystem,
 	createTargetingSystem,
 	createHomingMovementSystem,
 	createBallisticMovementSystem,

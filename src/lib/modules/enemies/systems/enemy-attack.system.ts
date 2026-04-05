@@ -1,17 +1,11 @@
 import type { World } from "miniplex";
 import type { Entity } from "$lib/core/world";
-import { EnemyState, TowerState } from "$lib/core/world";
-import { GAME_OVER_ANIMATION_DURATION } from "$lib/core/constants";
-import { VisualStatus } from "$lib/modules/render/components";
-
-let gameTriggered = false;
-
-export function resetEnemyAttackSystem() {
-	gameTriggered = false;
-}
+import { EnemyState } from "$lib/core/world";
 
 export function createEnemyAttackSystem(world: World<Entity>) {
-	const enemies = world.with("enemyTag", "position").without("dyingTag");
+	const enemies = world
+		.with("enemyTag", "position", "targetPosition", "attackRange")
+		.without("dyingTag");
 	const towers = world.with("towerTag");
 
 	return (dt: number) => {
@@ -32,73 +26,31 @@ export function createEnemyAttackSystem(world: World<Entity>) {
 			const dz = tz - ez;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance <= (enemy.attackRange ?? 0)) {
-				let hasActiveTower = false;
-				for (const tower of towers) {
-					if (tower.towerState !== TowerState.BROKEN) {
-						hasActiveTower = true;
-						break;
+			if (distance > (enemy.attackRange ?? 0)) {
+				continue;
+			}
+
+			if (enemy.enemyState === EnemyState.ATTACKING) {
+				enemy.attackTimer = (enemy.attackTimer ?? 0) - dt;
+
+				if ((enemy.attackTimer ?? 0) <= 0) {
+					const tower = towers.first;
+					if (tower) {
+						tower.hp = Math.max(0, (tower.hp ?? 0) - (enemy.damage ?? 0));
 					}
-				}
 
-				if (!hasActiveTower) {
-					continue;
+					enemy.enemyState = EnemyState.COOLDOWN;
+					enemy.cooldownTimer = enemy.attackCooldown;
 				}
+			}
 
-				if (enemy.enemyState === EnemyState.MOVING) {
+			if (enemy.enemyState === EnemyState.COOLDOWN) {
+				enemy.cooldownTimer = (enemy.cooldownTimer ?? 0) - dt;
+
+				if ((enemy.cooldownTimer ?? 0) <= 0) {
 					enemy.enemyState = EnemyState.ATTACKING;
-					enemy.visualStatus = VisualStatus.ATTACKING;
 					enemy.attackTimer = enemy.attackDuration;
 				}
-
-				if (enemy.enemyState === EnemyState.ATTACKING) {
-					enemy.attackTimer = (enemy.attackTimer ?? 0) - dt;
-
-					if ((enemy.attackTimer ?? 0) <= 0) {
-						for (const tower of towers) {
-							const towerHp = tower.hp ?? 0;
-							const newHp = Math.max(0, towerHp - (enemy.damage ?? 0));
-							tower.hp = newHp;
-
-							if (newHp <= 0 && !gameTriggered) {
-								gameTriggered = true;
-								tower.towerState = TowerState.BROKEN;
-
-								const allEnemies = world.with("enemyTag");
-								for (const e of allEnemies) {
-									e.enemyState = EnemyState.HAPPY;
-									e.visualStatus = VisualStatus.HAPPY;
-									e.cooldownTimer = 0;
-								}
-
-								const waveControl = world.with("waveControl").first;
-								if (waveControl) {
-									world.addComponent(waveControl, "gameOverTimer", {
-										remainingTime: GAME_OVER_ANIMATION_DURATION,
-									});
-								}
-								return;
-							}
-						}
-
-						enemy.enemyState = EnemyState.COOLDOWN;
-						enemy.visualStatus = VisualStatus.COOLDOWN;
-						enemy.cooldownTimer = enemy.attackCooldown;
-					}
-				}
-
-				if (enemy.enemyState === EnemyState.COOLDOWN) {
-					enemy.cooldownTimer = (enemy.cooldownTimer ?? 0) - dt;
-
-					if ((enemy.cooldownTimer ?? 0) <= 0) {
-						enemy.enemyState = EnemyState.ATTACKING;
-						enemy.visualStatus = VisualStatus.ATTACKING;
-						enemy.attackTimer = enemy.attackDuration;
-					}
-				}
-			} else {
-				enemy.enemyState = EnemyState.MOVING;
-				enemy.visualStatus = VisualStatus.MOVING;
 			}
 		}
 	};

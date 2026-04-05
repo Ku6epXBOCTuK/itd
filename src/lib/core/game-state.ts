@@ -1,7 +1,6 @@
 import { resetHudState } from "$lib/adapters/ui-state/hud-state.svelte";
 import { resumeGame } from "$lib/core/app-state.svelte";
 import { WaveStatus, world } from "$lib/core/world";
-import { resetEnemyAttackSystem } from "$lib/modules/enemies/systems/enemy-attack.system";
 import { createTower } from "$lib/modules/towers/factory";
 import { createPlayer } from "$lib/modules/player/factory";
 import { GAME_CONFIG } from "./game-config";
@@ -22,8 +21,6 @@ export const createGameState = () => {
 };
 
 export const resetGameState = () => {
-	resetEnemyAttackSystem();
-
 	world.clear();
 
 	resetHudState();
