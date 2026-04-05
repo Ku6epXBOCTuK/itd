@@ -31,7 +31,9 @@ import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
 type System = (deltaTime: number) => void;
 type SystemFactory = (world: World<Entity>) => System;
 
-const SYSTEM_FACTORIES: SystemFactory[] = [
+const SECOND_TICK_FACTORIES: SystemFactory[] = [createIncomeSystem];
+
+const TICK_START_FACTORIES: SystemFactory[] = [
 	createWaveSystem,
 	createEnemySpawnSystem,
 	createEnemyAISystem,
@@ -52,33 +54,31 @@ const SYSTEM_FACTORIES: SystemFactory[] = [
 	createApplyUpgradesSystem,
 	createAnimationStateSystem,
 	createGameOverTimerSystem,
-	createCleanupSystem,
 ];
 
-const SECOND_TICK_FACTORIES: SystemFactory[] = [createIncomeSystem];
-
-const FRAME_SYSTEM_FACTORIES: SystemFactory[] = [
+const UI_SYSTEM_FACTORIES: SystemFactory[] = [
 	createUpdateHudSystem,
 	createFpsSystem,
 	createUpdateDebugSystem,
 ];
 
+const TICK_END_FACTORIES: SystemFactory[] = [createCleanupSystem];
+
 export function createGameLoop(world: World<Entity>) {
-	const systems = SYSTEM_FACTORIES.map((factory) => factory(world));
 	const secondTickSystems = SECOND_TICK_FACTORIES.map((factory) =>
 		factory(world),
 	);
-	const frameSystems = FRAME_SYSTEM_FACTORIES.map((factory) => factory(world));
+	const tickStartSystems = TICK_START_FACTORIES.map((factory) =>
+		factory(world),
+	);
+	const uiSystems = UI_SYSTEM_FACTORIES.map((factory) => factory(world));
+	const tickEndSystems = TICK_END_FACTORIES.map((factory) => factory(world));
 
 	let isRunning = false;
 	let animationFrameId: number | null = null;
 	let secondTickTimer = 0;
 
 	function gameLoop(deltaTime: number) {
-		for (const system of systems) {
-			system(deltaTime);
-		}
-
 		secondTickTimer += deltaTime;
 		if (secondTickTimer >= SECOND_MS) {
 			const ticks = Math.floor(secondTickTimer / SECOND_MS);
@@ -91,7 +91,15 @@ export function createGameLoop(world: World<Entity>) {
 			}
 		}
 
-		for (const system of frameSystems) {
+		for (const system of tickStartSystems) {
+			system(deltaTime);
+		}
+
+		for (const system of uiSystems) {
+			system(deltaTime);
+		}
+
+		for (const system of tickEndSystems) {
 			system(deltaTime);
 		}
 	}
@@ -107,7 +115,7 @@ export function createGameLoop(world: World<Entity>) {
 		start(canvas: HTMLCanvasElement) {
 			if (isRunning) return;
 
-			frameSystems.unshift(createSyncRenderSystem(world, canvas));
+			uiSystems.push(createSyncRenderSystem(world, canvas));
 
 			isRunning = true;
 			animationFrameId = requestAnimationFrame(loop);
