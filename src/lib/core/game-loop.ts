@@ -4,8 +4,8 @@ import { createIncomeSystem } from "$lib/modules/player/systems/income.system";
 import { createSyncRenderSystem } from "$lib/modules/render/systems/render.system";
 import { createMovementSystem } from "$lib/modules/physics/systems/movement.system";
 import { createFrictionSystem } from "$lib/modules/physics/systems/friction.system";
-import { createEnemyAISystem } from "$lib/modules/enemies/systems/enemy-ai.system";
-import { createEnemyAttackSystem } from "$lib/modules/enemies/systems/enemy-attack.system";
+import { createEnemyAISystem } from "$lib/modules/enemies/systems/ai.system";
+import { createEnemyAttackSystem } from "$lib/modules/enemies/systems/attack.system";
 import { createTowerAttackSystem } from "$lib/modules/towers/systems/attack.system";
 import { createTargetingSystem } from "$lib/modules/projectiles/systems/targeting.system";
 import { createHomingMovementSystem } from "$lib/modules/projectiles/systems/homing-movement.system";
@@ -17,7 +17,8 @@ import { createUpdateHudSystem } from "$lib/modules/hud/systems/update-hud.syste
 import { createFpsSystem } from "$lib/modules/debug/systems/fps.system";
 import { createUpdateDebugSystem } from "$lib/modules/debug/systems/update-debug.system";
 import { createApplyUpgradesSystem } from "$lib/modules/upgrades/systems/apply-upgrades.system";
-import { createEnemyDeathSystem } from "$lib/modules/enemies/systems/enemy-death.system";
+import { createDeathCheckSystem } from "$lib/modules/enemies/systems/death-check.system";
+import { createEnemyDeathSystem } from "$lib/modules/enemies/systems/death.system";
 import { createTowerDeathSystem } from "$lib/modules/towers/systems/tower-death.system";
 import { createGameOverTimerSystem } from "$lib/modules/game-over/systems/game-over-timer.system";
 import { FRAME_MS, SECOND_MS } from "$lib/core/constants";
@@ -38,6 +39,7 @@ const SYSTEM_FACTORIES: SystemFactory[] = [
 	createHomingMovementSystem,
 	createBallisticMovementSystem,
 	createCollisionSystem,
+	createDeathCheckSystem,
 	createEnemyDeathSystem,
 	createApplyUpgradesSystem,
 	createGameOverTimerSystem,

@@ -49,16 +49,6 @@ export function createCollisionSystem(world: World<Entity>) {
 				if (distance < PROJECTILE_CONFIG.homingHitThreshold) {
 					if (target.enemyTag) {
 						target.hp = Math.max(0, (target.hp ?? 0) - projectile.damage);
-
-						if (target.hp <= 0) {
-							world.addComponent(target, "dyingTag", true);
-							world.addComponent(
-								target,
-								"deathTimer",
-								GAME_CONFIG.deathAnimationDuration,
-							);
-							target.visualStatus = VisualStatus.DYING;
-						}
 					}
 
 					world.remove(projectile);
