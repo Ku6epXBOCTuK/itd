@@ -1,5 +1,11 @@
-import { EnemyState, EnemyVariant, world, type Vector3 } from "$lib/core/world";
+import {
+	EnemyState,
+	EnemyVariant,
+	type Vector3,
+	type Entity,
+} from "$lib/core/world";
 import type { EnemyVariantType } from "$lib/modules/enemies/components";
+import type { World } from "miniplex";
 import { ENEMY_CONFIGS, ENEMY_SPAWN, GAME_CONFIG } from "$lib/core/game-config";
 import { ViewId, VisualStatus } from "$lib/modules/render/components";
 
@@ -8,6 +14,7 @@ export { EnemyVariant };
 type EnemyStats = (typeof ENEMY_CONFIGS)[EnemyVariantType];
 
 export const createEnemy = (
+	world: World<Entity>,
 	type: keyof typeof ENEMY_CONFIGS,
 	x: number,
 	z: number,

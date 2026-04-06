@@ -1,8 +1,10 @@
-import { world, type Position, type Entity } from "$lib/core/world";
+import type { Position, Entity } from "$lib/core/world";
+import type { World } from "miniplex";
 import { ViewId } from "$lib/modules/render/components";
 import { type ProjectileVariantType } from "$lib/modules/projectiles/components";
 
 export const createProjectile = (
+	world: World<Entity>,
 	startPos: Position,
 	damage: number,
 	behavior: {

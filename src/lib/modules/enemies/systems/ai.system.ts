@@ -1,11 +1,10 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { EnemyState } from "$lib/modules/enemies/components";
 import { AttackPhase } from "$lib/modules/shared/components";
 import { GAME_CONFIG } from "$lib/core/game-config";
 
-export function createEnemyAISystem(world: World<Entity>) {
-	const enemies = world
+export function createEnemyAISystem(ctx: BaseContext) {
+	const enemies = ctx.world
 		.with(
 			"enemyTag",
 			"position",
@@ -15,7 +14,7 @@ export function createEnemyAISystem(world: World<Entity>) {
 			"attackRange",
 		)
 		.without("dyingTag");
-	const towers = world.with("towerTag");
+	const towers = ctx.world.with("towerTag");
 
 	return (_dt: number) => {
 		for (const enemy of enemies) {
@@ -39,7 +38,7 @@ export function createEnemyAISystem(world: World<Entity>) {
 					const tower = towers.first;
 					if (tower) {
 						enemy.target = tower;
-						world.addComponent(enemy, "activeAttack", {
+						ctx.world.addComponent(enemy, "activeAttack", {
 							attackPhase: AttackPhase.WINDUP,
 							timer: enemy.attackStats.windupDuration,
 						});

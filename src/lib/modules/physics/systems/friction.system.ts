@@ -1,10 +1,9 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { GAME_CONFIG } from "$lib/core/game-config";
 import { PERCENT } from "$lib/core/constants";
 
-export function createFrictionSystem(world: World<Entity>) {
-	const withFriction = world.with("velocity", "friction");
+export function createFrictionSystem(ctx: BaseContext) {
+	const withFriction = ctx.world.with("velocity", "friction");
 
 	return (_dt: number) => {
 		for (const entity of withFriction) {

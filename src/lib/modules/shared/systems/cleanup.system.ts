@@ -1,7 +1,7 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 
-export function createCleanupSystem(world: World<Entity>) {
+export function createCleanupSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const withExecuteAttack = world.with("executeAttack");
 
 	return () => {

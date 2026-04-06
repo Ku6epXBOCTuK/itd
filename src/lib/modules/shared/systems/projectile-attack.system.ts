@@ -1,10 +1,10 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { AttackVariant } from "$lib/modules/shared/components";
 import { createProjectile } from "$lib/modules/projectiles/factory";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
-export function createProjectileAttackSystem(world: World<Entity>) {
+export function createProjectileAttackSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const shooters = world.with("executeAttack", "position");
 
 	return () => {
@@ -24,7 +24,7 @@ export function createProjectileAttackSystem(world: World<Entity>) {
 
 			if (
 				target &&
-				world.has(target) &&
+				ctx.world.has(target) &&
 				target.targetableTag &&
 				(target.hp ?? 0) > 0
 			) {
@@ -38,6 +38,7 @@ export function createProjectileAttackSystem(world: World<Entity>) {
 						: PROJECTILE_CONFIG.speed;
 
 				createProjectile(
+					world,
 					entity.position!,
 					executeAttack.damage,
 					{ type: projectileType, speed },

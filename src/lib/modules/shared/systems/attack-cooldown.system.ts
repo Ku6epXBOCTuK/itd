@@ -1,15 +1,14 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 
-export function createAttackCooldownSystem(world: World<Entity>) {
-	const onCooldown = world.with("attackCooldownTimer");
+export function createAttackCooldownSystem(ctx: BaseContext) {
+	const onCooldown = ctx.world.with("attackCooldownTimer");
 
 	return (dt: number) => {
 		for (const entity of onCooldown) {
 			entity.attackCooldownTimer -= dt;
 
 			if (entity.attackCooldownTimer <= 0) {
-				world.removeComponent(entity, "attackCooldownTimer");
+				ctx.world.removeComponent(entity, "attackCooldownTimer");
 			}
 		}
 	};

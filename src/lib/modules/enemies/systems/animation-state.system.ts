@@ -1,9 +1,9 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { EnemyState } from "$lib/core/world";
 import { VisualStatus } from "$lib/modules/render/components";
 
-export function createAnimationStateSystem(world: World<Entity>) {
+export function createAnimationStateSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const enemies = world.with("enemyTag", "enemyState");
 	const towers = world.with("towerTag");
 

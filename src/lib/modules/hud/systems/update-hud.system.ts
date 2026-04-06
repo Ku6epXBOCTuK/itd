@@ -1,8 +1,8 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { hudState } from "$lib/adapters/ui-state/hud-state.svelte";
 
-export function createUpdateHudSystem(world: World<Entity>) {
+export function createUpdateHudSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const players = world.with("gold");
 	const towersQuery = world.with("towerTag", "hp", "maxHp");
 	const waveControlQuery = world.with("waveControl");

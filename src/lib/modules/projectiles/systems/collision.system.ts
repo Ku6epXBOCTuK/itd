@@ -1,9 +1,9 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 
-export function createCollisionSystem(world: World<Entity>) {
+export function createCollisionSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const projectiles = world.with("projectileTag", "position", "damage");
 
 	return (_dt: number) => {

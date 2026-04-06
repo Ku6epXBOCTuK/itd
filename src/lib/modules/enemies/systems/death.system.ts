@@ -1,7 +1,7 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 
-export function createEnemyDeathSystem(world: World<Entity>) {
+export function createEnemyDeathSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const dyingEnemies = world.with("dyingTag", "position", "deathTimer");
 
 	return (dt: number) => {

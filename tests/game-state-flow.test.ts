@@ -6,8 +6,8 @@ import {
 } from "../src/lib/core/app-state.svelte";
 import { GameEngine, GameEvents } from "../src/lib/core/event-bus";
 
-vi.mock("../src/lib/core/game-loop", () => ({
-	createGameLoop: vi.fn(() => ({
+vi.mock("../src/lib/core/bootstrap", () => ({
+	bootstrapGame: vi.fn(() => ({
 		start: vi.fn(),
 		stop: vi.fn(),
 		isRunning: () => false,

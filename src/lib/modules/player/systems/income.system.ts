@@ -1,12 +1,12 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
+import { SECOND_MS } from "$lib/core/constants";
 
-export function createIncomeSystem(world: World<Entity>) {
-	const players = world.with("gold", "incomePerSecond");
+export function createIncomeSystem(ctx: BaseContext) {
+	const players = ctx.world.with("gold", "incomePerSecond");
 
-	return (_dt: number) => {
+	return (dt: number) => {
 		for (const player of players) {
-			player.gold += player.incomePerSecond;
+			player.gold += (player.incomePerSecond * dt) / SECOND_MS;
 		}
 	};
 }

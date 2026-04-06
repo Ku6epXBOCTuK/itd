@@ -1,9 +1,8 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { AttackVariant } from "$lib/modules/shared/components";
 
-export function createMeleeAttackSystem(world: World<Entity>) {
-	const attackers = world.with("executeAttack");
+export function createMeleeAttackSystem(ctx: BaseContext) {
+	const attackers = ctx.world.with("executeAttack");
 
 	return () => {
 		for (const entity of attackers) {
@@ -15,7 +14,7 @@ export function createMeleeAttackSystem(world: World<Entity>) {
 			const target = executeAttack.target;
 			if (
 				target &&
-				world.has(target) &&
+				ctx.world.has(target) &&
 				target.targetableTag &&
 				(target.hp ?? 0) > 0
 			) {

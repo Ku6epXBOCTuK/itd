@@ -1,10 +1,10 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { SECOND_MS } from "$lib/core/constants";
 import { PROJECTILE_CONFIG } from "$lib/core/game-config";
 import { ProjectileVariant } from "$lib/modules/projectiles/components";
 
-export function createBallisticMovementSystem(world: World<Entity>) {
+export function createBallisticMovementSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const projectiles = world.with("projectileTag", "position", "speed");
 
 	return (dt: number) => {

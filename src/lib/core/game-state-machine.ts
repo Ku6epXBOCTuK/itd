@@ -1,30 +1,26 @@
 import { AppState, setAppState } from "$lib/core/app-state.svelte";
-import { initializeGameState, resetGameState } from "$lib/core/game-state";
 import { GameEngine, GameEvents } from "./event-bus";
-import { createGameLoop } from "./game-loop";
-import { world } from "./world";
+import { bootstrapGame } from "./bootstrap";
 
-const gameLoop = createGameLoop(world);
+let gameLoop: ReturnType<typeof bootstrapGame> | null = null;
 
 export function startGameLoop(canvas: HTMLCanvasElement) {
-	if (gameLoop.isRunning()) return;
+	if (gameLoop?.isRunning()) return;
 
-	initializeGameState();
-	gameLoop.start(canvas);
+	gameLoop = bootstrapGame(canvas);
+	gameLoop.start();
 }
 
 export function stopGameLoop() {
-	if (!gameLoop.isRunning()) return;
-
-	gameLoop.stop();
+	gameLoop?.stop();
 }
 
 export const initGameStateMachine = () => {
 	GameEngine.on(GameEvents.START_GAME, () => {
-		if (gameLoop.isRunning()) {
+		if (gameLoop?.isRunning()) {
 			stopGameLoop();
 		}
-		resetGameState();
+		gameLoop?.reset();
 		setAppState(AppState.PLAYING);
 	});
 
@@ -41,7 +37,6 @@ export const initGameStateMachine = () => {
 	});
 
 	GameEngine.on(GameEvents.TO_MENU, () => {
-		resetGameState();
 		setAppState(AppState.MENU);
 		stopGameLoop();
 	});

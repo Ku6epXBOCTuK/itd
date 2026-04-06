@@ -1,8 +1,8 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { GameEngine, GameEvents } from "$lib/core/event-bus";
 
-export function createGameOverTimerSystem(world: World<Entity>) {
+export function createGameOverTimerSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const query = world.with("gameOverTimer");
 
 	return (dt: number) => {

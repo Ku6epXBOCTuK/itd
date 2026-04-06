@@ -1,5 +1,4 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { WaveStatus } from "$lib/core/world";
 import {
 	ENEMY_SPAWN,
@@ -8,7 +7,8 @@ import {
 } from "$lib/core/game-config";
 import { createEnemy } from "$lib/modules/enemies/factory";
 
-export function createEnemySpawnSystem(world: World<Entity>) {
+export function createEnemySpawnSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const waveControlQuery = world.with("waveControl");
 
 	return (dt: number) => {
@@ -42,7 +42,7 @@ export function createEnemySpawnSystem(world: World<Entity>) {
 
 			if (totalSpawned < spawnPositions.length) {
 				const pos = spawnPositions[totalSpawned];
-				createEnemy(waveDef.enemies[0].type, pos.x, pos.z);
+				createEnemy(world, waveDef.enemies[0].type, pos.x, pos.z);
 				waveControl.waveControl.remainingEnemies--;
 			}
 

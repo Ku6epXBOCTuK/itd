@@ -1,9 +1,9 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { UPGRADES } from "$lib/core/game-config";
 import { PERCENT } from "$lib/core/constants";
 
-export function createApplyUpgradesSystem(world: World<Entity>) {
+export function createApplyUpgradesSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const upgradesQuery = world.with("upgrades");
 	const towersQuery = world.with("towerTag", "baseDamage");
 

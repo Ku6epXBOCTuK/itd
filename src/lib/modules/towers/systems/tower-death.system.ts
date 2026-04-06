@@ -1,9 +1,9 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { EnemyState, TowerState } from "$lib/core/world";
 import { GAME_OVER_ANIMATION_DURATION } from "$lib/core/constants";
 
-export function createTowerDeathSystem(world: World<Entity>) {
+export function createTowerDeathSystem(ctx: BaseContext) {
+	const world = ctx.world;
 	const towers = world.with("towerTag", "hp", "towerState");
 	const existingTimer = world.with("gameOverTimer");
 

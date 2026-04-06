@@ -1,15 +1,15 @@
-import type { World } from "miniplex";
+import type { BaseContext } from "$lib/modules/shared/context";
 import type { Entity } from "$lib/core/world";
 import { AttackPhase } from "$lib/modules/shared/components";
 
-export function createTowerAISystem(world: World<Entity>) {
-	const towersQuery = world.with(
+export function createTowerAISystem(ctx: BaseContext) {
+	const towersQuery = ctx.world.with(
 		"towerTag",
 		"position",
 		"attackStats",
 		"attackRange",
 	);
-	const enemies = world.with("enemyTag", "position", "hp");
+	const enemies = ctx.world.with("enemyTag", "position", "hp");
 
 	return () => {
 		const tower = towersQuery.first;
@@ -18,7 +18,7 @@ export function createTowerAISystem(world: World<Entity>) {
 		if (tower.activeAttack || tower.attackCooldownTimer) return;
 
 		const attackRange = tower.attackRange;
-		let targetEnemy: Entity | undefined = undefined;
+		let targetEnemy: Entity | null = null;
 		let minDistance = attackRange;
 
 		for (const enemy of enemies) {
@@ -37,9 +37,9 @@ export function createTowerAISystem(world: World<Entity>) {
 
 		if (targetEnemy) {
 			tower.target = targetEnemy;
-			world.addComponent(tower, "activeAttack", {
+			ctx.world.addComponent(tower, "activeAttack", {
 				attackPhase: AttackPhase.WINDUP,
-				timer: tower.attackStats!.windupDuration,
+				timer: tower.attackStats.windupDuration,
 			});
 		}
 	};

@@ -5,13 +5,12 @@ import {
 	SHARED_TOWER_BROKEN_MATERIAL,
 	SHARED_TOWER_MATERIALS,
 } from "$lib/core/game-config";
+import type { RenderContext } from "$lib/modules/shared/context";
 import type { Entity } from "$lib/core/world";
 import { TowerState } from "$lib/core/world";
 import type { ViewIdType } from "$lib/modules/render/components";
 import { ViewId, VisualStatus } from "$lib/modules/render/components";
-import type { World } from "miniplex";
 import * as THREE from "three";
-import { setupScene } from "./setup-scene";
 
 const VIEW_CONSTRUCTORS: Record<
 	ViewIdType,
@@ -37,23 +36,11 @@ const VIEW_CONSTRUCTORS: Record<
 		),
 };
 
-function createResizeObserver(
-	canvas: HTMLCanvasElement,
-	renderer: THREE.WebGLRenderer,
-	camera: THREE.PerspectiveCamera,
-) {
-	return new ResizeObserver((_entries) => {
-		const { width, height } = canvas.getBoundingClientRect();
-		renderer.setSize(width, height);
-		camera.aspect = width / height;
-		camera.updateProjectionMatrix();
-	});
-}
-
-export function createSyncRenderSystem(
-	world: World<Entity>,
-	canvas: HTMLCanvasElement,
-) {
+export function createSyncRenderSystem(ctx: RenderContext) {
+	const world = ctx.world;
+	const scene = ctx.scene;
+	const camera = ctx.camera;
+	const renderer = ctx.renderer;
 	const entityToObject3D = new WeakMap<Entity, THREE.Object3D>();
 
 	const allWithView = world.with("viewId", "position");
@@ -69,12 +56,6 @@ export function createSyncRenderSystem(
 		"position",
 		"visualStatus",
 	);
-
-	const setup = setupScene(canvas);
-	const scene = setup.scene;
-	const camera = setup.camera;
-	const renderer = setup.renderer;
-	createResizeObserver(canvas, renderer, camera).observe(canvas);
 
 	function attachEntity(entity: Entity) {
 		if (!entity.viewId || !entity.position) return;

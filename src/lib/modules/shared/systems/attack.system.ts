@@ -1,9 +1,8 @@
-import type { World } from "miniplex";
-import type { Entity } from "$lib/core/world";
+import type { BaseContext } from "$lib/modules/shared/context";
 import { AttackPhase } from "$lib/modules/shared/components";
 
-export function createAttackSystem(world: World<Entity>) {
-	const attackers = world.with(
+export function createAttackSystem(ctx: BaseContext) {
+	const attackers = ctx.world.with(
 		"activeAttack",
 		"attackStats",
 		"target",
@@ -24,18 +23,18 @@ export function createAttackSystem(world: World<Entity>) {
 				} else if (activeAttack.attackPhase === AttackPhase.ACTIVE) {
 					activeAttack.attackPhase = AttackPhase.RECOVER;
 					activeAttack.timer = attackStats.recoveryDuration;
-					world.addComponent(entity, "executeAttack", {
+					ctx.world.addComponent(entity, "executeAttack", {
 						attackVariant: attackStats.type,
 						damage: entity.damage,
 						target: entity.target,
 					});
 				} else if (activeAttack.attackPhase === AttackPhase.RECOVER) {
-					world.addComponent(
+					ctx.world.addComponent(
 						entity,
 						"attackCooldownTimer",
 						attackStats.cooldownDuration,
 					);
-					world.removeComponent(entity, "activeAttack");
+					ctx.world.removeComponent(entity, "activeAttack");
 				}
 			}
 		}

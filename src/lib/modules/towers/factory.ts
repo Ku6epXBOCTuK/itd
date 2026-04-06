@@ -1,8 +1,9 @@
-import { TowerState, world, type Position } from "$lib/core/world";
+import { TowerState, type Position, type Entity } from "$lib/core/world";
+import type { World } from "miniplex";
 import { TOWER_CONFIG } from "$lib/core/game-config";
 import { ViewId, VisualStatus } from "$lib/modules/render/components";
 
-export const createTower = (x: number, z: number) => {
+export const createTower = (world: World<Entity>, x: number, z: number) => {
 	const tower = world.add({
 		position: { x, y: 1, z } as Position,
 		viewId: ViewId.TOWER,
