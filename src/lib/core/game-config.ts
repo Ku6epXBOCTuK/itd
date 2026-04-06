@@ -53,6 +53,8 @@ export const WAVE_CONFIG = {
 	delayBetweenSpawns: 500,
 	delayBetweenWaves: 2000,
 	announcementDuration: 2000,
+	spawnStartDelay: 2000,
+	waveCompleteDelay: 2000,
 } as const;
 
 export const WAVE_DEFINITIONS = [

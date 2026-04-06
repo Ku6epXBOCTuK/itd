@@ -18,13 +18,13 @@ export function createEnemyAISystem(ctx: BaseContext) {
 		.without("dyingTag");
 	const towers = ctx.world.with("towerTag", "position", "hp", "targetableTag");
 
-	return (_dt: number) => {
+	return (dt: number) => {
 		for (const enemy of enemies) {
 			if (enemy.enemyState === EnemyState.HAPPY) continue;
 
 			if (enemy.enemyState === EnemyState.IDLE) {
 				if (enemy.searchTimer) {
-					enemy.searchTimer -= _dt;
+					enemy.searchTimer -= dt;
 					if (enemy.searchTimer <= 0) {
 						const tower = towers.first;
 						if (tower) {

@@ -19,6 +19,17 @@ export function createWaveSystem(ctx: BaseContext) {
 		if (status === WaveStatus.PREPARING) {
 			waveControl.waveControl.waveDelayTimer -= dt;
 			if (waveControl.waveControl.waveDelayTimer <= 0) {
+				waveControl.waveControl.status = WaveStatus.ANNOUNCING;
+				waveControl.waveControl.waveDelayTimer = WAVE_CONFIG.spawnStartDelay;
+				GameEngine.emit(GameEvents.WAVE_START, {
+					waveNumber: waveControl.waveControl.currentWave,
+				});
+			}
+		}
+
+		if (status === WaveStatus.ANNOUNCING) {
+			waveControl.waveControl.waveDelayTimer -= dt;
+			if (waveControl.waveControl.waveDelayTimer <= 0) {
 				const waveIndex = Math.min(
 					waveControl.waveControl.currentWave - 1,
 					WAVE_DEFINITIONS.length - 1,
@@ -32,9 +43,12 @@ export function createWaveSystem(ctx: BaseContext) {
 				waveControl.waveControl.remainingEnemies = totalEnemies;
 				waveControl.waveControl.spawnTimer = 0;
 				waveControl.waveControl.status = WaveStatus.SPAWNING;
-				GameEngine.emit(GameEvents.WAVE_START, {
-					waveNumber: waveControl.waveControl.currentWave,
-				});
+			}
+		}
+
+		if (status === WaveStatus.SPAWNING) {
+			if (waveControl.waveControl.remainingEnemies === 0) {
+				waveControl.waveControl.status = WaveStatus.WAITING;
 			}
 		}
 
@@ -43,6 +57,14 @@ export function createWaveSystem(ctx: BaseContext) {
 				aliveEnemies.length === 0 &&
 				waveControl.waveControl.remainingEnemies === 0
 			) {
+				waveControl.waveControl.status = WaveStatus.COMPLETED;
+				waveControl.waveControl.waveDelayTimer = WAVE_CONFIG.waveCompleteDelay;
+			}
+		}
+
+		if (status === WaveStatus.COMPLETED) {
+			waveControl.waveControl.waveDelayTimer -= dt;
+			if (waveControl.waveControl.waveDelayTimer <= 0) {
 				GameEngine.emit(GameEvents.WAVE_COMPLETE, {
 					waveNumber: waveControl.waveControl.currentWave,
 				});
