@@ -5,9 +5,9 @@ import {
 	SHARED_TOWER_BROKEN_MATERIAL,
 	SHARED_TOWER_MATERIALS,
 } from "$lib/core/game-config";
+import { RENDER } from "$lib/core/constants";
 import type { Entity } from "$lib/core/world";
 import { TowerState } from "$lib/core/world";
-import { EnemyState } from "$lib/modules/enemies/components";
 import type { ViewIdType } from "$lib/modules/render/components";
 import { ViewId, VisualStatus } from "$lib/modules/render/components";
 import type { RenderContext } from "$lib/modules/shared/context";
@@ -50,7 +50,6 @@ export function createSyncRenderSystem(ctx: RenderContext) {
 		"viewId",
 		"position",
 		"visualStatus",
-		"enemyState",
 	);
 	const towerWithView = world.with(
 		"towerTag",
@@ -59,10 +58,8 @@ export function createSyncRenderSystem(ctx: RenderContext) {
 		"visualStatus",
 	);
 
-	const BASE_SCALE = 1;
-	const ATTACK_SCALE = 1.1;
-	const DYING_SCALE = 0;
-	const SCALE_LERP = 0.2;
+	const { BASE_SCALE, ATTACK_SCALE, DYING_SCALE, SCALE_LERP, ROTATION_LERP } =
+		RENDER;
 
 	function lerp(a: number, b: number, t: number): number {
 		return a + (b - a) * t;
@@ -116,9 +113,9 @@ export function createSyncRenderSystem(ctx: RenderContext) {
 					materialKey as keyof typeof SHARED_ENEMY_MATERIALS
 				] || SHARED_ENEMY_MATERIALS.moving;
 
-			if (entity.enemyState === EnemyState.DYING) {
+			if (entity.visualStatus === VisualStatus.DYING) {
 				mesh.scale.setScalar(lerp(mesh.scale.x, DYING_SCALE, SCALE_LERP));
-			} else if (entity.enemyState === EnemyState.ATTACKING) {
+			} else if (entity.visualStatus === VisualStatus.ATTACKING) {
 				mesh.scale.setScalar(lerp(mesh.scale.x, ATTACK_SCALE, SCALE_LERP));
 			} else {
 				mesh.scale.setScalar(lerp(mesh.scale.x, BASE_SCALE, SCALE_LERP));
@@ -129,7 +126,7 @@ export function createSyncRenderSystem(ctx: RenderContext) {
 				const dx = targetPos.x - entity.position.x;
 				const dz = targetPos.z - entity.position.z;
 				const targetRotation = Math.atan2(dx, dz);
-				mesh.rotation.y = lerp(mesh.rotation.y, targetRotation, 0.1);
+				mesh.rotation.y = lerp(mesh.rotation.y, targetRotation, ROTATION_LERP);
 			}
 		}
 

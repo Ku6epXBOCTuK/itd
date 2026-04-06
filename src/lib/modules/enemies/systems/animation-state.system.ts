@@ -11,6 +11,8 @@ export function createAnimationStateSystem(ctx: BaseContext) {
 		for (const enemy of enemies) {
 			if (enemy.dyingTag) {
 				enemy.visualStatus = VisualStatus.DYING;
+			} else if (enemy.enemyState === EnemyState.IDLE) {
+				enemy.visualStatus = VisualStatus.IDLE;
 			} else if (enemy.enemyState === EnemyState.HAPPY) {
 				enemy.visualStatus = VisualStatus.HAPPY;
 			} else if (enemy.activeAttack) {

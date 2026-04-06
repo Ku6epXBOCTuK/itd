@@ -75,6 +75,7 @@ export const WAVE_DEFINITIONS = [
 
 export const ENEMY_CONFIGS = {
 	[EnemyVariant.BASIC]: {
+		searchTime: 500,
 		speed: 2,
 		frictionModifier: 1,
 		hp: 100,
@@ -89,6 +90,7 @@ export const ENEMY_CONFIGS = {
 		},
 	},
 	[EnemyVariant.FAST]: {
+		searchTime: 500,
 		speed: 4,
 		frictionModifier: 0.5,
 		hp: 50,
@@ -103,6 +105,7 @@ export const ENEMY_CONFIGS = {
 		},
 	},
 	[EnemyVariant.TANK]: {
+		searchTime: 500,
 		speed: 1,
 		frictionModifier: 2,
 		hp: 200,

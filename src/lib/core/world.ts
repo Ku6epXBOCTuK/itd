@@ -68,6 +68,7 @@ export type Entity = Partial<
 		activeAttack: ActiveAttack;
 		attackCooldownTimer: number;
 		executeAttack: ExecuteAttack;
+		// visualStatus: изменяется ТОЛЬКО в AnimationStateSystem, используется ТОЛЬКО в render
 		visualStatus: VisualStatusType;
 		projectileVariant: ProjectileVariantType;
 
@@ -79,6 +80,7 @@ export type Entity = Partial<
 
 		experienceValue: number;
 		deathTimer: number;
+		searchTimer: number;
 
 		waveControl: WaveControl;
 		gameOverTimer: GameOverTimer;

@@ -1,4 +1,5 @@
 export const EnemyState = {
+	IDLE: "idle",
 	MOVING: "moving",
 	ATTACKING: "attacking",
 	COOLDOWN: "cooldown",
