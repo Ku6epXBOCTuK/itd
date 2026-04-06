@@ -5,11 +5,12 @@ import {
 	SHARED_TOWER_BROKEN_MATERIAL,
 	SHARED_TOWER_MATERIALS,
 } from "$lib/core/game-config";
-import type { RenderContext } from "$lib/modules/shared/context";
 import type { Entity } from "$lib/core/world";
 import { TowerState } from "$lib/core/world";
+import { EnemyState } from "$lib/modules/enemies/components";
 import type { ViewIdType } from "$lib/modules/render/components";
 import { ViewId, VisualStatus } from "$lib/modules/render/components";
+import type { RenderContext } from "$lib/modules/shared/context";
 import * as THREE from "three";
 
 const VIEW_CONSTRUCTORS: Record<
@@ -49,6 +50,7 @@ export function createSyncRenderSystem(ctx: RenderContext) {
 		"viewId",
 		"position",
 		"visualStatus",
+		"enemyState",
 	);
 	const towerWithView = world.with(
 		"towerTag",
@@ -56,6 +58,15 @@ export function createSyncRenderSystem(ctx: RenderContext) {
 		"position",
 		"visualStatus",
 	);
+
+	const BASE_SCALE = 1;
+	const ATTACK_SCALE = 1.1;
+	const DYING_SCALE = 0;
+	const SCALE_LERP = 0.2;
+
+	function lerp(a: number, b: number, t: number): number {
+		return a + (b - a) * t;
+	}
 
 	function attachEntity(entity: Entity) {
 		if (!entity.viewId || !entity.position) return;
@@ -104,6 +115,22 @@ export function createSyncRenderSystem(ctx: RenderContext) {
 				SHARED_ENEMY_MATERIALS[
 					materialKey as keyof typeof SHARED_ENEMY_MATERIALS
 				] || SHARED_ENEMY_MATERIALS.moving;
+
+			if (entity.enemyState === EnemyState.DYING) {
+				mesh.scale.setScalar(lerp(mesh.scale.x, DYING_SCALE, SCALE_LERP));
+			} else if (entity.enemyState === EnemyState.ATTACKING) {
+				mesh.scale.setScalar(lerp(mesh.scale.x, ATTACK_SCALE, SCALE_LERP));
+			} else {
+				mesh.scale.setScalar(lerp(mesh.scale.x, BASE_SCALE, SCALE_LERP));
+			}
+
+			if (entity.position && entity.target) {
+				const targetPos = entity.target.position;
+				const dx = targetPos.x - entity.position.x;
+				const dz = targetPos.z - entity.position.z;
+				const targetRotation = Math.atan2(dx, dz);
+				mesh.rotation.y = lerp(mesh.rotation.y, targetRotation, 0.1);
+			}
 		}
 
 		const towerEntity = towerWithView.first;

@@ -1,6 +1,6 @@
-import type { BaseContext } from "$lib/modules/shared/context";
+import { PERCENT, VELOCITY_EPSILON } from "$lib/core/constants";
 import { GAME_CONFIG } from "$lib/core/game-config";
-import { PERCENT } from "$lib/core/constants";
+import type { BaseContext } from "$lib/modules/shared/context";
 
 export function createFrictionSystem(ctx: BaseContext) {
 	const withFriction = ctx.world.with("velocity", "friction");
@@ -16,6 +16,10 @@ export function createFrictionSystem(ctx: BaseContext) {
 			entity.velocity.x *= multiplier;
 			entity.velocity.y *= multiplier;
 			entity.velocity.z *= multiplier;
+
+			if (Math.abs(entity.velocity.x) < VELOCITY_EPSILON) entity.velocity.x = 0;
+			if (Math.abs(entity.velocity.y) < VELOCITY_EPSILON) entity.velocity.y = 0;
+			if (Math.abs(entity.velocity.z) < VELOCITY_EPSILON) entity.velocity.z = 0;
 		}
 	};
 }

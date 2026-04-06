@@ -40,7 +40,7 @@ export const GAME_CONFIG = {
 	initialGold: 100,
 	initialIncomePerSecond: 10,
 	initialWave: 1,
-	baseFriction: 10,
+	baseFriction: 20,
 	aliveFrictionModifier: 4.0,
 } as const;
 
@@ -93,7 +93,7 @@ export const ENEMY_CONFIGS = {
 		frictionModifier: 0.5,
 		hp: 50,
 		maxHp: 50,
-		damage: 50,
+		damage: 10,
 		attackRange: 1.5,
 		attackStats: {
 			type: AttackVariant.MELEE,
@@ -107,7 +107,7 @@ export const ENEMY_CONFIGS = {
 		frictionModifier: 2,
 		hp: 200,
 		maxHp: 200,
-		damage: 200,
+		damage: 20,
 		attackRange: 1.5,
 		attackStats: {
 			type: AttackVariant.MELEE,
@@ -145,7 +145,7 @@ export const RENDER_CONFIG = {
 		fov: 75,
 		near: 0.1,
 		far: 1000,
-		position: { x: 0, y: 10, z: 10 },
+		position: { x: 0, y: 15, z: 6 },
 	},
 	colors: {
 		background: 0x1a1a2e,
@@ -171,8 +171,7 @@ export const RENDER_CONFIG = {
 
 export const GEOMETRY = {
 	enemy: {
-		radius: 0.5,
-		segments: 16,
+		size: 0.5,
 	},
 	projectile: {
 		radius: 0.2,
@@ -187,10 +186,10 @@ export const GEOMETRY = {
 } as const;
 
 export const SHARED_GEOMETRIES = {
-	enemy: new THREE.SphereGeometry(
-		GEOMETRY.enemy.radius,
-		GEOMETRY.enemy.segments,
-		GEOMETRY.enemy.segments,
+	enemy: new THREE.BoxGeometry(
+		GEOMETRY.enemy.size,
+		GEOMETRY.enemy.size,
+		GEOMETRY.enemy.size,
 	),
 	projectile: new THREE.SphereGeometry(
 		GEOMETRY.projectile.radius,

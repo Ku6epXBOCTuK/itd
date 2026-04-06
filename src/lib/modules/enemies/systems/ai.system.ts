@@ -1,8 +1,7 @@
-import type { BaseContext } from "$lib/modules/shared/context";
 import type { TargetableEntity } from "$lib/core/world";
 import { EnemyState } from "$lib/modules/enemies/components";
 import { AttackPhase } from "$lib/modules/shared/components";
-import { GAME_CONFIG } from "$lib/core/game-config";
+import type { BaseContext } from "$lib/modules/shared/context";
 
 export function createEnemyAISystem(ctx: BaseContext) {
 	const enemies = ctx.world
@@ -26,7 +25,7 @@ export function createEnemyAISystem(ctx: BaseContext) {
 			const dz = enemy.targetPosition.z - enemy.position.z;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-			if (distance > GAME_CONFIG.targetReachedDistance) {
+			if (distance > enemy.attackRange) {
 				enemy.velocity = {
 					x: (dx / distance) * enemy.maxSpeed,
 					y: (dy / distance) * enemy.maxSpeed,

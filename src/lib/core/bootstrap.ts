@@ -179,6 +179,7 @@ export function bootstrapGame(canvas: HTMLCanvasElement) {
 
 	let isRunning = false;
 	let animationFrameId: number | null = null;
+	let lastTime = 0;
 
 	function gameLoop(dt: number) {
 		for (const group of groups) {
@@ -188,10 +189,13 @@ export function bootstrapGame(canvas: HTMLCanvasElement) {
 		}
 	}
 
-	function loop(_timestamp: number) {
+	function loop(timestamp: number) {
 		if (!isRunning) return;
 
-		gameLoop(FRAME_MS);
+		const dt = lastTime ? timestamp - lastTime : FRAME_MS;
+		lastTime = timestamp;
+
+		gameLoop(dt);
 		animationFrameId = requestAnimationFrame(loop);
 	}
 
