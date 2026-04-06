@@ -1,5 +1,5 @@
 import type { BaseContext } from "$lib/modules/shared/context";
-import type { Entity } from "$lib/core/world";
+import type { Entity, TargetableEntity } from "$lib/core/world";
 import { AttackPhase } from "$lib/modules/shared/components";
 
 export function createTowerAISystem(ctx: BaseContext) {
@@ -9,7 +9,7 @@ export function createTowerAISystem(ctx: BaseContext) {
 		"attackStats",
 		"attackRange",
 	);
-	const enemies = ctx.world.with("enemyTag", "position", "hp");
+	const enemies = ctx.world.with("targetableTag", "enemyTag", "position", "hp");
 
 	return () => {
 		const tower = towersQuery.first;
@@ -24,9 +24,9 @@ export function createTowerAISystem(ctx: BaseContext) {
 		for (const enemy of enemies) {
 			if (enemy.hp <= 0) continue;
 
-			const dx = (enemy.position?.x ?? 0) - (tower.position?.x ?? 0);
-			const dy = (enemy.position?.y ?? 0) - (tower.position?.y ?? 0);
-			const dz = (enemy.position?.z ?? 0) - (tower.position?.z ?? 0);
+			const dx = enemy.position.x - tower.position.x;
+			const dy = enemy.position.y - tower.position.y;
+			const dz = enemy.position.z - tower.position.z;
 			const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 			if (distance <= attackRange && distance < minDistance) {
@@ -36,7 +36,7 @@ export function createTowerAISystem(ctx: BaseContext) {
 		}
 
 		if (targetEnemy) {
-			tower.target = targetEnemy;
+			tower.target = targetEnemy as TargetableEntity;
 			ctx.world.addComponent(tower, "activeAttack", {
 				attackPhase: AttackPhase.WINDUP,
 				timer: tower.attackStats.windupDuration,

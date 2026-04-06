@@ -26,7 +26,7 @@ export function createProjectileAttackSystem(ctx: BaseContext) {
 				target &&
 				ctx.world.has(target) &&
 				target.targetableTag &&
-				(target.hp ?? 0) > 0
+				target.hp > 0
 			) {
 				const projectileType =
 					attackVariant === AttackVariant.PROJECTILE_HOMING

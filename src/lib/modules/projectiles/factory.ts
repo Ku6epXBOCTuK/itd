@@ -1,4 +1,4 @@
-import type { Position, Entity } from "$lib/core/world";
+import type { Position, Entity, TargetableEntity } from "$lib/core/world";
 import type { World } from "miniplex";
 import { ViewId } from "$lib/modules/render/components";
 import { type ProjectileVariantType } from "$lib/modules/projectiles/components";
@@ -13,7 +13,7 @@ export const createProjectile = (
 		radius?: number;
 		center?: Position;
 	},
-	target: Entity | undefined = undefined,
+	target: TargetableEntity | undefined = undefined,
 	targetPosition: Position | undefined = undefined,
 	lifetime: number = 2000,
 ) => {

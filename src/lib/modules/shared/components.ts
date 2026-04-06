@@ -1,5 +1,10 @@
 import type { Entity } from "$lib/core/world";
 
+export type TargetableEntity = Required<
+	Pick<Entity, "position" | "hp" | "targetableTag">
+> &
+	Entity;
+
 export const AttackPhase = {
 	ACTIVE: "active",
 	WINDUP: "windup",
@@ -32,5 +37,5 @@ export type ActiveAttack = {
 export type ExecuteAttack = {
 	attackVariant: AttackVariantType;
 	damage: number;
-	target: Entity;
+	target: TargetableEntity;
 };

@@ -1,4 +1,5 @@
 import type { BaseContext } from "$lib/modules/shared/context";
+import type { TargetableEntity } from "$lib/core/world";
 import { EnemyState } from "$lib/modules/enemies/components";
 import { AttackPhase } from "$lib/modules/shared/components";
 import { GAME_CONFIG } from "$lib/core/game-config";
@@ -14,7 +15,7 @@ export function createEnemyAISystem(ctx: BaseContext) {
 			"attackRange",
 		)
 		.without("dyingTag");
-	const towers = ctx.world.with("towerTag");
+	const towers = ctx.world.with("towerTag", "position", "hp", "targetableTag");
 
 	return (_dt: number) => {
 		for (const enemy of enemies) {
@@ -37,7 +38,7 @@ export function createEnemyAISystem(ctx: BaseContext) {
 				if (!enemy.activeAttack && !enemy.attackCooldownTimer) {
 					const tower = towers.first;
 					if (tower) {
-						enemy.target = tower;
+						enemy.target = tower as TargetableEntity;
 						ctx.world.addComponent(enemy, "activeAttack", {
 							attackPhase: AttackPhase.WINDUP,
 							timer: enemy.attackStats.windupDuration,

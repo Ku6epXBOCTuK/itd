@@ -30,12 +30,12 @@ export function createCollisionSystem(ctx: BaseContext) {
 			}
 
 			if (target) {
-				if (!world.has(target) || !target.position) {
+				if (!world.has(target)) {
 					world.remove(projectile);
 					continue;
 				}
 
-				if (target.enemyTag && (target.hp ?? 0) <= 0) {
+				if (target.hp <= 0) {
 					world.remove(projectile);
 					continue;
 				}
@@ -46,10 +46,7 @@ export function createCollisionSystem(ctx: BaseContext) {
 				const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 				if (distance < PROJECTILE_CONFIG.homingHitThreshold) {
-					if (target.enemyTag) {
-						target.hp = Math.max(0, (target.hp ?? 0) - projectile.damage);
-					}
-
+					target.hp = Math.max(0, target.hp - projectile.damage);
 					world.remove(projectile);
 				}
 			}

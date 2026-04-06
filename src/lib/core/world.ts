@@ -12,6 +12,7 @@ import type {
 	AttackStats,
 	ActiveAttack,
 	ExecuteAttack,
+	TargetableEntity,
 } from "$lib/modules/shared/components";
 import type {
 	TowerBaseStats,
@@ -27,6 +28,7 @@ export type {
 	AttackStats,
 	ActiveAttack,
 	ExecuteAttack,
+	TargetableEntity,
 } from "$lib/modules/shared/components";
 export { TowerState } from "$lib/modules/towers/components";
 export { WaveStatus } from "$lib/modules/waves/components";
@@ -69,7 +71,7 @@ export type Entity = Partial<
 		visualStatus: VisualStatusType;
 		projectileVariant: ProjectileVariantType;
 
-		target: Entity;
+		target: TargetableEntity;
 		targetPosition: Vector3;
 		radius: number;
 		center: Vector3;

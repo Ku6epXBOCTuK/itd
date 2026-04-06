@@ -1,5 +1,5 @@
 import type { BaseContext } from "$lib/modules/shared/context";
-import type { Entity } from "$lib/core/world";
+import type { Entity, TargetableEntity } from "$lib/core/world";
 import { GAME_CONFIG } from "$lib/core/game-config";
 import { ProjectileVariant } from "$lib/modules/projectiles/components";
 
@@ -14,20 +14,19 @@ export function createTargetingSystem(ctx: BaseContext) {
 			const needsNewTarget =
 				!projectile.target ||
 				!world.has(projectile.target) ||
-				!projectile.target.enemyTag ||
-				(projectile.target.hp ?? 0) <= 0;
+				projectile.target.hp <= 0;
 
 			if (needsNewTarget) {
-				const enemies = world.with("enemyTag", "position", "hp");
+				const enemies = world.with("targetableTag", "position", "hp");
 				let nearest: Entity | undefined = undefined;
 				let minDistance: number = GAME_CONFIG.targetingMinDistance;
 
 				for (const enemy of enemies) {
 					if (enemy.hp <= 0) continue;
 
-					const dx = (enemy.position?.x ?? 0) - (projectile.position?.x ?? 0);
-					const dy = (enemy.position?.y ?? 0) - (projectile.position?.y ?? 0);
-					const dz = (enemy.position?.z ?? 0) - (projectile.position?.z ?? 0);
+					const dx = enemy.position.x - projectile.position.x;
+					const dy = enemy.position.y - projectile.position.y;
+					const dz = enemy.position.z - projectile.position.z;
 					const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 					if (distance < minDistance) {
@@ -36,7 +35,7 @@ export function createTargetingSystem(ctx: BaseContext) {
 					}
 				}
 
-				projectile.target = nearest;
+				projectile.target = nearest as TargetableEntity;
 			}
 		}
 	};

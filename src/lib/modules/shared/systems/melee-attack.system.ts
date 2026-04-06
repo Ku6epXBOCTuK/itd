@@ -16,9 +16,9 @@ export function createMeleeAttackSystem(ctx: BaseContext) {
 				target &&
 				ctx.world.has(target) &&
 				target.targetableTag &&
-				(target.hp ?? 0) > 0
+				target.hp > 0
 			) {
-				target.hp = Math.max(0, (target.hp ?? 0) - executeAttack.damage);
+				target.hp = Math.max(0, target.hp - executeAttack.damage);
 			}
 		}
 	};

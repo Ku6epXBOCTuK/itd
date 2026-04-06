@@ -20,10 +20,13 @@
 - [ ] 5. Tower AI — улучшить поиск цели
      - Проверить поиск ближайшей цели
 
-- [ ] 6. Типизация target — определить тип targetableEntity
-     - Создать тип с полями position, hp, enemyTag
-     - Заменить Entity на targetableEntity в поле target
+- [x] 6. Типизация target — определить тип targetableEntity
+     - Создать тип с полями position, hp, targetableTag + Entity
+     - Заменить Entity на TargetableEntity в поле target
 
-- [ ] 7. Убрать optional проверки ?? 0 в системах
-     - Добавить тег-маркеры для сущностей с position/hp
+- [x] 7. Убрать optional проверки ?? 0 в системах
      - Убрать проверки через ?? 0
+
+- [ ] 8. Рефакторить collision system
+     - Сделать универсальным для любых targetable сущностей
+     - Добавить поддержку piercing, chain и т.д.
